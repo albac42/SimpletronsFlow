@@ -1,5 +1,5 @@
 from opentrons import robot, containers, instruments
-from opentrons import robot2
+#from opentrons import robot2
 
 def getTransportposition():
     transportposition = {}

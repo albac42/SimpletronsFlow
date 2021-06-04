@@ -23,15 +23,15 @@ def find_arduino(serial_number):
             return serial.Serial(pinfo.device)
     raise IOError("Could not find an Robot - is it plugged in?")
 
-	robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3')
-	robotUSB = str(robotUSB)
-	robotUSB = re.findall(r"port='(.*?)'", robotUSB)
+    robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3')
+    robotUSB = str(robotUSB)
+    robotUSB = re.findall(r"port='(.*?)'", robotUSB)
 
 	#robot2USB = find_arduino(serial_number='16003013AF27A5235A53E460F50020C4')
 	#robot2USB = str(robot2USB)
 	#robot2USB = re.findall(r"port='(.*?)'", robot2USB)
 
-	print(robotUSB)
+    print(robotUSB)
 	#print(robot2USB)
 
     #Serial<id=0x75fa4430, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=False, rtscts=False, dsrdtr=False)

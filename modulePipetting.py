@@ -1,6 +1,6 @@
 import opentrons
 #import openworkstation
-from opentrons import robot, robot2, containers, instruments
+from opentrons import robot, containers, instruments
 #from openworkstation import robot2
 from time import sleep
 from moduleCommands import *
@@ -8,10 +8,10 @@ from moduleCommands import *
 
 #New Pipetting Setup
 
-def loadpipette_b (axis_s,max_v_s, min_v_s)
+def loadpipette_b (axis_s,max_v_s, min_v_s):
   if max_v_s > 200:
     max_v_s = 200
-  if min_v_s = < 20:
+  if min_v_s  < 20:
     min_v_s = 20
   if axis_s == b:
     pipeipette_b = instruments.Pipette(
@@ -21,7 +21,7 @@ def loadpipette_b (axis_s,max_v_s, min_v_s)
       min_volume=min_v_s,
       channels = 1,
       aspirate_speed=200,
-      dispense_speed=600
+      dispense_speed=600,
         tip_racks=[equipment['1000TiprackB2']],
         trash_container=equipment['TrashA2']
       )
@@ -34,21 +34,21 @@ def loadpipette_b (axis_s,max_v_s, min_v_s)
       min_volume=min_v_s,
       channels = 1,
       aspirate_speed=200,
-      dispense_speed=600
+      dispense_speed=600,
         tip_racks=[equipment['1000TiprackB2']],
         trash_container=equipment['TrashA2']
       )
-    else
-      print ("Please Select Correct")
+  else:
+    print ("Please Select Correct")
 
 
 
-def pickuptip (pipette, well)
+def pickuptip (pipette, well):
   if pipette == b:
     pipeipette_b.pick_up_tip(tiprack.wells('A1'))
   elif pipette == a:
     pipeipette_a.pick_up_tip(tiprack.wells('A1'))
-  else
+  else:
     print("Pipette and Wells Error, Please check value are correct")
 
 
