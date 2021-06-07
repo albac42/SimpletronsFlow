@@ -1,1 +1,32 @@
-{"version": 1, "data": {}}
+{
+    "version": 1,
+    "data": {
+        "a:pd100": {
+            "calibration_data": {
+                "A2": {
+                    "children": {
+                        "trash-box": {
+                            "delta": "{\"x\": -52.75, \"y\": 191.625, \"z\": 99.0}",
+                            "type": "trash-box"
+                        }
+                    }
+                },
+                "B2": {
+                    "children": {
+                        "tiprack-1000ul2": {
+                            "delta": "{\"x\": -101.0, \"y\": 255.5, \"z\": 100.0}",
+                            "type": "tiprack-1000ul2"
+                        }
+                    }
+                }
+            },
+            "positions": {
+                "top": 0.0101,
+                "bottom": 10.0101,
+                "blow_out": 12.0101,
+                "drop_tip": 14.0101
+            },
+            "max_volume": 1000
+        }
+    }
+}

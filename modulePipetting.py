@@ -64,11 +64,11 @@ def getEquipment():
       #equipment['InputsC1'] = containers.load('heating-block-3x4','C1')
       #equipment['MixingD1'] = containers.load('heating-block-3x4', 'D1')
       #equipment['OutputD2'] = containers.load('48-well-plate', 'D2')
-      #containers.create('tiprack-1000ul2', grid=(7, 5), spacing=(10.3, 18.6), diameter=9, depth=56)
+      containers.create('custom', grid=(7, 5), spacing=(10.3, 18.6), diameter=9, depth=56)
       equipment['1000TiprackB2'] = containers.load('tiprack-1000ul2', 'B2')
       equipment['100TiprackB1'] = containers.load('tiprack-1000ul', 'B1')
       equipment['TrashA2'] = containers.load('trash-box', 'A2')
-      #equipment['touch_tipC2'] = containers.load('96-flat', 'C2')
+      #equipment['custom'] = containers.load('custom', 'C2')
       #Setup Pipette Left
       equipment['pd1000'] = instruments.Pipette(
          name='pd1000',
