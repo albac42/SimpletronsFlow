@@ -64,7 +64,6 @@ position=list(robot._driver.get_head_position()["current"])
 
 
 
-
 #OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is integrated with UI
 #PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment]
 movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
