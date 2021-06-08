@@ -23,26 +23,15 @@ def find_arduino(serial_number):
             return serial.Serial(pinfo.device)
     raise IOError("Could not find an Robot - is it plugged in or is serial number setup correct?")
 
-robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3')
-robotUSB = str(robotUSB)
-robotUSB = re.findall(r"port='(.*?)'", robotUSB)
-robotUSB = str(robotUSB)
-robotUSB = str(robotUSB).strip('['']')
-robotUSB = eval(robotUSB)
-print(robotUSB)
-
-	#robot2USB = find_arduino(serial_number='16003013AF27A5235A53E460F50020C4')
-	#robot2USB = str(robot2USB)
-	#robot2USB = re.findall(r"port='(.*?)'", robot2USB)
-    
-	#print(robot2USB)
-
-    #Serial<id=0x75fa4430, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=False, rtscts=False, dsrdtr=False)
-    #Serial<id=0x75fa44f0, open=True>(port='/dev/ttyACM1', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=False, rtscts=False, dsrdtr=False)
-
-
-    #robotUSB = '/dev/ttyACM0'
-    #robot2USB = '/dev/ttyACM1'
+def find_ot():
+    # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
+    robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial 
+    robotUSB = str(robotUSB) #Array to Convert to string
+    robotUSB = re.findall(r"port='(.*?)'", robotUSB)
+    robotUSB = str(robotUSB) #Array to Convert to string
+    robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
+    robotUSB = eval(robotUSB) #Remove Quotation 
+    #print(robotUSB)
 
 #######################################################################
 
@@ -50,9 +39,10 @@ print(robotUSB)
 def connect():
     print('Connecting to Robots')
     # robot.connect()
+    find_ot()
     robot.connect(robotUSB)
     print('Opentrons Robot Connected')
-    # robot2.connect()
+    #robot2.connect()
     #robot2.connect(robot2USB)
     #print('Opentrons Robot Connected')
 

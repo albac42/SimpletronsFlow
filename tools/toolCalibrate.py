@@ -1,3 +1,7 @@
+######################################################################
+# Please Do NOT Modify Unless You Know What you're doing #
+
+######################################################################
 from opentrons import robot, containers, instruments
 import opentrons
 import curses
@@ -5,27 +9,22 @@ import time
 
 from curses import wrapper
 
+import os,sys,inspect
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir) 
 from modulePipetting import getEquipment
 from moduleCommands import *
 
-
-
-
 movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
 equipment=getEquipment()
-
-#robot.connect('/dev/ttyACM0')
-
-#robot.connect()
-
-#input("Robot will now home, press enter to continue.")
-#robot.home()
+######################################################################
 
 
+#Common Out
+#connect()
 
-connect()
-
-home_robot()
+#home_robot()
 
 
 
