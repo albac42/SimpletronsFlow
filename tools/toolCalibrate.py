@@ -10,9 +10,7 @@ import time
 from curses import wrapper
 
 import os,sys,inspect
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir) 
+sys.path.insert(1, os.path.realpath(os.path.pardir))
 from modulePipetting import getEquipment
 from moduleCommands import *
 
