@@ -8,15 +8,19 @@ from moduleCommands import *
 
 #New Pipetting Setup
 
-def loadpipette_b (axis_s,max_v_s, min_v_s):
+def loadpipette (axis_s,max_v_s, min_v_s):
   if max_v_s > 200:
     max_v_s = 200
+    print('Loaded Default Max Volume due to exceed device max amount')
   if min_v_s  < 20:
     min_v_s = 20
+    print('Loaded Default Min Volume due to exceed device max amount')
+
+
   if axis_s == b:
     pipeipette_b = instruments.Pipette(
       axis='b',
-      name='pd1000b',
+      name='pd1000',
       max_volume=max_v_s,
       min_volume=min_v_s,
       channels = 1,
@@ -29,7 +33,7 @@ def loadpipette_b (axis_s,max_v_s, min_v_s):
   elif axis_s == a:
     pipeipette_a = instruments.Pipette(
       axis='a',
-      name='pd1000a',
+      name='pd100',
       max_volume=max_v_s,
       min_volume=min_v_s,
       channels = 1,
@@ -39,7 +43,7 @@ def loadpipette_b (axis_s,max_v_s, min_v_s):
         trash_container=equipment['TrashA2']
       )
   else:
-    print ("Please Select Correct")
+    print ("Please Check your loadpipette axis is correct or not")
 
 
 

@@ -18,7 +18,7 @@ def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth
         diameter=diameter,                     # diameter (mm) of each well on the plate
         depth=depth                     # depth (mm) of each well on the plate
     )
-    print('Custom Container Created "', name '"')
+    #print('Custom Container Created "', name '"')
 
     #Load Container 
     var = container.load(name, location)
@@ -33,9 +33,9 @@ def load_container(name, location, var):
 #Load some useful default containers 
 def load_dd_container():
     print ('Loading Default Preset Containers')
-    trashA = container.load('point', 'A1') 
-    P_A = container.load('tiprack-1000ul-chem', A2)
-    P_B = ontainer.load('tiprack-1000ul-chem', A3)
-    print('Loaded Containe "trashA" ')
+    trashA = containers.load('trash-box', 'A1') 
+    P_A = containers.load('tiprack-1000ul-chem', 'A2')
+    P_B = containers.load('tiprack-1000ul-chem', 'A3')
+    print('Loaded default Container')
 
-create_container(test_c, 10, 10, 2, 5, 5, 1)
+#create_container(test_c, 10, 10, 2, 5, 5, 1)

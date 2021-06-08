@@ -6,8 +6,12 @@ from tkinter.ttk import Combobox
 import tkinter as tk    
 from tkinter import ttk
 
+from opentrons import robot, containers, instruments
+import opentrons
 
-	
+
+
+
 
 
 
@@ -96,4 +100,4 @@ def graphicalUI():
 
 
 #Debugging (Run Graphical Interface without backend code)
-graphicalUI()
+#graphicalUI()

@@ -1,4 +1,3 @@
-
 from opentrons import robot, containers, instruments
 import opentrons
 import curses
@@ -6,13 +5,14 @@ import time
 
 from curses import wrapper
 
+from modulePipetting import getEquipment
 from moduleCommands import *
-from modulePipetting import *
-from moduleContainers import *
+
+
 
 
 movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
-#equipment=getEquipment()
+equipment=getEquipment()
 
 #robot.connect('/dev/ttyACM0')
 
@@ -22,51 +22,31 @@ movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
 #robot.home()
 
 
-#Load Default Containers 
-load_dd_container()
 
-#Create Blank Array
-placeables = []
-pipettes = [0, 1] #Limit to 2 Pipetting
-count_P = 0
-count_C = 0 
+connect()
 
-
-#Generate Pipettes List
-for axis, pipette in robot.get_instruments():
-
-    pipettes[count_P]= pipette.name
-    count_P = count_P+1
-
-    #print(pipette.name)
-
-#Generate Containers List
-for name, container in robot.get_containers():
-    placeables.append(count_C)
-    placeables[count_C]= name
-    count_C = count_C+1
-    #sprint(name)
-
-#Reset Counter
-count_P = 0
-count_C = 0 
-
-
-placeableNames=sorted(placeables)
-pipetteNames=sorted(pipettes)
-
-#print(placeableNames)
-#print(pipetteNames)
-
-position=list(robot._driver.get_head_position()["current"])
-#print(position)
+home_robot()
 
 
 
 
+placeables = {}
+pipettes = {}
 
-#OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is integrated with UI
-#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment]
+for key, value in equipment.items():
+
+     if hasattr(value, 'axis'):
+
+          pipettes[key]=value
+     else:
+          placeables[key]=value
+
+placeableNames=sorted(list(placeables.keys()))
+pipetteNames=sorted(list(pipettes.keys()))
+
+
+
+
 def main(stdscr):
     currentlyCalibrating=placeableNames[0]
     currentPipette=pipetteNames[0]
@@ -137,7 +117,6 @@ def main(stdscr):
                     plungerTarget="drop_tip"
                 if key=="s":
                     equipment[currentPipette].calibrate(plungerTarget)
-
                     stdscr.clear()
                     stdscr.addstr("plunger position saved")
                     stdscr.refresh()
@@ -251,4 +230,4 @@ def main(stdscr):
         stdscr.refresh()
 
 
-#wrapper(main)
+wrapper(main)
