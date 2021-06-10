@@ -23,7 +23,7 @@ from moduleContainers import *
 
 
 #Load Default Containers 
-load_dd_container()
+#load_dd_container()
 
 #Create Blank Array [ Global Variable ]
 placeables = []
@@ -37,7 +37,6 @@ for axis, pipette in robot.get_instruments():
 
     pipettes[count_P]= pipette.name
     count_P = count_P+1
-
     #print(pipette.name)
 
 #Generate Containers List
@@ -45,24 +44,101 @@ for name, container in robot.get_containers():
     placeables.append(count_C)
     placeables[count_C]= name
     count_C = count_C+1
-    #sprint(name)
+    #print(name)
 
 #Reset Counter
 count_P = 0
 count_C = 0 
 
-
+#Global Variables for calibration
 placeableNames=sorted(placeables)
 pipetteNames=sorted(pipettes)
+
+currentlyCalibrating=placeableNames[0]
+currentPipette=pipetteNames[0]
+movementAmount=1
+
+#Initial Robotic Position
+position=list(robot._driver.get_head_position()["current"])
+position[0]=0
+
 
 #print(placeableNames)
 #print(pipetteNames)
 
-position=list(robot._driver.get_head_position()["current"])
+#position=list(robot._driver.get_head_position()["current"])
 #print(position)
 
+def changeDirectionSpeed(speed):
+    global movementAmount
+    if speed > 80:
+        print('Warning: Speed Exceed Max Speed Allowed, Please change to lower value <80')
+        movementAmount = 80
+    if speed < 0.1:
+        print('Warning: Speed Exceed Min Speed Allowed, Please change to higher value <0.1')
+        movementAmount = 0.1
+    else:    
+        movementAmount = speed
+        return print('Speed Set', movementAmount)
 
+def calibrationControl(direction):
+    global position
+    global movementAmount
+    if direction == 'z_up':
+        position[2]=position[2]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "z_down":
+        position[2]=position[2]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "x_left":
+        position[0]=position[0]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "x_right":
+        direction[0]=position[0]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "y_up":
+        position[1]=position[1]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "y_down":
+        position[1]=position[1]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "home":
+        robot.home()
+        position=list(robot._driver.get_head_position()["current"])
+    else:
+        print('Warning: Last action was not sent to robot due to invalid direction command')
+        position=list(robot._driver.get_head_position()["current"])
 
+def moveDefaultLocation():
+    global position
+    well = currentlyCalibrating
+    pos = well.from_center(x=0, y=0, z=-1, reference=currentlyCalibrating)
+    location = (equipment[currentlyCalibrating], pos)
+    equipment[currentPipette].move_to(location)
+    position=list(robot._driver.get_head_position()["current"])
+
+def saveCalibration(rack, pipette):
+
+    pip = pipette
+    well = rack[0]
+    pos = well.from_center(x=0, y=0, z=-1, reference=rack)
+    location = (equipment[currentlyCalibrating], pos)
+    pip.calibrate_position(location)
+    print('Calibration Saved')
+
+def calibrationControlPlugger(pipette):
+    global movementAmount
+
+    pip = pipette
+    
+    if key == "z_up":
+        plungerPos=plungerPos-movementAmount
+    if key == "z_down":
+        plungerPos=plungerPos+movementAmount
+
+    pip.motor.move(plungerPos)
+
+#def selectWhatToCalibrate():
 
 #OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is integrated with UI
 #PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment]

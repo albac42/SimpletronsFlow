@@ -18,8 +18,8 @@ print('Loaded Require Libaries')
 
 #Startup Scripts [Do NOT EDIT]
 
-#Reset main Pipetting Robot & Transport Robot
-reset_all()
+#Reset main Pipetting Robot & Transport Robot 
+#reset_all()
 
 #Connection to Robot
 connect()
