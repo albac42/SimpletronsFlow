@@ -21,7 +21,7 @@ def find_arduino(serial_number):
     for pinfo in serial.tools.list_ports.comports():
         if pinfo.serial_number == serial_number:
             return serial.Serial(pinfo.device)
-    raise IOError("Could not find an Robot - is it plugged in or is serial number setup correct?")
+    raise IOError("[#A1]Could not find an Robot - is it plugged in or is serial number setup correct?")
 
 def find_ot():
     # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer

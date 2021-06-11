@@ -8,12 +8,12 @@ from tkinter import ttk
 
 from opentrons import robot, containers, instruments
 import opentrons
-
+from moduleContainers import *
 
 
 
 load_dd_container()
-
+#connect()
 
 # Create a window
 def graphicalUI():
@@ -97,8 +97,6 @@ def graphicalUI():
 	zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
 	z_down_b = ttk.Button(tab2, image = zu_button_image, width = 5)
 	z_down_b.grid(column = 1, row = 1)
-
-
 
 
 
