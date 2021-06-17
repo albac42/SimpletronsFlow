@@ -43,7 +43,7 @@ load_calibration()
 #Refer to Desk Documentation
 
 #Example Container
-create_container(test_c, 10, 10, 2, 5, 5, 1)
+create_container('test_c', 10, 10, 2, 5, 5, 1)
 
 
 
@@ -54,16 +54,19 @@ create_container(test_c, 10, 10, 2, 5, 5, 1)
 #load_container(name, location, var):
 
 #Load Default Containers (Refer to Documentation)
-load_dd_container()
+#load_dd_container()
+
+#Load Containers
+load_container('test_c', 'A1')
 
 #######################################################################
 
 # Create and configure Pipette [Editable]
 
 # Please check documentation or user manual for correct Pipetting Device 
+loadpipette (a, 200, 100, 1000TiprackB2, TrashA2)
 
 
-loadpipette_b()
 #######################################################################
 
 # Pick Up Tip Function Editable

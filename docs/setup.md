@@ -1,0 +1,93 @@
+# Setup Raspberry Pi
+
+Download Raspberry Pi Os Installer ([Raspberry Pi OS – Raspberry Pi)](https://www.raspberrypi.org/software/)
+
+Install Video: [How to use Raspberry Pi Imager | Install Raspberry Pi OS to your Raspberry Pi (Raspbian) - YouTube](https://www.youtube.com/watch?v=ntaXWS8Lk34)
+
+You can now insert the SD card into the Raspberry Pi and power it up. For the official Raspberry Pi OS, if you need to manually log in, the default user name is `pi`, with password `raspberry`. Remember the default keyboard layout is set to UK.
+
+Remember to set a new password if not DO NOT connect to the network. Any data store can be accessible by anyone who has access to the raspberry pi. This is to prevent any unauthorised access to the raspberry pi and associate printers or devices.
+
+Once Raspberry Pi is boot up, please update and install require software. A Internet connection is require to ensure all software is running up to date.
+
+# Configure Simpletrons on Raspberry Pi
+
+1\. Open Terminal
+
+2\. Ensure some preliminary program is installed. `sudo apt install git `
+
+3\. Enter to grab simpletrons latest release `git clone https://github.com/skydivercactus/simpletrons`
+
+4\. Navigate to directory `cd simpletrons`
+
+5\. Run Install Script sudo ./install.sh
+
+6\. Wait until install script finish install
+
+7\. If no error occurred you should be all set to start your first program. (You can ignore any warning occurring in the install script - if you face any error in install script please submit a issues on github https://github.com/skydivercactus/simpletrons/issues/new)
+
+# Configure Simpletrons on Window Based Bash
+
+# How to use Calibration Application
+
+All OT-1 is require to be calibrate to ensure accuracy of the pipeting robot. This process is REQUIRED to be complete for each new container in the program. You are require to use builtin calibration application to ensure calibration are correctly configured for you custom or pre-defined containers.
+
+Additional Documentations
+
+[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
+
+[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
+
+|     |     |     |     |     |
+| --- | --- | --- | --- | --- |
+| 11  | 12  | 13  | 14  | 14  |
+| 6   | 7   | 8   | 9   | 10  |
+| 1   | 2   | 3   | 4   | 5   |
+
+<img src=":/e17a72de9ca94c739ea3faaf78acb5a6" alt="DeckMapEmpty.png" width="509" height="454" class="jop-noMdConv">
+
+# Headless Setup
+
+If you wish to setup opentrons headless (without a monitor), please follow below instructions.
+
+1.  After initial raspberry pi setup, please keep SD card plugged into the computer.
+2.  Open File Explorer (Windows)/ Finder (Mac) and access portable drive called boot.
+3.  create the following files wpa_supplicant.conf and ssh.
+
+File Name: wpa_supplicant.conf
+
+```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=AU
+
+network={
+ ssid="<Name of your wireless LAN>"
+ psk="<Password for your wireless LAN>"
+}
+```
+
+File name “ssh” without any extension as shown in below Figure.
+
+<img src=":/a16c2a3c9345407ea3bb369447e41763" alt="c7c493d8d8e672eef6a16bcef17c3ea0.png" width="687" height="537">
+
+4.  Now you can unplug sd card from the computer and insert into raspberry pi.
+5.  Plug the power into raspberry pi and give it a few minutes to boot up.
+6.  Use a SSH client (PUTTY) to ssh into headless raspberry pi and follow above step to setup simpletrons.
+
+# How to setup correct serial connection to robotic (OT-1)
+
+1.  Please plug in OT-1 communication USB cable into the device.
+2.  Please unplug all other USB connection apart from keyboard/mouse.
+3.  Check if you simpletrons directory, if not please navigate to that directory using `cd`
+4.  Run `python3 tools/toolScanner.py`
+5.  Copy/write down serial information.
+6.  Open txt named usbserial.txt and paste/enter serial information into it.
+7. Run `python3 calibrate.py` to check if everything is setup correctly, a graphical interface will load if serial has been setup correctly. 
+
+
+# How to Calibrate pipetting positions
+1. Run `python3 calibrate.py` 
+2. Create and load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres)
+3. Customised pipetting profile such as max/min volume and desire tip rack. 
+4. 

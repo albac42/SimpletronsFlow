@@ -23,14 +23,24 @@ def find_arduino(serial_number):
             return serial.Serial(pinfo.device)
     raise IOError("[#A1]Could not find an Robot - is it plugged in or is serial number setup correct?")
 
+def check_file():
+    with open('usbSerial.txt') as f:
+        lines = f.readlines() #Read UsbSerial file
+        lines = [line.replace(' ', '') for line in lines] #Remove Empty Spaces
+    return lines
+
 def find_ot():
     # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
-    robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial 
+    serial = check_file()
+    print(serial)
+    #robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial
+    robotUSB = find_arduino(serial) #Configurable Serial
     robotUSB = str(robotUSB) #Array to Convert to string
     robotUSB = re.findall(r"port='(.*?)'", robotUSB)
     robotUSB = str(robotUSB) #Array to Convert to string
     robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
-    robotUSB = eval(robotUSB) #Remove Quotation 
+    robotUSB = eval(robotUSB) #Remove Quotation
+
     #print(robotUSB)
 
 #######################################################################
@@ -87,6 +97,5 @@ def reset_all():
     #robot2.reset()
     #print('Successfully Rested Opentrons Robot')
     
-
 def load_calibration():
     print('Loaded Pre-Configured Robot Calibration')

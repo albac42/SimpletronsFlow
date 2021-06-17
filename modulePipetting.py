@@ -8,7 +8,9 @@ from moduleCommands import *
 
 #New Pipetting Setup
 
-def loadpipette (axis_s,max_v_s, min_v_s):
+def loadpipette (axis_s,max_v_s, min_v_s, tiprack, trash):
+
+  #Eror Check
   if max_v_s > 200:
     max_v_s = 200
     print('Loaded Default Max Volume due to exceed device max amount')
@@ -26,8 +28,8 @@ def loadpipette (axis_s,max_v_s, min_v_s):
       channels = 1,
       aspirate_speed=200,
       dispense_speed=600,
-        tip_racks=[equipment['1000TiprackB2']],
-        trash_container=equipment['TrashA2']
+      tip_racks=tiprack,
+      trash_container=trash
       )
     print ("Loaded B Axis Pipette")
   elif axis_s == a:
@@ -39,11 +41,11 @@ def loadpipette (axis_s,max_v_s, min_v_s):
       channels = 1,
       aspirate_speed=200,
       dispense_speed=600,
-        tip_racks=[equipment['1000TiprackB2']],
-        trash_container=equipment['TrashA2']
+      tip_racks=tiprack,
+      trash_container=trash
       )
   else:
-    print ("Please Check your loadpipette axis is correct or not")
+    print ("Please check your loadpipette axis is correct or not")
 
 
 
