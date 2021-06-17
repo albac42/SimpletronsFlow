@@ -22,6 +22,10 @@ def list_containers():
 
 	return 
 
+
+#Update Value 
+
+
 # Create a window
 def graphicalUI():
 	root = Tk()
@@ -34,7 +38,7 @@ def graphicalUI():
 	tab3 = ttk.Frame(tabControl)
 
   	#Tab Header Name
-	tabControl.add(tab1, text ='Step 1 Custom Containers')
+	tabControl.add(tab1, text ='Step 1 Containers/Pipette Setup')
 	tabControl.add(tab2, text ='Step 2 Calibrate Pipette')
 	tabControl.add(tab3, text ='Step 3 Calibrate Containers')
 	#tabControl.add(tab4, text ='Step 3 Protocol Programmer')
@@ -70,8 +74,6 @@ def graphicalUI():
 	#Section 2 - Pipette Movement 
 
 	#Pipette Movement Increments
-
-
 	#Movement Pad - X Axis
 	#Set Image to variable
 	xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ Y Axis Positive ]
@@ -107,8 +109,6 @@ def graphicalUI():
 	z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5)
 	z_down_b.grid(column = 1, row = 1)
 
-
-
 	#Home
 	home_image = PhotoImage(file="graphic/home.png") 
 	home_b = ttk.Button(tab3, image = home_image, width = 5)
@@ -126,16 +126,19 @@ def graphicalUI():
 
 
 	#########################################################################################################
-	ttk.Label(tab1,
-    	      text ="Lets dive into the\
-        	  world of computers").grid(column = 0,
-                                    row = 0, 
-                                    padx = 30,
-                                    pady = 30)
-
-
+	# #Drop Down Default Selection
+	# varcon = StringVar(root, value=' ')
+	# var_p_a = DoubleVar()
+	# #Selection 1 - Containers
+	# label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 15))
+	# label.grid(column = 0, row = 0, padx = 1)
+	# scale_1 = ttk.Scale(tab1, from_=0, to=42, orient="horizontal", variable = var_p_a)
+	# #dropdown['values'] = [ 'test_c','test_b' ] # Replace to Global pipette variable
+	# scale_1.grid(column = 1, row = 0, padx = 1)
+	# p_value = ttk.Label(tab1, text="0" )
 
     #########################################################################################################
+    #TAB
 
 	#Selection 1 - Pipette
 	label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
@@ -153,7 +156,7 @@ def graphicalUI():
 	dropdown['values'] = [ 'top','bottom', 'blow_out','drop_tip'] # Replace to Global pipette variable
 	dropdown.grid(column = 0, row = 4, padx = 1)
 
-
+	#Pipette Movement Increments
 	#Movement Pad - Z Axis [Pipette Movement] Down
 	#zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") 
 	z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5)
@@ -177,9 +180,6 @@ def graphicalUI():
 	#Save Button - Calibration  
 	save_p = ttk.Button(tab2, image = save_button_image, width = 5)
 	save_p.grid(column = 1, row = 4)
-
-
-
 
 
 	root.mainloop() 
