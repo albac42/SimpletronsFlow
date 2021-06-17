@@ -49,7 +49,7 @@ def graphicalUI():
 	varpip = StringVar(root, value=' ')
   
 	#Selection 1 - Pipette
-	label = ttk.Label(tab3, text='Select a pipette', font = ('Arial', 15))
+	label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 15))
 	label.grid(column = 0, row = 1, padx = 1)
 	dropdown = ttk.Combobox(tab3, textvariable = varpip)
 	dropdown['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
@@ -59,7 +59,7 @@ def graphicalUI():
 	varcon = StringVar(root, value=' ')
 
 	#Selection 1 - Containers
-	label = ttk.Label(tab3, text='Select a containers', font = ('Arial', 15))
+	label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 15))
 	label.grid(column = 0, row = 3, padx = 1)
 	dropdown = ttk.Combobox(tab3, textvariable = varcon)
 	dropdown['values'] = [ 'test_c','test_b' ] # Replace to Global pipette variable
@@ -109,7 +109,17 @@ def graphicalUI():
 
 
 
-	#Save Button
+	#Home
+	home_image = PhotoImage(file="graphic/home.png") 
+	home_b = ttk.Button(tab3, image = home_image, width = 5)
+	home_b.grid(column = 2, row = 4)
+
+	#Move to preconfigured 
+	pre_home_image = PhotoImage(file="graphic/content-save-settings.png")
+	pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5)
+	pre_home_b.grid(column = 3, row = 4)
+
+	#Save Button - Calibration 
 	save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 	save_c = ttk.Button(tab3, image = save_button_image, width = 5)
 	save_c.grid(column = 1, row = 4)
@@ -153,12 +163,24 @@ def graphicalUI():
 	#zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
 	z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5)
 	z_down_bp.grid(column = 1, row = 1)
-  
 
-	#Movement Pad - Z Axis [Pipette Movement] UP
-	#zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
+
+	#Home Button
+	home_b = ttk.Button(tab2, image = home_image, width = 5)
+	home_b.grid(column = 2, row = 4)
+
+	#Move to preconfigured 
+	pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5)
+	pre_home_b.grid(column = 3, row = 4)
+
+  
+	#Save Button - Calibration  
 	save_p = ttk.Button(tab2, image = save_button_image, width = 5)
 	save_p.grid(column = 1, row = 4)
+
+
+
+
 
 	root.mainloop() 
 
