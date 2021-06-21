@@ -22,30 +22,44 @@ def list_containers():
 
 	return 
 
+def graphicalUIprotocol(): # Start Graphical Protocal Interface
+	pass
 
-#Update Value 
-
+def aboutPage():
+	pass
 
 # Create a window
-def graphicalUI():
+def graphicalUIcalibrate():
 	root = Tk()
 	root.title('Simpletrons - OT')
-
+	########################################################################################################
 	#Tab Creation
 	tabControl = ttk.Notebook(root)
 	tab1 = ttk.Frame(tabControl)
+	tab1b = ttk.Frame(tabControl)
 	tab2 = ttk.Frame(tabControl)
 	tab3 = ttk.Frame(tabControl)
 
   	#Tab Header Name
-	tabControl.add(tab1, text ='Step 1 Containers/Pipette Setup')
-	tabControl.add(tab2, text ='Step 2 Calibrate Pipette')
-	tabControl.add(tab3, text ='Step 3 Calibrate Containers')
+	tabControl.add(tab1, text ='Step 1 Pipette Setup')
+	tabControl.add(tab1b, text ='Step 2 Containers Setup')
+	tabControl.add(tab2, text ='Step 3 Calibrate Pipette')
+	tabControl.add(tab3, text ='Step 4 Calibrate Containers')
 	#tabControl.add(tab4, text ='Step 3 Protocol Programmer')
 	#tabControl.add(tab5, text ='Step 4 Start Protocol')
 
 	tabControl.pack(expand = 1, fill ="both")
 	#tabControl.grid(column = 3, row = 1, padx = 1)
+	########################################################################################################
+	#Menu 
+	s_menu = Menu(root)
+	root.config(menu = s_menu)
+
+	file_menu = Menu(s_menu)
+	s_menu.add_cascade(label = "File", menu = file_menu)
+	file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
+	file_menu.add_command(label = "About", command = aboutPage)
+	file_menu.add_command(label = "Exit", command = root.quit )
 
 
 	########################################################################################################
@@ -66,7 +80,7 @@ def graphicalUI():
 	label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 15))
 	label.grid(column = 0, row = 3, padx = 1)
 	dropdown = ttk.Combobox(tab3, textvariable = varcon)
-	dropdown['values'] = [ 'test_c','test_b' ] # Replace to Global pipette variable
+	dropdown['values'] = [ '96_well','96_tip' ] # Replace to Global pipette variable
 	dropdown.grid(column = 0, row = 4, padx = 1)
 
 
@@ -126,16 +140,28 @@ def graphicalUI():
 
 
 	#########################################################################################################
-	# #Drop Down Default Selection
-	# varcon = StringVar(root, value=' ')
-	# var_p_a = DoubleVar()
-	# #Selection 1 - Containers
-	# label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 15))
-	# label.grid(column = 0, row = 0, padx = 1)
-	# scale_1 = ttk.Scale(tab1, from_=0, to=42, orient="horizontal", variable = var_p_a)
-	# #dropdown['values'] = [ 'test_c','test_b' ] # Replace to Global pipette variable
-	# scale_1.grid(column = 1, row = 0, padx = 1)
-	# p_value = ttk.Label(tab1, text="0" )
+	#Drop Down Default Selection
+	varcon = StringVar(root, value=' ')
+	var_p_a = DoubleVar()
+	#Selection 1 - Containers
+	label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 15))
+	label.grid(column = 1, row = 0)
+	#Scale Bar
+	scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
+	scale_1.grid(column = 1, row = 1)
+
+	left_hand_image = PhotoImage(file="graphic/hand-left.png")
+	right_hand_image = PhotoImage(file="graphic/hand-right.png")
+
+	label = ttk.Label(tab1, image=left_hand_image).grid(column = 0,  row =0)
+	label = ttk.Label(tab1, text='L', font = ('Arial', 15) ).grid(column = 0,  row =1)
+	label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
+	label = ttk.Label(tab1, text='R', font = ('Arial', 15) ).grid(column = 2,  row =1)
+
+
+
+	# Pre - Load Default Pipette
+
 
     #########################################################################################################
     #TAB
@@ -186,4 +212,4 @@ def graphicalUI():
 
 
 #Debugging (Run Graphical Interface without backend code)
-graphicalUI()
+graphicalUIcalibrate()
