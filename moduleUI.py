@@ -1,6 +1,10 @@
 #Import User Interface Library 
 from tkinter import *
 
+#Database
+import sqlite3
+from sqlite3 import Error
+
 #START UP GUI
 from tkinter.ttk import Combobox
 import tkinter as tk    
@@ -9,11 +13,13 @@ from tkinter import ttk
 from opentrons import robot, containers, instruments
 import opentrons
 from moduleContainers import *
+from moduleCommands import *
 
 
 
 load_dd_container()
 #connect()
+create_connection('database/data.db')
 
 def list_containers():
 
@@ -28,6 +34,8 @@ def graphicalUIprotocol(): # Start Graphical Protocal Interface
 def aboutPage():
 	pass
 
+
+
 # Create a window
 def graphicalUIcalibrate():
 	root = Tk()
@@ -41,8 +49,8 @@ def graphicalUIcalibrate():
 	tab3 = ttk.Frame(tabControl)
 
   	#Tab Header Name
-	tabControl.add(tab1, text ='Step 1 Pipette Setup')
-	tabControl.add(tab1b, text ='Step 2 Containers Setup')
+	tabControl.add(tab1b, text ='Step 1 Containers Setup')
+	tabControl.add(tab1, text ='Step 2 Pipette Setup')
 	tabControl.add(tab2, text ='Step 3 Calibrate Pipette')
 	tabControl.add(tab3, text ='Step 4 Calibrate Containers')
 	#tabControl.add(tab4, text ='Step 3 Protocol Programmer')
@@ -142,9 +150,17 @@ def graphicalUIcalibrate():
 	#########################################################################################################
 	#Drop Down Default Selection
 	varcon = StringVar(root, value=' ')
-	var_p_a = DoubleVar()
-	#Selection 1 - Containers
-	label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 15))
+	var_p_a = IntVar()
+	var_max_volume = DoubleVar()
+	var_min_volume = DoubleVar()
+	var_aspirate_speed = DoubleVar()
+	var_dispense_speed = DoubleVar()
+	s_tip_rack = StringVar(root, value=' ')
+	s_trash = StringVar(root, value=' ')
+
+
+	#Selection 1 - Axis
+	label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 12))
 	label.grid(column = 1, row = 0)
 	#Scale Bar
 	scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
@@ -154,14 +170,75 @@ def graphicalUIcalibrate():
 	right_hand_image = PhotoImage(file="graphic/hand-right.png")
 
 	label = ttk.Label(tab1, image=left_hand_image).grid(column = 0,  row =0)
-	label = ttk.Label(tab1, text='L', font = ('Arial', 15) ).grid(column = 0,  row =1)
+	label = ttk.Label(tab1, text='L', font = ('Arial', 12) ).grid(column = 0,  row =1)
 	label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
-	label = ttk.Label(tab1, text='R', font = ('Arial', 15) ).grid(column = 2,  row =1)
+	label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
+
+	#Selection 2 - Max Volume
+	label = ttk.Label(tab1, text='Select a max volume', font = ('Arial', 12))
+	label.grid(column = 1, row = 2)
+	#Scale Bar
+	scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
+	scale_2.grid(column = 1, row = 3)
 
 
+	#Selection 3 - Min Volume
+	label = ttk.Label(tab1, text='Select a min volume', font = ('Arial', 12))
+	label.grid(column = 1, row = 4)
+	#Scale Bar
+	scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
+	scale_3.grid(column = 1, row = 5)
 
-	# Pre - Load Default Pipette
 
+	#Selection 3 - aspirate_speed
+	label = ttk.Label(tab1, text='Select aspirate speed', font = ('Arial', 12))
+	label.grid(column = 1, row = 6)
+	#Scale Bar
+	scale_2 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+	scale_2.grid(column = 1, row = 7)
+
+	# Separator object
+	separator = ttk.Separator(tab1, orient='vertical')
+	separator.grid(row=0,column=4, rowspan=10, ipady=140)
+
+
+	#Selection 4 - dispense_speed
+	label = ttk.Label(tab1, text='Select a dispense speed', font = ('Arial', 12))
+	label.grid(column = 6, row = 0)
+	#Scale Bar
+	scale_3 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+	scale_3.grid(column = 6, row = 1)
+
+	#Selection 5 - Select a Tip Rack
+	label = ttk.Label(tab1, text='Select a Tip Rack', font = ('Arial', 12))
+	label.grid(column = 6, row = 2)
+	dropdown = ttk.Combobox(tab1, textvariable = s_tip_rack)
+	dropdown['values'] = [ '96_tip_p100', '96_tip_p1000'] # Replace to Global pipette variable
+	dropdown.grid(column = 6, row = 3)
+
+	#Selection 6 - Select a Bin
+	label = ttk.Label(tab1, text='Select a Bin', font = ('Arial', 12))
+	label.grid(column = 6, row = 4)
+	dropdown = ttk.Combobox(tab1, textvariable = s_trash)
+	dropdown['values'] = [ 'trash_p100', 'trash_p1000'] # Replace to Global pipette variable
+	dropdown.grid(column = 6, row = 5)
+
+
+	save_pip = ttk.Button(tab1, image = save_button_image, width = 5)
+	save_pip.grid(column = 6, row = 6)
+
+	# Separator object
+	separator = ttk.Separator(tab1, orient='vertical')
+	separator.grid(row=0,column=8, rowspan=10, ipady=140)
+
+	#Use Pre-Configured Pipetting in script/database
+	label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
+	label.grid(column = 9, row = 0)
+
+	pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5)
+	pre_select_pip.grid(column = 10, row = 0)
+
+	# Save New Pipette 
 
     #########################################################################################################
     #TAB

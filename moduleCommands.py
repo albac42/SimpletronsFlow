@@ -10,6 +10,9 @@ from modulePipetting import *
 from moduleTransportation import getTransportposition
 from time import sleep
 
+import sqlite3
+from sqlite3 import Error
+
 import warnings
 import serial
 import serial.tools.list_ports
@@ -99,3 +102,26 @@ def reset_all():
     
 def load_calibration():
     print('Loaded Pre-Configured Robot Calibration')
+
+
+##################################################################
+# Database
+# Test Connection
+def create_connection(db_file):
+    """ create a test database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+        print('Datbase Found')
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+# def clear_database(db_file, table):
+#     conn = None
+#     try:
+#         conn = sqlite3.connect(db_file)
