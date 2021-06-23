@@ -15,16 +15,14 @@ import opentrons
 from moduleContainers import *
 from moduleCommands import *
 
-
+#Global Variable
+container_list = [ '', 'trash','96_tip', '96_well' ]
 
 load_dd_container()
 #connect()
 create_connection('database/data.db')
 
 def list_containers():
-
-
-
 
 	return 
 
@@ -34,9 +32,32 @@ def graphicalUIprotocol(): # Start Graphical Protocal Interface
 def aboutPage():
 	pass
 
+###########################################################################################################
+#
+# Containers Creation UI
+#
+###########################################################################################################
+def containersCreationUi():
+	rootNew = Tk()
+	rootNew.title('Simpletrons - OT - Container Creation')
 
 
-# Create a window
+	#Create Containers
+	var_container_name = StringVar()
+
+	label = ttk.Label(rootNew, text='Set a Name:', font = ('Arial', 12))
+	label.grid(column = 0, row = 1)	
+	
+	e_container_name = Entry(rootNew, bd =5, justify = CENTER, textvariable = var_container_name)
+	e_container_name.grid(column = 0, row = 2)	
+
+
+
+###########################################################################################################
+#
+# Calibration UI
+#
+###########################################################################################################
 def graphicalUIcalibrate():
 	root = Tk()
 	root.title('Simpletrons - OT')
@@ -59,7 +80,7 @@ def graphicalUIcalibrate():
 	tabControl.pack(expand = 1, fill ="both")
 	#tabControl.grid(column = 3, row = 1, padx = 1)
 	########################################################################################################
-	#Menu 
+	#Top Menu 
 	s_menu = Menu(root)
 	root.config(menu = s_menu)
 
@@ -68,11 +89,126 @@ def graphicalUIcalibrate():
 	file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
 	file_menu.add_command(label = "About", command = aboutPage)
 	file_menu.add_command(label = "Exit", command = root.quit )
+	########################################################################################################
+	#
+	#Container Setup
+	#
+	A1_W = StringVar(root, value='')
+	A2_W = StringVar(root, value='')
+	A3_W = StringVar(root, value='')
+	B1_W = StringVar(root, value='')
+	B2_W = StringVar(root, value='')
+	B3_W = StringVar(root, value='')
+	C1_W = StringVar(root, value='')
+	C2_W = StringVar(root, value='')
+	C3_W = StringVar(root, value='')
+	D1_W = StringVar(root, value='')
+	D2_W = StringVar(root, value='')
+	D3_W = StringVar(root, value='')
+	E1_W = StringVar(root, value='')
+	E2_W = StringVar(root, value='')
+	E3_W = StringVar(root, value='')
+
+	background_image=PhotoImage(file='graphic/workspace.png')
+	my_canvas = ttk.Label(tab1b, image = background_image)
+	my_canvas.grid(column = 0, row = 0, rowspan = 3, columnspan = 5)
+
+	#Col A
+	dropdown = ttk.Combobox(tab1b, textvariable = A1_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 0, row = 2, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = A2_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 0, row = 1, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = A3_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 0, row = 0, padx = 1)
+	dropdown.lift()
+
+	#Col B
+	dropdown = ttk.Combobox(tab1b, textvariable = B1_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 1, row = 2, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = B2_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 1, row = 1, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = B3_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 1, row = 0, padx = 1)
+	dropdown.lift()
+
+	#Col C
+	dropdown = ttk.Combobox(tab1b, textvariable = C1_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 2, row = 2, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = C2_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 2, row = 1, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = C3_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 2, row = 0, padx = 1)
+	dropdown.lift()
+
+	#Col D
+	dropdown = ttk.Combobox(tab1b, textvariable = D1_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 3, row = 2, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = D2_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 3, row = 1, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = D3_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 3, row = 0, padx = 1)
+	dropdown.lift()
+	#Col E
+	dropdown = ttk.Combobox(tab1b, textvariable = E1_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 4, row = 2, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = E2_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 4, row = 1, padx = 1)
+	dropdown.lift()
+
+	dropdown = ttk.Combobox(tab1b, textvariable = E3_W)
+	dropdown['values'] = container_list 
+	dropdown.grid(column = 4, row = 0, padx = 1)
+	dropdown.lift()
+
+	#Save Button - Calibration 
+	save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+	save_w = ttk.Button(tab1b, image = save_button_image, width = 5)
+	save_w.grid(column = 2, row = 3)
+
+	#Button
+
+	########################################################################################################
+
+
 
 
 	########################################################################################################
+	#Calibrate Containers
+	########################################################################################################
 	#Drop Down Default Selection
-	varpip = StringVar(root, value=' ')
+	varpip = StringVar(root, value='')
   
 	#Selection 1 - Pipette
 	label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 15))
@@ -82,7 +218,7 @@ def graphicalUIcalibrate():
 	dropdown.grid(column = 0, row = 2, padx = 1)
 
 	#Drop Down Default Selection
-	varcon = StringVar(root, value=' ')
+	varcon = StringVar(root, value='')
 
 	#Selection 1 - Containers
 	label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 15))
@@ -90,8 +226,6 @@ def graphicalUIcalibrate():
 	dropdown = ttk.Combobox(tab3, textvariable = varcon)
 	dropdown['values'] = [ '96_well','96_tip' ] # Replace to Global pipette variable
 	dropdown.grid(column = 0, row = 4, padx = 1)
-
-
 
 	#Section 2 - Pipette Movement 
 
@@ -142,22 +276,21 @@ def graphicalUIcalibrate():
 	pre_home_b.grid(column = 3, row = 4)
 
 	#Save Button - Calibration 
-	save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+	#save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 	save_c = ttk.Button(tab3, image = save_button_image, width = 5)
 	save_c.grid(column = 1, row = 4)
 
-
 	#########################################################################################################
+	#Setup Pipette
 	#Drop Down Default Selection
-	varcon = StringVar(root, value=' ')
+	varcon = StringVar(root, value='')
 	var_p_a = IntVar()
 	var_max_volume = DoubleVar()
 	var_min_volume = DoubleVar()
 	var_aspirate_speed = DoubleVar()
 	var_dispense_speed = DoubleVar()
-	s_tip_rack = StringVar(root, value=' ')
-	s_trash = StringVar(root, value=' ')
-
+	s_tip_rack = StringVar(root, value='')
+	s_trash = StringVar(root, value='')
 
 	#Selection 1 - Axis
 	label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 12))
@@ -181,14 +314,12 @@ def graphicalUIcalibrate():
 	scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
 	scale_2.grid(column = 1, row = 3)
 
-
 	#Selection 3 - Min Volume
 	label = ttk.Label(tab1, text='Select a min volume', font = ('Arial', 12))
 	label.grid(column = 1, row = 4)
 	#Scale Bar
 	scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
 	scale_3.grid(column = 1, row = 5)
-
 
 	#Selection 3 - aspirate_speed
 	label = ttk.Label(tab1, text='Select aspirate speed', font = ('Arial', 12))
@@ -200,7 +331,6 @@ def graphicalUIcalibrate():
 	# Separator object
 	separator = ttk.Separator(tab1, orient='vertical')
 	separator.grid(row=0,column=4, rowspan=10, ipady=140)
-
 
 	#Selection 4 - dispense_speed
 	label = ttk.Label(tab1, text='Select a dispense speed', font = ('Arial', 12))
@@ -223,7 +353,7 @@ def graphicalUIcalibrate():
 	dropdown['values'] = [ 'trash_p100', 'trash_p1000'] # Replace to Global pipette variable
 	dropdown.grid(column = 6, row = 5)
 
-
+	# Save Button
 	save_pip = ttk.Button(tab1, image = save_button_image, width = 5)
 	save_pip.grid(column = 6, row = 6)
 
@@ -238,10 +368,9 @@ def graphicalUIcalibrate():
 	pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5)
 	pre_select_pip.grid(column = 10, row = 0)
 
-	# Save New Pipette 
 
     #########################################################################################################
-    #TAB
+    #Calibrate Pipette
 
 	#Selection 1 - Pipette
 	label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
@@ -261,15 +390,12 @@ def graphicalUIcalibrate():
 
 	#Pipette Movement Increments
 	#Movement Pad - Z Axis [Pipette Movement] Down
-	#zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") 
 	z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5)
 	z_up_bp.grid(column = 1, row = 3)
 
-	#Movement Pad - Z Axis [Pipette Movement] UP
-	#zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
+	#Movement Pad - Z Axis [Pipette Movement] UP 
 	z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5)
 	z_down_bp.grid(column = 1, row = 1)
-
 
 	#Home Button
 	home_b = ttk.Button(tab2, image = home_image, width = 5)
@@ -279,11 +405,9 @@ def graphicalUIcalibrate():
 	pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5)
 	pre_home_b.grid(column = 3, row = 4)
 
-  
 	#Save Button - Calibration  
 	save_p = ttk.Button(tab2, image = save_button_image, width = 5)
 	save_p.grid(column = 1, row = 4)
-
 
 	root.mainloop() 
 
