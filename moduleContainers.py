@@ -24,18 +24,18 @@ def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth
     #var = container.load(name, location, deck)
 
 
-def load_container(name, location):
+def load_container(name, location, container):
     print('Loading Container', name) #                       
-    name = container.load(name, location) # Load Container to a location
+    name = containers.load(container, location) # Load Container to a location
     print('Loaded Container', name) # 
 
 
 #Load some useful default containers 
 def load_dd_container():
     print ('Loading Default Preset Containers')
-    trashA = containers.load('trash-box', 'A1') 
-    P_A = containers.load('tiprack-1000ul-chem', 'A2')
-    P_B = containers.load('tiprack-1000ul-chem', 'A3')
+    #trashA = containers.load('trash-box', 'A1') 
+    #P_A = containers.load('tiprack-1000ul-chem', 'A2')
+    #P_B = containers.load('tiprack-1000ul-chem', 'A3')
     print('Loaded default Container')
 
 #create_container(test_c, 10, 10, 2, 5, 5, 1)

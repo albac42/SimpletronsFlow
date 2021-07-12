@@ -1,4 +1,3 @@
-
 from opentrons import robot, containers, instruments
 import opentrons
 import curses
@@ -10,6 +9,14 @@ from moduleCommands import *
 from modulePipetting import *
 from moduleContainers import *
 
+#Database
+import sqlite3
+from sqlite3 import Error
+
+#START UP GUI
+from tkinter.ttk import Combobox
+import tkinter as tk    
+from tkinter import ttk
 
 
 #equipment=getEquipment()
@@ -109,24 +116,23 @@ def calibrationControl(direction):
         print('Warning: Last action was not sent to robot due to invalid direction command')
         position=list(robot._driver.get_head_position()["current"])
 
-def moveDefaultLocation():
+def moveDefaultLocation(pipette):
     global position
     well = currentlyCalibrating
     pos = well.from_center(x=0, y=0, z=-1, reference=currentlyCalibrating)
-    location = (equipment[currentlyCalibrating], pos)
-    equipment[currentPipette].move_to(location)
+    location = (pipette, pos)
+    pipette.move_to(location)
     position=list(robot._driver.get_head_position()["current"])
 
 def saveCalibration(rack, pipette):
-
-    pip = pipette
+    #pip = pipette
     well = rack[0]
     pos = well.from_center(x=0, y=0, z=-1, reference=rack)
-    location = (equipment[currentlyCalibrating], pos)
-    pip.calibrate_position(location)
+    location = (pipette, pos)
+    pipette.calibrate_position(location)
     print('Calibration Saved')
 
-def calibrationControlPlugger(pipette):
+def calibrationControlPlugger(pipette, key):
     global movementAmount
 
     pip = pipette
@@ -137,6 +143,13 @@ def calibrationControlPlugger(pipette):
         plungerPos=plungerPos+movementAmount
 
     pip.motor.move(plungerPos)
+
+def move_pip_action_home():
+    pip = varpip.get()
+    print(pip)
+    pip.home()
+    print('Homing Pipette')
+    plungerPos=0
 
 #def selectWhatToCalibrate():
 
