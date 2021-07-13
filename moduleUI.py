@@ -20,12 +20,38 @@ from moduleCalibrate import *
 
 #Global Variable
 container_list = [ '', 'trash-box','96_tip', '96-flat' ]
+loaded_container_type = []
+loaded_containers = []
+count_CT = 0
+count_C = 0
 
-
-load_dd_container()
+#load_dd_container()
 #connect()
 create_connection('database/data.db')
 
+
+def update_containers_list_type():
+
+	global loaded_container_type
+	global count_C
+
+	for name, container in robot.get_containers():
+	    loaded_container_type.append(count_C)
+	    loaded_container_type[count_C]= name
+	    count_C = count_C + 1
+
+
+	#Sort List
+	loaded_container_type = sorted(loaded_container_type)
+	print('Loaded Container Type:', loaded_container_type)
+
+def update_containers_list(name):
+	global loaded_containers
+	global count_CT
+
+	loaded_containers.append(count_CT)
+	loaded_containers[count_CT]= name
+	count_CT = count_CT + 1
 
 ###########################################################################################################
 #
@@ -38,7 +64,7 @@ def save_pip_action():
 	pos = pippos.get()
 	print(pos)
 	saveCalibration(pip, pos)
-	print('Command Sucessfull Sent To Save Calibration')
+	print('Command Sucessfull Saved Calibration')
 
 def move_pip_action_up():
 	pip = varpip.get()
@@ -57,30 +83,41 @@ def move_prepip_action():
 #Reference
 #load_container(name, location, container)
 def setup_workspace():
+	#Reset Counter
+	global count_C
+	global count_CT
+	count_CT = 0
+	#count_C = 0
+
+	loaded_containers.clear()
+
 	if A1_W.get() != '':
 		print('Entry Found in A1')
 		AA = 'A1_'+str(A1_W.get())
 		BB = A1_W.get()
 		print(AA)
-		print(BB)
+		update_containers_list(AA)
 		load_container(AA, 'A1', BB)
 	if A2_W.get() != '':
 		print('Entry Found in A2')
 		AA = 'A3_'+str(A2_W.get())
 		BB = A2_W.get()
 		print(AA)
+		update_containers_list(AA)
 		load_container(AA, 'A2', BB)
 	if A3_W.get() != '':
 		print('Entry Found in A3')
 		AA = 'A3_'+str(A3_W.get())
 		BB = A3_W.get()
 		print(AA)
+		update_containers_list(AA)
 		load_container(AA, 'A3', BB)
 	if B1_W.get() != '':
 		print('Entry Found in B1')
 		AA = 'A1_'+str(B1_W.get())
 		BB = B1_W.get()
 		print(AA)
+		update_containers_list(AA)
 		load_container(AA, 'B1', BB)
 	if B2_W.get() != '':
 		print('Entry Found in B2')
@@ -148,6 +185,28 @@ def setup_workspace():
 		BB = E3_W.get()
 		print(AA)
 		load_container(AA, 'E3', BB)
+	#Update Loaded in Workspaec Container List
+	update_containers_list_type()
+	print(loaded_containers)
+
+
+def update_dropdown_tip_rack():
+    list = loaded_containers
+    dropdown_tip_rack['values'] = list	
+
+
+def update_dropdown_trash():
+    list = loaded_containers
+    dropdown_trash['values'] = list
+
+
+
+
+def load_pre_pip():
+# 	loadpipette (a, 200, 100, 1000TiprackB2, TrashA2)
+# 	loadpipette (b, 200, 100, 1000TiprackB2, TrashA2)
+
+	return 
 
 
 def list_containers():
@@ -183,12 +242,17 @@ def containersCreationUi():
 
 ###########################################################################################################
 #
+#
+#
 # Calibration UI
+#
+#
 #
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
-########################################################################################################
+###########################################################################################################
+#
 #Tab Creation
 tabControl = ttk.Notebook(root)
 tab1 = ttk.Frame(tabControl)
@@ -196,7 +260,7 @@ tab1b = ttk.Frame(tabControl)
 tab2 = ttk.Frame(tabControl)
 tab3 = ttk.Frame(tabControl)
 
-	#Tab Header Name
+#Tab Header Name
 tabControl.add(tab1b, text ='Step 1 Containers Setup')
 tabControl.add(tab1, text ='Step 2 Pipette Setup')
 tabControl.add(tab2, text ='Step 3 Calibrate Pipette')
@@ -207,6 +271,7 @@ tabControl.add(tab3, text ='Step 4 Calibrate Containers')
 tabControl.pack(expand = 1, fill ="both")
 #tabControl.grid(column = 3, row = 1, padx = 1)
 ########################################################################################################
+#
 #Top Menu 
 s_menu = Menu(root)
 root.config(menu = s_menu)
@@ -469,16 +534,16 @@ scale_3.grid(column = 6, row = 1)
 #Selection 5 - Select a Tip Rack
 label = ttk.Label(tab1, text='Select a Tip Rack', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
-dropdown = ttk.Combobox(tab1, textvariable = s_tip_rack)
-dropdown['values'] = [ '96_tip_p100', '96_tip_p1000'] # Replace to Global pipette variable
-dropdown.grid(column = 6, row = 3)
+dropdown_tip_rack = ttk.Combobox(tab1, textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
+#dropdown['values'] = loaded_containers # Replace to Global pipette variable
+dropdown_tip_rack.grid(column = 6, row = 3)
 
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin', font = ('Arial', 12))
 label.grid(column = 6, row = 4)
-dropdown = ttk.Combobox(tab1, textvariable = s_trash)
-dropdown['values'] = [ 'trash_p100', 'trash_p1000'] # Replace to Global pipette variable
-dropdown.grid(column = 6, row = 5)
+dropdown_trash = ttk.Combobox(tab1, textvariable = s_trash, postcommand = update_dropdown_trash)
+#dropdown['values'] = loaded_containers # Replace to Global pipette variable
+dropdown_trash.grid(column = 6, row = 5)
 
 # Save Button
 save_pip = ttk.Button(tab1, image = save_button_image, width = 5)
@@ -492,7 +557,7 @@ separator.grid(row=0,column=8, rowspan=10, ipady=140)
 label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
 label.grid(column = 9, row = 0)
 
-pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5)
+pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5, command = load_pre_pip)
 pre_select_pip.grid(column = 10, row = 0)
 
 

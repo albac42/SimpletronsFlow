@@ -55,6 +55,7 @@ def connect():
     find_ot()
     robot.connect(robotUSB)
     print('Opentrons Robot Connected')
+    #versions = robot.versions()
     #robot2.connect()
     #robot2.connect(robot2USB)
     #print('Opentrons Robot Connected')
