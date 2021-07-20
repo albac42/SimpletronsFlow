@@ -8,36 +8,36 @@ from moduleCommands import *
 
 #New Pipetting Setup
 
-def loadpipette (axis_s,max_v_s, min_v_s, tiprack, trash):
+def loadpipette (axis_s,max_v_s, min_v_s, asp_s, dis_a,tiprack, trash):
 
   #Eror Check
-  if max_v_s > 200:
-    max_v_s = 200
-    print('Loaded Default Max Volume due to exceed device max amount')
-  if min_v_s  < 20:
-    min_v_s = 20
-    print('Loaded Default Min Volume due to exceed device max amount')
+  if max_v_s > 1000:
+    max_v_s = 1000
+    print('Loaded Default Max Volume due to exceed device max amount (1000 uL Max)')
+  if min_v_s  < 5:
+    min_v_s = 5
+    print('Loaded Default Min Volume due to exceed device max amount (5 uL Min)')
 
 
-  if axis_s == b:
-    pipeipette_b = instruments.Pipette(
+  if axis_s == 'b':
+    pipette_b = instruments.Pipette(
       axis='b',
       name='pd1000',
       max_volume=max_v_s,
       min_volume=min_v_s,
       channels = 1,
-      aspirate_speed=200,
-      dispense_speed=600,
+      aspirate_speed=asp_s,
+      dispense_speed=dis_a,
       tip_racks=tiprack,
       trash_container=trash
       )
     print ("Loaded B Axis Pipette")
-  elif axis_s == a:
-    pipeipette_a = instruments.Pipette(
+  elif axis_s == 'a':
+    pipette_a = instruments.Pipette(
       axis='a',
       name='pd100',
-      max_volume=max_v_s,
-      min_volume=min_v_s,
+      max_volume=asp_s,
+      min_volume=dis_a,
       channels = 1,
       aspirate_speed=200,
       dispense_speed=600,
@@ -52,9 +52,9 @@ def loadpipette (axis_s,max_v_s, min_v_s, tiprack, trash):
 
 def pickuptip (pipette, well):
   if pipette == b:
-    pipeipette_b.pick_up_tip(tiprack.wells('A1'))
+    pipette_b.pick_up_tip(tiprack.wells('A1'))
   elif pipette == a:
-    pipeipette_a.pick_up_tip(tiprack.wells('A1'))
+    pipette_a.pick_up_tip(tiprack.wells('A1'))
   else:
     print("Pipette and Wells Error, Please check value are correct")
 

@@ -17,17 +17,28 @@ import opentrons
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
+from moduleLink import *
+
+version = 'Version: Private Alpha 0.1'
 
 #Global Variable
-container_list = [ '', 'trash-box','96_tip', '96-flat' ]
+container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', '96-PCR-flat', '96-PCR-tall',  '96-deep-well']
+loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
 count_CT = 0
+count_CTT = 0
 count_C = 0
+
+
 
 #load_dd_container()
 #connect()
 create_connection('database/data.db')
+
+# Start GUI
+root = Tk()
+root.title('Simpletrons - OT')
 
 
 def update_containers_list_type():
@@ -52,6 +63,11 @@ def update_containers_list(name):
 	loaded_containers.append(count_CT)
 	loaded_containers[count_CT]= name
 	count_CT = count_CT + 1
+
+def update_pipette(name, num):
+
+	loaded_pipette_list[num]= name
+
 
 ###########################################################################################################
 #
@@ -79,7 +95,48 @@ def move_prepip_action():
 	moveDefaultLocation(pip)
 	print('Scuessfully Moved To Saved Position')
 
+#Save Custom Pipette
+def action_save_pip():
+	if var_p_a.get() == 0:
+		axis = 'b'
+		print(axis)
+		update_pipette('pipette_b', 0)
+	elif var_p_a.get() == 1:
+		axis = 'a'
+		print(axis)
+		update_pipette('pipette_a', 1)
 
+	max_vol = var_max_volume.get()
+	min_vol = var_min_volume.get()
+	asp_speed = var_aspirate_speed.get()
+	dis_speed = var_dispense_speed.get()
+
+	tiprack = s_tip_rack.get()
+	trash = s_trash.get()
+
+	print(max_vol)
+	print(min_vol)
+	print(asp_speed)
+	print(dis_speed)
+
+	print(tiprack)
+	print(trash)
+
+	loadpipette (axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+	print(loaded_pipette_list)
+
+
+def load_pre_workspace(): #For Testing
+	pass
+
+
+def load_pre_pip(): #For Testing
+
+	loadpipette ('a', 1000, 100, 800, 1200, 'B1_tiprack-1000ul', 'A2_trash-box')
+	update_pipette('pipette_a', 1)
+	loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
+	update_pipette('pipette_b', 0)
+	
 #Reference
 #load_container(name, location, container)
 def setup_workspace():
@@ -96,13 +153,15 @@ def setup_workspace():
 		AA = 'A1_'+str(A1_W.get())
 		BB = A1_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'A1', BB)
 	if A2_W.get() != '':
 		print('Entry Found in A2')
-		AA = 'A3_'+str(A2_W.get())
+		AA = 'A2_'+str(A2_W.get())
 		BB = A2_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'A2', BB)
 	if A3_W.get() != '':
@@ -110,88 +169,103 @@ def setup_workspace():
 		AA = 'A3_'+str(A3_W.get())
 		BB = A3_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'A3', BB)
 	if B1_W.get() != '':
 		print('Entry Found in B1')
-		AA = 'A1_'+str(B1_W.get())
+		AA = 'B1_'+str(B1_W.get())
 		BB = B1_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'B1', BB)
 	if B2_W.get() != '':
 		print('Entry Found in B2')
-		AA = 'A1_'+str(B2_W.get())
+		AA = 'B2_'+str(B2_W.get())
 		BB = B2_W.get()
 		print(AA)
+
+		update_containers_list(AA)
 		load_container(AA, 'B2', BB)
 	if B3_W.get() != '':
 		print('Entry Found in B3')
-		AA = 'A1_'+str(B3_W.get())
+		AA = 'B3_'+str(B3_W.get())
 		BB = B3_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'B3', BB)
 	if C1_W.get() != '':
 		print('Entry Found in C1')
-		AA = 'A1_'+str(C1_W.get())
+		AA = 'C1_'+str(C1_W.get())
 		BB = C1_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'C1', BB)
 	if C2_W.get() != '':
 		print('Entry Found in C2')
-		AA = 'A1_'+str(C2_W.get())
+		AA = 'C2_'+str(C2_W.get())
 		BB = C2_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'C2', BB)
 	if C3_W.get() != '':
 		print('Entry Found in C3')
-		AA = 'A1_'+str(C3_W.get())
+		AA = 'C3_'+str(C3_W.get())
 		BB = C3_W.get()
 		print(AA)
+
+		update_containers_list(AA)
 		load_container(AA, 'C3', BB)
 	if D1_W.get() != '':
 		print('Entry Found in D1')
-		AA = 'A1_'+str(D1_W.get())
+		AA = 'D1_'+str(D1_W.get())
 		BB = D1_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'D1', BB)
 	if D2_W.get() != '':
 		print('Entry Found in D2')
-		AA = 'A1_'+str(D2_W.get())
+		AA = 'D2_'+str(D2_W.get())
 		BB = D2_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'D2', BB)
 	if D3_W.get() != '':
 		print('Entry Found in D3')
-		AA = 'A1_'+str(D3_W.get())
+		AA = 'D3_'+str(D3_W.get())
 		BB = D3_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'D3', BB)
 	if E1_W.get() != '':
 		print('Entry Found in E1')
-		AA = 'A1_'+str(E1_W.get())
+		AA = 'E1_'+str(E1_W.get())
 		BB = E1_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'E1', BB)
 	if E2_W.get() != '':
 		print('Entry Found in E2')
-		AA = 'A1_'+str(E2_W.get())
+		AA = 'E2_'+str(E2_W.get())
 		BB = E2_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'E2', BB)
 	if E3_W.get() != '':
 		print('Entry Found in E3')
-		AA = 'A1_'+str(E3_W.get())
+		AA = 'E3_'+str(E3_W.get())
 		BB = E3_W.get()
 		print(AA)
+
 		update_containers_list(AA)
 		load_container(AA, 'E3', BB)
 	#Update Loaded in Workspaec Container List
@@ -199,23 +273,24 @@ def setup_workspace():
 	print(loaded_containers)
 
 
+#Update Tip Rack List
 def update_dropdown_tip_rack():
     list = loaded_containers
     dropdown_tip_rack['values'] = list	
 
-
+#Update Tip Rack List
 def update_dropdown_trash():
     list = loaded_containers
     dropdown_trash['values'] = list
 
 
+def update_dropdown_pip():
+    list = loaded_pipette_list
+    dropdown_cpip['values'] = list	
 
-
-def load_pre_pip():
-# 	loadpipette (a, 200, 100, 1000TiprackB2, TrashA2)
-# 	loadpipette (b, 200, 100, 1000TiprackB2, TrashA2)
-
-	return 
+def update_dropdown_pip_c():
+    list = loaded_pipette_list
+    dropdown_varpip_c['values'] = list	
 
 
 def list_containers():
@@ -226,8 +301,32 @@ def graphicalUIprotocol(): # Start Graphical Protocal Interface
 	pass
 
 def aboutPage():
+	confirmation_box(1)
 	pass
 
+
+
+###########################################################################################################
+#
+# Containers Creation UI
+#
+###########################################################################################################
+
+def confirmation_box(variable):
+
+	global version
+
+	newWindow = Toplevel(root)
+
+	newWindow.title("Simpletrons - OT")
+	newWindow.geometry("200x60")
+
+
+	if variable == 1:
+		label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
+		label.grid(column = 0, row = 0, sticky="NW")
+		label2 = Label(newWindow, text=version, font = ('Arial', 15))
+		label2.grid(column = 0, row = 1, sticky="NW")
 ###########################################################################################################
 #
 # Containers Creation UI
@@ -258,8 +357,8 @@ def containersCreationUi():
 #
 #
 ###########################################################################################################
-root = Tk()
-root.title('Simpletrons - OT')
+# root = Tk()
+# root.title('Simpletrons - OT')
 ###########################################################################################################
 #
 #Tab Creation
@@ -393,10 +492,15 @@ dropdown['values'] = container_list
 dropdown.grid(column = 4, row = 0, padx = 1)
 dropdown.lift()
 
-#Save Button - Calibration 
+#Save Button - Save Workspace 
 save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 save_w = ttk.Button(tab1b, image = save_button_image, width = 5, command = setup_workspace)
 save_w.grid(column = 2, row = 3)
+
+#Save Button - Load Pre-Configured Workspace
+pree_home_image = PhotoImage(file="graphic/content-save-settings.png")
+save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
+save_w.grid(column = 3, row = 3)
 
 #Button
 
@@ -414,9 +518,9 @@ varpip = StringVar(root, value='')
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 15))
 label.grid(column = 0, row = 1, padx = 1)
-dropdown = ttk.Combobox(tab3, textvariable = varpip)
-dropdown['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
-dropdown.grid(column = 0, row = 2, padx = 1)
+dropdown_varpip_c = ttk.Combobox(tab3, textvariable = varpip, postcommand = update_dropdown_pip_c)
+#dropdown['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
+dropdown_varpip_c.grid(column = 0, row = 2, padx = 1)
 
 #Drop Down Default Selection
 varcon = StringVar(root, value='')
@@ -509,65 +613,101 @@ label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
 label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
 
 #Selection 2 - Max Volume
+var_max_volume = IntVar()
+
 label = ttk.Label(tab1, text='Select a max volume', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
 scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
+#Sync Entry Box
+text = Entry(tab1, width=3, textvariable=var_max_volume)
+text.grid(column = 0, row = 3, padx=5)
+text.bind("<Return>", lambda event: scale_2.configure(to=var_max_volume.get()))
+#Unit
+label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
+label.grid(column = 2, row = 3)
 
 #Selection 3 - Min Volume
+var_min_volume = IntVar()
+
 label = ttk.Label(tab1, text='Select a min volume', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
 scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
+#Sync Entry Box
+text = Entry(tab1, width=3, textvariable=var_min_volume)
+text.grid(column = 0, row = 5, padx=5)
+text.bind("<Return>", lambda event: scale_3.configure(to=var_min_volume.get()))
+#Unit
+label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
+label.grid(column = 2, row = 5)
 
 #Selection 3 - aspirate_speed
+var_aspirate_speed = IntVar()
+
 label = ttk.Label(tab1, text='Select aspirate speed', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
-scale_2 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
-scale_2.grid(column = 1, row = 7)
+scale_4 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4.grid(column = 1, row = 7)
+#Sync Entry Box
+text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
+text.grid(column = 0, row = 7, padx=5)
+text.bind("<Return>", lambda event: scale_4.configure(to=var_aspirate_speed.get()))
+#Unit
+label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
+label.grid(column = 2, row = 7)
 
 # Separator object
 separator = ttk.Separator(tab1, orient='vertical')
-separator.grid(row=0,column=4, rowspan=10, ipady=140)
+separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
 #Selection 4 - dispense_speed
+var_dispense_speed = IntVar()
+
 label = ttk.Label(tab1, text='Select a dispense speed', font = ('Arial', 12))
-label.grid(column = 6, row = 0)
+label.grid(column = 1, row = 8)
 #Scale Bar
-scale_3 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
-scale_3.grid(column = 6, row = 1)
+scale_5 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5.grid(column = 1, row = 9)
+#Sync Entry Box
+text = Entry(tab1, width=3, textvariable=var_dispense_speed)
+text.grid(column = 0, row = 9, padx=5)
+text.bind("<Return>", lambda event: scale_5.configure(to=var_dispense_speed.get()))
+#Unit
+label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
+label.grid(column = 2, row = 9)
 
 #Selection 5 - Select a Tip Rack
 label = ttk.Label(tab1, text='Select a Tip Rack', font = ('Arial', 12))
-label.grid(column = 6, row = 2)
+label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
-dropdown_tip_rack.grid(column = 6, row = 3)
+dropdown_tip_rack.grid(column = 6, row = 1)
 
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin', font = ('Arial', 12))
-label.grid(column = 6, row = 4)
+label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1, textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
-dropdown_trash.grid(column = 6, row = 5)
+dropdown_trash.grid(column = 6, row = 3)
 
 # Save Button
-save_pip = ttk.Button(tab1, image = save_button_image, width = 5)
-save_pip.grid(column = 6, row = 6)
+save_pip = ttk.Button(tab1, image = save_button_image, width = 5, command = action_save_pip)
+save_pip.grid(column = 6, row = 4)
 
 # Separator object
 separator = ttk.Separator(tab1, orient='vertical')
-separator.grid(row=0,column=8, rowspan=10, ipady=140)
+separator.grid(row=0,column=8, rowspan=10, ipady=180)
 
 #Use Pre-Configured Pipetting in script/database
 label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
-label.grid(column = 9, row = 0)
+label.grid(column = 6, row = 5)
 
 pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5, command = load_pre_pip)
-pre_select_pip.grid(column = 10, row = 0)
+pre_select_pip.grid(column = 6, row = 6)
 
 
 #########################################################################################################
@@ -576,8 +716,8 @@ pre_select_pip.grid(column = 10, row = 0)
 #Selection 1 - Pipette
 label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
 label.grid(column = 0, row = 1, padx = 1)
-dropdown_cpip = ttk.Combobox(tab2, textvariable = varpip)
-dropdown_cpip['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
+dropdown_cpip = ttk.Combobox(tab2, textvariable = varpip, postcommand = update_dropdown_pip)
+#dropdown_cpip['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
 dropdown_cpip.grid(column = 0, row = 2, padx = 1)
 
 #Drop Down Default Selection
