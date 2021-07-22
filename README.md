@@ -12,4 +12,6 @@ Simplify Opentrons API 1 for OT-1
 If no error occurs, you're all set. If not, check our FAQ. 
 
 
-# 
+# How to Run Program
+
+`python3 main.py`
