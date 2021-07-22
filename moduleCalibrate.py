@@ -30,6 +30,7 @@ from tkinter import ttk
 
 
 #Load Default Containers 
+
 #load_dd_container()
 
 # #Create Blank Array [ Global Variable ]
@@ -91,7 +92,8 @@ def changeDirectionSpeed(speed):
 def calibrationControl(direction):
     global position
     global movementAmount
-    if direction == 'z_up':
+
+    if direction == "z_up":
         position[2]=position[2]+movementAmount
         position=list(robot._driver.get_head_position()["current"])
     if direction == "z_down":
@@ -114,15 +116,25 @@ def calibrationControl(direction):
         position=list(robot._driver.get_head_position()["current"])
     else:
         print('Warning: Last action was not sent to robot due to invalid direction command')
+
         position=list(robot._driver.get_head_position()["current"])
 
-def moveDefaultLocation(pipette):
+def moveHome():
+    robot.home()
+    position=list(robot._driver.get_head_position()["current"])
+
+def moveDefaultLocation_C(pipette, container):
     global position
-    well = currentlyCalibrating
-    pos = well.from_center(x=0, y=0, z=-1, reference=currentlyCalibrating)
+    well = container
+    pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
     location = (pipette, pos)
     pipette.move_to(location)
     position=list(robot._driver.get_head_position()["current"])
+
+
+def moveDefaultLocation_p(pipette, plungerTarget):
+    pipette.motor.move(pipette._get_plunger_position(plungerTarget))
+    plungerPos=pipette._get_plunger_position(plungerTarget)
 
 def saveCalibration(rack, pipette):
     #pip = pipette
@@ -134,20 +146,17 @@ def saveCalibration(rack, pipette):
 
 def calibrationControlPlugger(pipette, key):
     global movementAmount
-
-    pip = pipette
     
     if key == "z_up":
         plungerPos=plungerPos-movementAmount
-    if key == "z_down":
+    elif key == "z_down":
         plungerPos=plungerPos+movementAmount
 
-    pip.motor.move(plungerPos)
+    pipette.motor.move(plungerPos)
 
-def move_pip_action_home():
-    pip = varpip.get()
+def move_pip_action_home(pipette):
     print(pip)
-    pip.home()
+    pipette.home()
     print('Homing Pipette')
     plungerPos=0
 

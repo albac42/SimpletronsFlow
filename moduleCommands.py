@@ -7,7 +7,7 @@ import opentrons
 from opentrons import robot, containers, instruments
 
 from modulePipetting import *
-from moduleTransportation import getTransportposition
+#from moduleTransportation import getTransportposition
 from time import sleep
 
 import sqlite3

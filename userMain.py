@@ -7,12 +7,15 @@ from opentrons import robot, containers, instruments
 from time import sleep
 #from commands import *
 from modulePipetting import *
-from moduleCrosslinker import *
-from moduleStorage import *
-from moduleTransportation import getTransportposition
+#from moduleCrosslinker import *
+#from moduleStorage import *
+#from moduleTransportation import getTransportposition
 from moduleCommands import *
 from moduleContainers import *
 print('Loaded Require Libaries')
+print('Loading UI')
+from moduleUI import *
+print('UI Closing')
 
 ######################################################################
 
@@ -22,14 +25,15 @@ print('Loaded Require Libaries')
 #reset_all()
 
 #Connection to Robot
-connect()
-home_all() # Home all system
+#connect()
+#home_all() # Home all system
+
 
 #home_robot() # Home Just Opentrons Robot
 #home_robot2() #Home Storage Robot 
 
 #Load Calibration 
-load_calibration()
+#load_calibration()
 
 ######################################################################
 
@@ -43,7 +47,7 @@ load_calibration()
 #Refer to Desk Documentation
 
 #Example Container
-create_container('test_c', 10, 10, 2, 5, 5, 1)
+#create_container('test_c', 10, 10, 2, 5, 5, 1)
 
 
 
@@ -57,14 +61,14 @@ create_container('test_c', 10, 10, 2, 5, 5, 1)
 #load_dd_container()
 
 #Load Containers
-load_container('test_c', 'A1')
+#load_container('test_c', 'A1')
 
 #######################################################################
 
 # Create and configure Pipette [Editable]
 
 # Please check documentation or user manual for correct Pipetting Device 
-loadpipette (a, 200, 100, 1000TiprackB2, TrashA2)
+#loadpipette (a, 200, 100, 1000TiprackB2, TrashA2)
 
 
 #######################################################################

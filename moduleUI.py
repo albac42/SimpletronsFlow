@@ -17,7 +17,7 @@ import opentrons
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
-from moduleLink import *
+
 
 version = 'Version: Private Alpha 0.1'
 
@@ -31,16 +31,71 @@ count_CTT = 0
 count_C = 0
 
 
-
-#load_dd_container()
+###########################################################################################################
+#
+# Start Up Command
+#
+###########################################################################################################
 #connect()
 create_connection('database/data.db')
 
-# Start GUI
+###########################################################################################################
+#
+# Start UI
+#
+###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
 
+###########################################################################################################
+#
+# Popup Window
+#
+###########################################################################################################
 
+def confirmation_box(variable):
+
+	global version
+
+	newWindow = Toplevel(root)
+
+	newWindow.title("Simpletrons - OT")
+	newWindow.geometry("200x60")
+
+	def close_popup():
+		newWindow.destroy()
+		newWindow.update()
+
+	if variable == 1:
+		newWindow.geometry("200x60")
+		label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
+		label.grid(column = 0, row = 0, sticky="NW")
+		label2 = Label(newWindow, text=version, font = ('Arial', 15))
+		label2.grid(column = 0, row = 1, sticky="NW")
+	elif variable == 2:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Sucessfully Loaded Workspace', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+	elif variable == 3:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Sucessfully Loaded Workspace', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+###########################################################################################################
+
+
+###########################################################################################################
+#
+# Update Container and Pipetting
+#
+###########################################################################################################
+
+#Update Type of conatiners loaded
 def update_containers_list_type():
 
 	global loaded_container_type
@@ -51,11 +106,11 @@ def update_containers_list_type():
 	    loaded_container_type[count_C]= name
 	    count_C = count_C + 1
 
-
 	#Sort List
 	loaded_container_type = sorted(loaded_container_type)
 	print('Loaded Container Type:', loaded_container_type)
 
+#Update Loaded Conatiner List
 def update_containers_list(name):
 	global loaded_containers
 	global count_CT
@@ -64,21 +119,57 @@ def update_containers_list(name):
 	loaded_containers[count_CT]= name
 	count_CT = count_CT + 1
 
+#Update Loaded Pipette List
 def update_pipette(name, num):
-
 	loaded_pipette_list[num]= name
 
+#Update Tip Rack List in Setup Pipette
+def update_dropdown_tip_rack():
+    list = loaded_containers
+    dropdown_tip_rack['values'] = list
+    print('Updating Dropdown List: tip rack pipette setup')
+
+#Update Tip Rack List in Setup Pipette
+def update_dropdown_trash():
+    list = loaded_containers
+    dropdown_trash['values'] = list
+    print('Updating Dropdown List: trash pipette setup')
+
+#Update Pipette in Pipette Dropdown
+def update_dropdown_pip():
+    list = loaded_pipette_list
+    dropdown_cpip['values'] = list
+    print('Updating Dropdown List: Pipette pipette calibrate')
+
+#Update Pipette in Calibration Dropdown
+def update_dropdown_pip_c():
+    list = loaded_pipette_list
+    dropdown_varpip_c['values'] = list
+    print('Updating Dropdown List: Pipette container calibrate')
+#Update Container in Calibration Dropdown
+def update_dropdown_con_c():
+    list = loaded_containers
+    dropdown_varcon_c['values'] = list
+    print('Updating Dropdown List: conatiners containers calibrate')
+###########################################################################################################
 
 ###########################################################################################################
 #
-# Function Link - Move to Module After Testing *TO DO*
+# Function Link
 #
 ###########################################################################################################
+
+
+#
+#Pipette Control
+#
 def save_pip_action():
 	pip = varpip.get()
-	print(pip)
 	pos = pippos.get()
+
+	print(pip)
 	print(pos)
+
 	saveCalibration(pip, pos)
 	print('Command Sucessfull Saved Calibration')
 
@@ -92,53 +183,97 @@ def move_pip_action_down():
 
 def move_prepip_action():
 	pip = varpip.get()
-	moveDefaultLocation(pip)
+	plunger = pippos.get()
+
+	print(pip)
+	print(pos)
+
+	moveDefaultLocation_p(pip, plunger)
 	print('Scuessfully Moved To Saved Position')
 
-#Save Custom Pipette
-def action_save_pip():
-	if var_p_a.get() == 0:
-		axis = 'b'
-		print(axis)
-		update_pipette('pipette_b', 0)
-	elif var_p_a.get() == 1:
-		axis = 'a'
-		print(axis)
-		update_pipette('pipette_a', 1)
 
-	max_vol = var_max_volume.get()
-	min_vol = var_min_volume.get()
-	asp_speed = var_aspirate_speed.get()
-	dis_speed = var_dispense_speed.get()
+#
+# Roboto Control
+#
+def move_x_neg():
+	calibrationControl('x_left')
 
-	tiprack = s_tip_rack.get()
-	trash = s_trash.get()
+	pass
 
-	print(max_vol)
-	print(min_vol)
-	print(asp_speed)
-	print(dis_speed)
+def move_x_pos():
+	calibrationControl('x_right')
 
-	print(tiprack)
-	print(trash)
+	pass
 
-	loadpipette (axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
-	print(loaded_pipette_list)
+def move_y_neg():
+	calibrationControl('y_down')
+
+	pass
+
+def move_y_pos():
+	calibrationControl('y_up')
+
+	pass 
 
 
-def load_pre_workspace(): #For Testing
+def move_z_neg():
+	calibrationControl('z_down')
+
+	pass
+
+def move_z_pos():
+	calibrationControl('z_up')
+
+	pass 
+
+def home_axis():
+
+	calibrationControl('home')
+
 	pass
 
 
-def load_pre_pip(): #For Testing
+def load_axis():
 
+	pip = varpip,get()
+	con = varcon.get()
+
+	moveDefaultLocation_C(pip, con)
+	pass
+#
+#Pre Load
+#
+
+# Load Pre Configured Workspace
+def load_pre_workspace(): #For Testing
+	load_container('A1_trash-box', 'A1', 'trash-box')
+	load_container('B1_tiprack-1000ul', 'B1', 'tiprack-1000ul')
+	load_container('B2_tiprack-1000ul', 'B2', 'tiprack-1000ul')
+	load_container('C1_96-flat', 'C1', '96-flat')
+	load_container('C2_96-flat', 'C2', '96-flat')
+
+
+	update_containers_list('A1_trash-box')
+	update_containers_list('B1_tiprack-1000ul')
+	update_containers_list('B2_tiprack-1000ul')
+	update_containers_list('C1_96-flat')
+	update_containers_list('C2_96-flat')
+
+	print('Load Default Container Sucessfull')
+	pass
+
+# Load Pre Configured PIp
+def load_pre_pip(): #For Testing
 	loadpipette ('a', 1000, 100, 800, 1200, 'B1_tiprack-1000ul', 'A2_trash-box')
 	update_pipette('pipette_a', 1)
 	loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
 	update_pipette('pipette_b', 0)
-	
-#Reference
-#load_container(name, location, container)
+
+#
+# Dynamic Creation
+#
+
+# Setup Workspace
 def setup_workspace():
 	#Reset Counter
 	global count_C
@@ -271,26 +406,37 @@ def setup_workspace():
 	#Update Loaded in Workspaec Container List
 	update_containers_list_type()
 	print(loaded_containers)
+	confirmation_box(2)
 
+#Save Custom Pipette
+def action_save_pip():
+	if var_p_a.get() == 0:
+		axis = 'b'
+		print(axis)
+		update_pipette('pipette_b', 0)
+	elif var_p_a.get() == 1:
+		axis = 'a'
+		print(axis)
+		update_pipette('pipette_a', 1)
 
-#Update Tip Rack List
-def update_dropdown_tip_rack():
-    list = loaded_containers
-    dropdown_tip_rack['values'] = list	
+	max_vol = var_max_volume.get()
+	min_vol = var_min_volume.get()
+	asp_speed = var_aspirate_speed.get()
+	dis_speed = var_dispense_speed.get()
 
-#Update Tip Rack List
-def update_dropdown_trash():
-    list = loaded_containers
-    dropdown_trash['values'] = list
+	tiprack = s_tip_rack.get()
+	trash = s_trash.get()
 
+	# print(max_vol)
+	# print(min_vol)
+	# print(asp_speed)
+	# print(dis_speed)
 
-def update_dropdown_pip():
-    list = loaded_pipette_list
-    dropdown_cpip['values'] = list	
+	# print(tiprack)
+	# print(trash)
 
-def update_dropdown_pip_c():
-    list = loaded_pipette_list
-    dropdown_varpip_c['values'] = list	
+	loadpipette (axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+	print(loaded_pipette_list)
 
 
 def list_containers():
@@ -300,50 +446,26 @@ def list_containers():
 def graphicalUIprotocol(): # Start Graphical Protocal Interface
 	pass
 
-def aboutPage():
-	confirmation_box(1)
-	pass
-
-
 
 ###########################################################################################################
-#
-# Containers Creation UI
-#
-###########################################################################################################
 
-def confirmation_box(variable):
-
-	global version
-
-	newWindow = Toplevel(root)
-
-	newWindow.title("Simpletrons - OT")
-	newWindow.geometry("200x60")
-
-
-	if variable == 1:
-		label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
-		label.grid(column = 0, row = 0, sticky="NW")
-		label2 = Label(newWindow, text=version, font = ('Arial', 15))
-		label2.grid(column = 0, row = 1, sticky="NW")
 ###########################################################################################################
 #
 # Containers Creation UI
 #
 ###########################################################################################################
 def containersCreationUi():
-	rootNew = Tk()
-	rootNew.title('Simpletrons - OT - Container Creation')
+	rootCustom = Tk()
+	rootCustom.title('Simpletrons - OT - Container Creation')
 
 
 	#Create Containers
 	var_container_name = StringVar()
 
-	label = ttk.Label(rootNew, text='Set a Name:', font = ('Arial', 12))
+	label = ttk.Label(rootCustom, text='Set a Name:', font = ('Arial', 12))
 	label.grid(column = 0, row = 1)	
 	
-	e_container_name = Entry(rootNew, bd =5, justify = CENTER, textvariable = var_container_name)
+	e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
 	e_container_name.grid(column = 0, row = 2)	
 
 
@@ -378,9 +500,17 @@ tabControl.add(tab3, text ='Step 4 Calibrate Containers')
 
 tabControl.pack(expand = 1, fill ="both")
 #tabControl.grid(column = 3, row = 1, padx = 1)
+
 ########################################################################################################
 #
 #Top Menu 
+#
+#########################################################################################################
+
+def aboutPage():
+	confirmation_box(1)
+	pass
+
 s_menu = Menu(root)
 root.config(menu = s_menu)
 
@@ -510,7 +640,9 @@ save_w.grid(column = 3, row = 3)
 
 
 ########################################################################################################
+#
 #Calibrate Containers
+#
 ########################################################################################################
 #Drop Down Default Selection
 varpip = StringVar(root, value='')
@@ -519,7 +651,6 @@ varpip = StringVar(root, value='')
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 15))
 label.grid(column = 0, row = 1, padx = 1)
 dropdown_varpip_c = ttk.Combobox(tab3, textvariable = varpip, postcommand = update_dropdown_pip_c)
-#dropdown['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
 dropdown_varpip_c.grid(column = 0, row = 2, padx = 1)
 
 #Drop Down Default Selection
@@ -528,56 +659,55 @@ varcon = StringVar(root, value='')
 #Selection 1 - Containers
 label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 15))
 label.grid(column = 0, row = 3, padx = 1)
-dropdown = ttk.Combobox(tab3, textvariable = varcon)
-dropdown['values'] = [ '96_well','96_tip' ] # Replace to Global pipette variable
-dropdown.grid(column = 0, row = 4, padx = 1)
+dropdown_varcon_c = ttk.Combobox(tab3, textvariable = varcon, postcommand = update_dropdown_con_c)
+dropdown_varcon_c.grid(column = 0, row = 4, padx = 1)
 
 #Section 2 - Pipette Movement 
 
 #Pipette Movement Increments
 #Movement Pad - X Axis
 #Set Image to variable
-xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ Y Axis Positive ]
-left_b = ttk.Button(tab3, image = xn_button_image, width = 5)
+xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ X Axis Negative ]
+left_b = ttk.Button(tab3, image = xn_button_image, width = 5, command = move_x_neg)
 left_b.grid(column = 1, row = 2)
 
 #Movement Pad - X Axis
 #Set Image to variable 
 xp_button_image = PhotoImage(file="graphic/arrow-right-bold-circle.png") # [ X Axis Positive ]
-right_b = ttk.Button(tab3, image = xp_button_image, width = 5)
+right_b = ttk.Button(tab3, image = xp_button_image, width = 5, command = move_x_pos)
 right_b.grid(column = 3, row = 2)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
-down_b = ttk.Button(tab3, image = yn_button_image, width = 5)
+yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Negative ]
+down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_neg)
 down_b.grid(column = 2, row = 1)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") 
-up_b = ttk.Button(tab3, image = yp_button_image, width = 5)
+yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Positive ]
+up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_pos)
 up_b.grid(column = 2, row = 3)
 
 
 #Movement Pad - Z Axis [Pipette Movement] Down
-zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") 
-z_up_b = ttk.Button(tab3, image = zd_button_image, width = 5)
+zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png")  # [ Z Axis Negative ]
+z_up_b = ttk.Button(tab3, image = zd_button_image, width = 5, command = move_z_neg)
 z_up_b.grid(column = 1, row = 3)
 
 #Movement Pad - Z Axis [Pipette Movement] UP
-zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") 
-z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5)
+zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") # [ z Axis Positive ]
+z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5, command = move_z_pos)
 z_down_b.grid(column = 1, row = 1)
 
 #Home
 home_image = PhotoImage(file="graphic/home.png") 
-home_b = ttk.Button(tab3, image = home_image, width = 5)
+home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
 home_b.grid(column = 2, row = 4)
 
 #Move to preconfigured 
 pre_home_image = PhotoImage(file="graphic/content-save-settings.png")
-pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5)
+pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
 pre_home_b.grid(column = 3, row = 4)
 
 #Save Button - Calibration 
@@ -586,7 +716,10 @@ save_c = ttk.Button(tab3, image = save_button_image, width = 5)
 save_c.grid(column = 1, row = 4)
 
 #########################################################################################################
+#
 #Setup Pipette
+#
+#########################################################################################################
 #Drop Down Default Selection
 varcon = StringVar(root, value='')
 var_p_a = IntVar()
@@ -711,8 +844,10 @@ pre_select_pip.grid(column = 6, row = 6)
 
 
 #########################################################################################################
+#
 #Calibrate Pipette
-
+#
+#########################################################################################################
 #Selection 1 - Pipette
 label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
 label.grid(column = 0, row = 1, padx = 1)
@@ -751,7 +886,7 @@ save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_p
 save_p.grid(column = 1, row = 4)
 
 root.mainloop() 
-
+#########################################################################################################
 
 #Debugging (Run Graphical Interface without backend code)
 #graphicalUIcalibrate()
