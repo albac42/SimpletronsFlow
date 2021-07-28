@@ -14,8 +14,31 @@ from moduleCommands import *
 from moduleContainers import *
 print('Loaded Require Libaries')
 print('Loading UI')
+
+#reset_all()
+#robot.connect()
+#home_all()
+
 from moduleUI import *
 print('UI Closing')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Manual Python Method 
+
 
 ######################################################################
 

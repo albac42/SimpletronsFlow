@@ -27,22 +27,33 @@ def find_arduino(serial_number):
     raise IOError("[#A1]Could not find an Robot - is it plugged in or is serial number setup correct?")
 
 def check_file():
-    with open('usbSerial.txt') as f:
-        lines = f.readlines() #Read UsbSerial file
-        lines = [line.replace(' ', '') for line in lines] #Remove Empty Spaces
-    return lines
+    try:
+        with open('usbSerial.txt') as f:
+            lines = f.readlines() #Read UsbSerial file
+            lines = [line.replace(' ', '') for line in lines] #Remove Empty Spaces
+        return lines
+    except:
+        return lines
+        print('[#A7] Error reading usbSerial text file, please double check the file exist and value is entered within the brackets')
+        pass
+
+    
 
 def find_ot():
-    # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
-    serial = check_file()
-    print(serial)
-    #robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial
-    robotUSB = find_arduino(serial) #Configurable Serial
-    robotUSB = str(robotUSB) #Array to Convert to string
-    robotUSB = re.findall(r"port='(.*?)'", robotUSB)
-    robotUSB = str(robotUSB) #Array to Convert to string
-    robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
-    robotUSB = eval(robotUSB) #Remove Quotation
+    try:
+        # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
+        serial = check_file()
+        print(serial)
+        #robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial
+        robotUSB = find_arduino(serial) #Configurable Serial
+        robotUSB = str(robotUSB) #Array to Convert to string
+        robotUSB = re.findall(r"port='(.*?)'", robotUSB)
+        robotUSB = str(robotUSB) #Array to Convert to string
+        robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
+        robotUSB = eval(robotUSB) #Remove Quotation
+    except:
+        print('[#A2] Error Phrasing serial number, please submit issue on github')
+        pass
 
     #print(robotUSB)
 
@@ -51,55 +62,84 @@ def find_ot():
 #Connect To both Robot
 def connect():
     print('Connecting to Robots')
-    # robot.connect()
-    find_ot()
-    robot.connect(robotUSB)
-    print('Opentrons Robot Connected')
-    #versions = robot.versions()
-    #robot2.connect()
-    #robot2.connect(robot2USB)
-    #print('Opentrons Robot Connected')
+    try:
+        find_ot()
+        robot.connect(robotUSB)
+        versions = robot.versions()
+        print('Opentrons Robot Connected, Robot Firmware Version:', versions)
+        #robot2.connect()
+        #robot2.connect(robot2USB)
+        #print('Opentrons Robot Connected')
+    except:
+        print('Opentrons Robot Not Connected')
+        print('[#A3] Running Debugging Mode')
 
 def home_all():
-    print('Homing Opentrons Robot in progress')
-    robot.home()
-    print('Successfully Homed Opentrons Robot Complete')
-
-    #Home Robot 2
-    #robot2._driver.send_command('G28.2 Y Z')
-    #robot2._driver.send_command('G28.2 A')
-    #robot2._driver.send_command('G28.2 B')
-    #robot2._driver.send_command('G28.2 X')
-    #robot2._driver.send_command('G90')
-    #print('Successfully Homed Transport Robot')
+    try:
+        print('Homing Opentrons Robot in progress')
+        robot.home()
+        print('Successfully Homed Opentrons Robot Complete')
+        try: 
+            #Home Robot 2
+            robot2._driver.send_command('G28.2 Y Z')
+            robot2._driver.send_command('G28.2 A')
+            robot2._driver.send_command('G28.2 B')
+            robot2._driver.send_command('G28.2 X')
+            robot2._driver.send_command('G90')
+            print('Successfully Homed Transport Robot')
+        except:
+            print('[#A4] Robot 2 Not Loaded')
+            pass
+    except: 
+        print('[#A5] Running Debugging Mode')
+        pass
 
 #Homes All Axis For Opentrons Robot
 def home_robot():
-    print('Homing Opentrons Robot in progress')
-    robot.home()
-    print('Successfully Homed Opentrons Robot Complete')
+    try:
+        print('Homing Opentrons Robot in progress')
+        robot.home()
+        print('Successfully Homed Opentrons Robot Complete')
+    except: 
+        print('[#A6] Running Debugging Mode')
+        print('[#H1] Unable to Home Robot')
+        pass
 
 #Homes All Axis For Transport Robot
 def home_robot2():
-    print('Homing Transport Robot in progress')
-    robot2._driver.send_command('G28.2 Y Z')
-    robot2._driver.send_command('G28.2 A')
-    robot2._driver.send_command('G28.2 B')
-    robot2._driver.send_command('G28.2 X')
-    robot2._driver.send_command('G90')
-    print('Successfully Homed Transport Robot')
+    try:
+        print('Homing Transport Robot in progress')
+        robot2._driver.send_command('G28.2 Y Z')
+        robot2._driver.send_command('G28.2 A')
+        robot2._driver.send_command('G28.2 B')
+        robot2._driver.send_command('G28.2 X')
+        robot2._driver.send_command('G90')
+        print('Successfully Homed Transport Robot')
+    except: 
+        print('Note: Running Debugging Mode')
+        print('[#H2] Unable to Home Robot2')
+        pass
 
 #Reset Connection
 def reset_all():
-    #Reset Robot Opentron Robot
-    print('Reseting Opentrons Robot')
-    robot.reset()
-    print('Successfully Rested Opentrons Robot')
-
-    #ResetRobot 2(Transport Platforms)
-    #print('Reseting Transport Robot')
-    #robot2.reset()
-    #print('Successfully Rested Opentrons Robot')
+    try:
+        #Reset Robot Opentron Robot
+        print('Reseting Opentrons Robot')
+        robot.reset()
+        print('Successfully Rested Opentrons Robot')
+        try: 
+            #ResetRobot 2(Transport Platforms)
+            print('Reseting Transport Robot')
+            robot2.reset()
+            print('Successfully Rested Opentrons Robot')
+        except:
+            print('Note: Running Debugging Mode')
+            print('[#H2] Unable to Home Robot2')
+            pass
+    except:
+        print('Note: Running Debugging Mode')
+        print('[#H2] Unable to Home Robot2')
+        pass
     
 def load_calibration():
     print('Loaded Pre-Configured Robot Calibration')
@@ -117,6 +157,7 @@ def create_connection(db_file):
         print('Datbase Found')
     except Error as e:
         print(e)
+        print('[#A7] Error Loading Database')
     finally:
         if conn:
             conn.close()

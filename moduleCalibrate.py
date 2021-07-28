@@ -19,8 +19,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-#equipment=getEquipment()
-
+#Self Debugging 
 #robot.connect('/dev/ttyACM0')
 
 #robot.connect()
@@ -29,6 +28,89 @@ from tkinter import ttk
 #robot.home()
 
 
+def changeDirectionSpeed(speed):
+    global movementAmount
+    if speed > 80:
+        print('Warning: Speed Exceed Max Speed Allowed, Please change to lower value <80')
+        movementAmount = 80
+    if speed < 0.1:
+        print('Warning: Speed Exceed Min Speed Allowed, Please change to higher value <0.1')
+        movementAmount = 0.1
+    else:    
+        movementAmount = speed
+        return print('Speed Set', movementAmount)
+
+def calibrationControl(direction):
+    global position
+    global movementAmount
+
+    if direction == "z_up":
+        position[2]=position[2]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "z_down":
+        position[2]=position[2]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "x_left":
+        position[0]=position[0]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "x_right":
+        direction[0]=position[0]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "y_up":
+        position[1]=position[1]+movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "y_down":
+        position[1]=position[1]-movementAmount
+        position=list(robot._driver.get_head_position()["current"])
+    if direction == "home":
+        robot.home()
+        position=list(robot._driver.get_head_position()["current"])
+    else:
+        print('Warning: Last action was not sent to robot due to invalid direction command')
+
+        position=list(robot._driver.get_head_position()["current"])
+
+def moveDefaultLocation_C(pipette, container):
+    global position
+    well = container
+    pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
+    location = (pipette, pos)
+    pipette.move_to(location)
+    position=list(robot._driver.get_head_position()["current"])
+
+
+def moveDefaultLocation_p(pipette, plungerTarget):
+    pipette.motor.move(pipette._get_plunger_position(plungerTarget))
+    plungerPos=pipette._get_plunger_position(plungerTarget)
+
+def saveCalibration(rack, pipette):
+    #pip = pipette
+    well = rack[0]
+    pos = well.from_center(x=0, y=0, z=-1, reference=rack)
+    location = (pipette, pos)
+    pipette.calibrate_position(location)
+    print('Calibration Saved')
+
+def calibrationControlPlugger(pipette, key):
+    global movementAmount
+    
+    if key == "z_up":
+        plungerPos=plungerPos-movementAmount
+    elif key == "z_down":
+        plungerPos=plungerPos+movementAmount
+
+    pipette.motor.move(plungerPos)
+
+def move_pip_action_home(pipette):
+    print(pip)
+    pipette.home()
+    print('Homing Pipette')
+    plungerPos=0
+
+
+#OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is fully integrated with UI
+#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference 
+#equipment=getEquipment()
 #Load Default Containers 
 
 #load_dd_container()
@@ -77,98 +159,10 @@ from tkinter import ttk
 #position=list(robot._driver.get_head_position()["current"])
 #print(position)
 
-def changeDirectionSpeed(speed):
-    global movementAmount
-    if speed > 80:
-        print('Warning: Speed Exceed Max Speed Allowed, Please change to lower value <80')
-        movementAmount = 80
-    if speed < 0.1:
-        print('Warning: Speed Exceed Min Speed Allowed, Please change to higher value <0.1')
-        movementAmount = 0.1
-    else:    
-        movementAmount = speed
-        return print('Speed Set', movementAmount)
-
-def calibrationControl(direction):
-    global position
-    global movementAmount
-
-    if direction == "z_up":
-        position[2]=position[2]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "z_down":
-        position[2]=position[2]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "x_left":
-        position[0]=position[0]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "x_right":
-        direction[0]=position[0]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "y_up":
-        position[1]=position[1]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "y_down":
-        position[1]=position[1]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
-    if direction == "home":
-        robot.home()
-        position=list(robot._driver.get_head_position()["current"])
-    else:
-        print('Warning: Last action was not sent to robot due to invalid direction command')
-
-        position=list(robot._driver.get_head_position()["current"])
-
-def moveHome():
-    robot.home()
-    position=list(robot._driver.get_head_position()["current"])
-
-def moveDefaultLocation_C(pipette, container):
-    global position
-    well = container
-    pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
-    location = (pipette, pos)
-    pipette.move_to(location)
-    position=list(robot._driver.get_head_position()["current"])
-
-
-def moveDefaultLocation_p(pipette, plungerTarget):
-    pipette.motor.move(pipette._get_plunger_position(plungerTarget))
-    plungerPos=pipette._get_plunger_position(plungerTarget)
-
-def saveCalibration(rack, pipette):
-    #pip = pipette
-    well = rack[0]
-    pos = well.from_center(x=0, y=0, z=-1, reference=rack)
-    location = (pipette, pos)
-    pipette.calibrate_position(location)
-    print('Calibration Saved')
-
-def calibrationControlPlugger(pipette, key):
-    global movementAmount
-    
-    if key == "z_up":
-        plungerPos=plungerPos-movementAmount
-    elif key == "z_down":
-        plungerPos=plungerPos+movementAmount
-
-    pipette.motor.move(plungerPos)
-
-def move_pip_action_home(pipette):
-    print(pip)
-    pipette.home()
-    print('Homing Pipette')
-    plungerPos=0
-
-#def selectWhatToCalibrate():
 
 
 
 
-
-
-#OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is fully integrated with UI
-#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference 
 # movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
 
 # def main(stdscr):
