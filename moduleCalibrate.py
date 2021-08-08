@@ -19,6 +19,8 @@ import tkinter as tk
 from tkinter import ttk
 
 
+set_calibration_mode = 0
+
 #Self Debugging 
 #robot.connect('/dev/ttyACM0')
 
@@ -26,6 +28,13 @@ from tkinter import ttk
 
 #input("Robot will now home, press enter to continue.")
 #robot.home()
+
+def calibration_mode_toggle(option):
+    if optiion == 1: #Enable
+        set_calibration_mode = 1
+    if option == 0: #Disable
+        set_calibration_mode = 0
+
 
 
 def changeDirectionSpeed(speed):
@@ -44,29 +53,35 @@ def calibrationControl(direction):
     global position
     global movementAmount
 
-    if direction == "z_up":
+    if ((direction == "z_up") and (set_calibration_mode == 1)):
         position[2]=position[2]+movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "z_down":
+
+    if ((direction == "z_down") and (set_calibration_mode == 1)):
         position[2]=position[2]-movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "x_left":
+
+    if ((direction == "x_left") and (set_calibration_mode == 1)):
         position[0]=position[0]-movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "x_right":
+
+    if ((direction == "x_right") and (set_calibration_mode == 1)):
         direction[0]=position[0]+movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "y_up":
+
+    if ((direction == "y_up") and (set_calibration_mode == 1)):
         position[1]=position[1]+movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "y_down":
+
+    if ((direction == "y_down") and (set_calibration_mode == 1)):
         position[1]=position[1]-movementAmount
         position=list(robot._driver.get_head_position()["current"])
-    if direction == "home":
+
+    if ((direction == "home") and (set_calibration_mode == 1)):
         robot.home()
         position=list(robot._driver.get_head_position()["current"])
     else:
-        print('Warning: Last action was not sent to robot due to invalid direction command')
+        print('Warning: Calibration Keyboard Is Pressed, Please check your in calaibration mode')
 
         position=list(robot._driver.get_head_position()["current"])
 
@@ -89,14 +104,19 @@ def saveCalibration(rack, pipette):
     pos = well.from_center(x=0, y=0, z=-1, reference=rack)
     location = (pipette, pos)
     pipette.calibrate_position(location)
+    calibration_mode_toggle(0)
     print('Calibration Saved')
+
+
+def saveCalibrationPip(pipette, plungerPos):
+    pipette.calibrate(plungerPos)
 
 def calibrationControlPlugger(pipette, key):
     global movementAmount
     
-    if key == "z_up":
+    if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
-    elif key == "z_down":
+    elif ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
 
     pipette.motor.move(plungerPos)

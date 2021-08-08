@@ -30,7 +30,6 @@ count_CT = 0
 count_CTT = 0
 count_C = 0
 
-
 ###########################################################################################################
 #
 # Start Up Command
@@ -81,12 +80,39 @@ def confirmation_box(variable):
 		save_w.grid(column = 0, row = 1)
 	elif variable == 3:
 		newWindow.geometry("180x60")
-		label = Label(newWindow, text='Sucessfully Loaded Workspace', font = ('Arial', 9))
+		label = Label(newWindow, text='Sucessfully Loaded Pipette', font = ('Arial', 9))
 		label.grid(column = 0, row = 0, sticky="NW")
 		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
 		save_w.grid(column = 0, row = 1)
 ###########################################################################################################
+
+
+###########################################################################################################
+#
+# UI Protocol [Pop Up]
+#
+###########################################################################################################
+
+def graphicalUIprotocol():
+
+	proroot = Toplevel(root)
+
+	proroot.title("Simpletrons - OT")
+	#newWindow.geometry("200x60")
+
+	def close_popup():
+		proroot.destroy()
+		proroot.update()
+
+	label = ttk.Label(proroot, text='Setup Liquids', font = ('Arial', 15))
+	label.grid(column = 0, row = 1, padx = 1)
+
+
+
+
+###########################################################################################################
+
 
 
 ###########################################################################################################
@@ -140,17 +166,20 @@ def update_dropdown_pip():
     list = loaded_pipette_list
     dropdown_cpip['values'] = list
     print('Updating Dropdown List: Pipette pipette calibrate')
+    calibration_mode_toggle(1)
 
 #Update Pipette in Calibration Dropdown
 def update_dropdown_pip_c():
     list = loaded_pipette_list
     dropdown_varpip_c['values'] = list
     print('Updating Dropdown List: Pipette container calibrate')
+    calibration_mode_toggle(1)
 #Update Container in Calibration Dropdown
 def update_dropdown_con_c():
     list = loaded_containers
     dropdown_varcon_c['values'] = list
     print('Updating Dropdown List: conatiners containers calibrate')
+    calibration_mode_toggle(1)
 ###########################################################################################################
 
 ###########################################################################################################
@@ -170,7 +199,7 @@ def save_pip_action():
 	print(pip)
 	print(pos)
 
-	saveCalibration(pip, pos)
+	saveCalibrationPip(pip, pos)
 	print('Command Sucessfull Saved Calibration')
 
 def move_pip_action_up():
@@ -715,6 +744,24 @@ pre_home_b.grid(column = 3, row = 4)
 save_c = ttk.Button(tab3, image = save_button_image, width = 5)
 save_c.grid(column = 1, row = 4)
 
+#Keybaord Input
+root.bind("<Left>", move_x_neg)
+root.bind("<Right>", move_x_pos)
+root.bind("<Up>", move_y_neg) 
+root.bind("<Down>", move_y_pos)
+
+def key_press(event):
+	if event.char == "w":
+		move_z_neg()
+	if event.char == "W":
+		move_z_neg()
+	if event.char == "s":
+		move_z_pos()
+	if event.char == "S":
+		move_z_pos()	
+
+root.bind("<Key>", key_press)
+
 #########################################################################################################
 #
 #Setup Pipette
@@ -884,6 +931,11 @@ pre_home_b.grid(column = 3, row = 4)
 #Save Button - Calibration  
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
 save_p.grid(column = 1, row = 4)
+
+#Keybaord Input
+root.bind("<Prior>", move_pip_action_up) #Page UP
+root.bind("<Next>", move_pip_action_down) #PageDown
+
 
 root.mainloop() 
 #########################################################################################################
