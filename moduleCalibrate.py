@@ -30,7 +30,7 @@ set_calibration_mode = 0
 #robot.home()
 
 def calibration_mode_toggle(option):
-    if optiion == 1: #Enable
+    if option == 1: #Enable
         set_calibration_mode = 1
     if option == 0: #Disable
         set_calibration_mode = 0

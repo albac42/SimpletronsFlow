@@ -22,6 +22,7 @@ from moduleCalibrate import *
 version = 'Version: Private Alpha 0.1'
 
 #Global Variable
+shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', '96-PCR-flat', '96-PCR-tall',  '96-deep-well']
 loaded_pipette_list = ['','']
 loaded_container_type = []
@@ -36,7 +37,7 @@ count_C = 0
 #
 ###########################################################################################################
 #connect()
-create_connection('database/data.db')
+create_connection()
 
 ###########################################################################################################
 #
@@ -58,7 +59,7 @@ def confirmation_box(variable):
 
 	newWindow = Toplevel(root)
 
-	newWindow.title("Simpletrons - OT")
+	newWindow.title("Simpletrons - OT: Calibration")
 	newWindow.geometry("200x60")
 
 	def close_popup():
@@ -88,30 +89,7 @@ def confirmation_box(variable):
 ###########################################################################################################
 
 
-###########################################################################################################
-#
-# UI Protocol [Pop Up]
-#
-###########################################################################################################
 
-def graphicalUIprotocol():
-
-	proroot = Toplevel(root)
-
-	proroot.title("Simpletrons - OT")
-	#newWindow.geometry("200x60")
-
-	def close_popup():
-		proroot.destroy()
-		proroot.update()
-
-	label = ttk.Label(proroot, text='Setup Liquids', font = ('Arial', 15))
-	label.grid(column = 0, row = 1, padx = 1)
-
-
-
-
-###########################################################################################################
 
 
 
@@ -180,6 +158,9 @@ def update_dropdown_con_c():
     dropdown_varcon_c['values'] = list
     print('Updating Dropdown List: conatiners containers calibrate')
     calibration_mode_toggle(1)
+
+
+
 ###########################################################################################################
 
 ###########################################################################################################
@@ -472,7 +453,20 @@ def list_containers():
 
 	return 
 
-def graphicalUIprotocol(): # Start Graphical Protocal Interface
+#def graphicalUIprotocol(): # Start Graphical Protocal Interface
+#	pass
+
+
+###########################################################################################################
+
+
+
+###########################################################################################################
+#
+# Containers Creation UI
+#
+###########################################################################################################
+def opencontainer(location):
 	pass
 
 
@@ -497,7 +491,126 @@ def containersCreationUi():
 	e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
 	e_container_name.grid(column = 0, row = 2)	
 
+###########################################################################################################
+#
+# UI Protocol [Pop Up]
+#
+###########################################################################################################
 
+p_varpip = []
+volume_well = []
+aspirate_con = []
+dispense_con = []
+well_1 = 0
+well_2 = 0
+volume_well = 0
+dropdown_ppip = StringVar()
+
+#Update Protocol Dropdown
+def update_dropdown_source_pip():
+    list = loaded_pipette_list
+    dropdown_ppip['values'] = list
+    print('Updating Dropdown List: Pipette Protocol')
+
+def update_aspirate_source_rack():
+    list = loaded_containers
+    dropdown_aspirate_c['values'] = list
+    print('Updating Dropdown List: Containers Protocol')
+
+def update_dispense_source_rack():
+    list = loaded_containers
+    dropdown_dispense_c['values'] = list
+    print('Updating Dropdown List: Containers Protocol')
+
+v1 = StringVar()
+v2 = StringVar()
+v3 = StringVar()
+v4 = StringVar()
+
+def graphicalUIprotocol():
+
+	global v1
+	global v2
+	global v3 
+	global v4
+	global shortcuts
+	global shortcuts
+	global dropdown_dispense_c
+	global dropdown_aspirate_c
+	global dropdown_ppip
+	global aspirate_con
+	global dispense_con
+	global volume_well
+	global well_1
+	global well_2
+	global p_varpip
+
+	proroot = Toplevel(root)
+
+	proroot.title("Simpletrons - OT: Protocol")
+	#newWindow.geometry("200x60")
+
+	def close_popup():
+		proroot.destroy()
+		proroot.update()
+
+	label = ttk.Label(proroot, textvariable=v1)
+	label.grid(column = 0, row = 0)
+	#Set Default Label
+	v1.set("Transfer: Basic")
+
+	label = ttk.Label(proroot, text = 'Shortcuts Function:')
+	label.grid(column = 0, row = 1)
+	dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
+	dropdown_shortcuts['values'] = shortcuts # Replace to Global pipette variable
+	dropdown_shortcuts.current(0)
+	dropdown_shortcuts.grid(column = 0, row = 2)	
+
+	label = ttk.Label(proroot, text = 'Pipette:')
+	label.grid(column = 0, row = 3)
+	dropdown_ppip = ttk.Combobox(proroot, textvariable = p_varpip, postcommand = update_dropdown_source_pip)
+	dropdown_ppip.grid(column = 0, row = 4)
+
+	label = ttk.Label(proroot, textvariable=v2)
+	label.grid(column = 1, row = 3)
+	#Set Default Label
+	v2.set("Volume Per Well: (uL)")
+	textboxA = Entry(proroot, width=12)
+	textboxA.grid(column = 1, row = 4)
+
+
+	label = ttk.Label(proroot, text = 'Aspirate:')
+	label.grid(column = 0, row = 5)
+	dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
+	dropdown_aspirate_c.grid(column = 0, row = 6)
+
+	label = ttk.Label(proroot, textvariable=v3)
+	label.grid(column = 1, row = 5)
+	#Set Default Label
+	v3.set("Wells:")
+	textboxB = Entry(proroot, width=12)
+	textboxB.grid(column = 1, row = 6)
+
+	label = ttk.Label(proroot, text = 'Dispense:')
+	label.grid(column = 2, row = 5)
+	dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
+	dropdown_dispense_c.grid(column = 2, row = 6)
+
+	label = ttk.Label(proroot, textvariable=v4)
+	label.grid(column = 3, row = 5)
+	#Set Default Label
+	v4.set("Wells:")
+	textboxC = Entry(proroot, width=12)
+	textboxC.grid(column = 3, row = 6)
+
+	background_image2=PhotoImage(file='graphic/workspace.png')
+	background2 = ttk.Label(proroot, image = background_image2)
+	background2.grid(column = 0, row = 8, rowspan = 3, columnspan = 5)
+
+
+
+
+###########################################################################################################
 
 ###########################################################################################################
 #
@@ -899,7 +1012,6 @@ pre_select_pip.grid(column = 6, row = 6)
 label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
 label.grid(column = 0, row = 1, padx = 1)
 dropdown_cpip = ttk.Combobox(tab2, textvariable = varpip, postcommand = update_dropdown_pip)
-#dropdown_cpip['values'] = [ 'p100','p1000' ] # Replace to Global pipette variable
 dropdown_cpip.grid(column = 0, row = 2, padx = 1)
 
 #Drop Down Default Selection

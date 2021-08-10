@@ -24,7 +24,7 @@ def find_arduino(serial_number):
     for pinfo in serial.tools.list_ports.comports():
         if pinfo.serial_number == serial_number:
             return serial.Serial(pinfo.device)
-    raise IOError("[#A1]Could not find an Robot - is it plugged in or is serial number setup correct?")
+    raise IOError("[#A1] Could not find an Robot - is it plugged in or is serial number setup correct?")
 
 def check_file():
     try:
@@ -116,7 +116,7 @@ def home_robot2():
         robot2._driver.send_command('G90')
         print('Successfully Homed Transport Robot')
     except: 
-        print('Note: Running Debugging Mode')
+        print('[#A5] Note: Running Debugging Mode')
         print('[#H2] Unable to Home Robot2')
         pass
 
@@ -133,11 +133,11 @@ def reset_all():
             robot2.reset()
             print('Successfully Rested Opentrons Robot')
         except:
-            print('Note: Running Debugging Mode')
+            print('[#A5] Note: Running Debugging Mode')
             print('[#H2] Unable to Home Robot2')
             pass
     except:
-        print('Note: Running Debugging Mode')
+        print('[#A5] Note: Running Debugging Mode')
         print('[#H2] Unable to Home Robot2')
         pass
     
@@ -148,7 +148,8 @@ def load_calibration():
 ##################################################################
 # Database
 # Test Connection
-def create_connection(db_file):
+db_file = 'database/data.db'
+def create_connection():
     """ create a test database connection to a SQLite database """
     conn = None
     try:
@@ -162,8 +163,115 @@ def create_connection(db_file):
         if conn:
             conn.close()
 
+def create_table(conn, create_table_sql):
+    # create a table from the create_table_sql statement
+    try:
+        conn = sqlite3.connect(db_file)
+        c = conn.cursor()
+        c.execute(create_table_sql)
+        conn.commit()
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            con.close()
 
-# def clear_database(db_file, table):
-#     conn = None
-#     try:
-#         conn = sqlite3.connect(db_file)
+#Delete A Single Record
+def deleteRecord(variable, id):
+    try:
+        c = conn.cursor()
+        print("Connected to SQLite")
+
+        # Deleting Whole Table Values
+        if variable == "custom_container":
+            sql_delete_query = """DELETE FROM custom_container WHERE id=?;"""
+
+        if variable == "custom_workspace":
+            sql_delete_query = """DELETE FROM custom_workspace WHERE id=?;"""
+
+        if variable == "custom_protocol":
+            sql_delete_query = """DELETE FROM custom_protocol WHERE id=?;"""
+
+        c.execute(sql_delete_query)
+        conn.commit()
+        print("Record deleted successfully ")
+        conn.close()
+
+    except sqlite3.Error as error:
+        print("Failed to delete record from sqlite table", error)
+    finally:
+        if conn:
+            conn.close()
+            print("the sqlite connection is closed")
+
+#Delete Whole Table
+def deleteTable(variable):
+    try:
+        c = conn.cursor()
+        print("Connected to SQLite")
+
+        # Deleting Whole Table Values
+        if variable == "custom_container":
+            sql_delete_query = """DELETE FROM custom_container;"""
+
+        if variable == "custom_workspace":
+            sql_delete_query = """DELETE FROM custom_workspace;"""
+
+        if variable == "custom_protocol":
+            sql_delete_query = """DELETE FROM custom_protocol;"""
+
+        c.execute(sql_delete_query)
+        conn.commit()
+        print("Record deleted successfully ")
+        conn.close()
+
+    except sqlite3.Error as error:
+        print("Failed to delete whole table from sqlite", error)
+    finally:
+        if conn:
+            conn.close()
+            print("the sqlite connection is closed")
+
+#Setup New Table if none exist in DB File
+def setup_table(variable):
+
+
+    if variable == "custom_container":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_container (
+                                            id integer PRIMARY KEY,
+                                            name text NOT NULL,
+                                            grid_c REAL,
+                                            grid_r REAL,
+                                            spacing_c REAL,
+                                            diameter REAL,
+                                            depth REAL
+                                        ); """
+
+    if variable == "custom_workspace":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_workspace (
+                                            id integer PRIMARY KEY,
+                                            name text NOT NULL,
+                                            container text,
+                                            location text,
+                                        ); """
+
+    if variable == "custom_protocol":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
+                                            id integer PRIMARY KEY,
+                                            name text NOT NULL,
+                                            shortcuts text,
+                                            volume text,
+                                            value1 text,
+                                            value2 text,
+                                            value3 text,
+                                            value4 text,
+                                            option text
+                                            notes text,
+                                        ); """
+
+    if conn is not None:
+        # create projects table
+        create_table(conn, sql_create_projects_table)
+
+    else:
+        print("Error! cannot create the database connection.")
