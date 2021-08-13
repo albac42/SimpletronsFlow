@@ -17,6 +17,7 @@ import opentrons
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
+from modulePipetting import *
 
 
 version = 'Version: Private Alpha 0.1'
@@ -165,94 +166,9 @@ def update_dropdown_con_c():
 
 ###########################################################################################################
 #
-# Function Link
+# PRE LOAD
 #
 ###########################################################################################################
-
-
-#
-#Pipette Control
-#
-def save_pip_action():
-	pip = varpip.get()
-	pos = pippos.get()
-
-	print(pip)
-	print(pos)
-
-	saveCalibrationPip(pip, pos)
-	print('Command Sucessfull Saved Calibration')
-
-def move_pip_action_up():
-	pip = varpip.get()
-	calibrationControlPlugger(pip, z_up)
-
-def move_pip_action_down():
-	pip = varpip.get()
-	calibrationControlPlugger(pip, z_down)
-
-def move_prepip_action():
-	pip = varpip.get()
-	plunger = pippos.get()
-
-	print(pip)
-	print(pos)
-
-	moveDefaultLocation_p(pip, plunger)
-	print('Scuessfully Moved To Saved Position')
-
-
-#
-# Roboto Control
-#
-def move_x_neg():
-	calibrationControl('x_left')
-
-	pass
-
-def move_x_pos():
-	calibrationControl('x_right')
-
-	pass
-
-def move_y_neg():
-	calibrationControl('y_down')
-
-	pass
-
-def move_y_pos():
-	calibrationControl('y_up')
-
-	pass 
-
-
-def move_z_neg():
-	calibrationControl('z_down')
-
-	pass
-
-def move_z_pos():
-	calibrationControl('z_up')
-
-	pass 
-
-def home_axis():
-
-	calibrationControl('home')
-
-	pass
-
-
-def load_axis():
-
-	pip = varpip,get()
-	con = varcon.get()
-
-	moveDefaultLocation_C(pip, con)
-	pass
-#
-#Pre Load
-#
 
 # Load Pre Configured Workspace
 def load_pre_workspace(): #For Testing
@@ -278,6 +194,103 @@ def load_pre_pip(): #For Testing
 	update_pipette('pipette_a', 1)
 	loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
 	update_pipette('pipette_b', 0)
+###########################################################################################################
+
+###########################################################################################################
+#
+# Function Link
+#
+###########################################################################################################
+
+
+#
+#Pipette Control
+#
+def save_pip_action():
+	pip = varpip.get()
+	pos = pippos.get()
+
+	print(pip)
+	print(pos)
+
+	saveCalibrationPip(pip, pos)
+	print('Command Sucessfull Saved Calibration')
+
+def move_pip_action_up():
+	pip = varpip.get()
+	calibrationControlPlugger(pip, 'z_up')
+
+def move_pip_action_down():
+	pip = varpip.get()
+	calibrationControlPlugger(pip, 'z_down')
+
+def move_prepip_action():
+	pip = varpip.get()
+	plunger = pippos.get()
+
+	print(pip)
+	print(pos)
+
+	moveDefaultLocation_p(pip, plunger)
+	print('Scuessfully Moved To Saved Position')
+
+
+#
+# Roboto Control
+#
+def move_x_neg():
+	try:
+		calibrationControl('x_left')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")
+	
+
+def move_x_pos():
+	try:
+		calibrationControl('x_right')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+
+def move_y_neg():
+	try:
+		calibrationControl('y_down')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+
+def move_y_pos():
+	try:
+		calibrationControl('y_up')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+
+
+def move_z_neg():
+	try:
+		calibrationControl('z_down')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+
+def move_z_pos():
+	try:
+		calibrationControl('z_up')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+
+def home_axis():
+	try:
+		calibrationControl('home')
+	except:
+		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+
+
+def load_axis():
+
+	pip = varpip,get()
+	con = varcon.get()
+
+	moveDefaultLocation_C(pip, con)
+	pass
+
 
 #
 # Dynamic Creation
@@ -417,8 +430,9 @@ def setup_workspace():
 	update_containers_list_type()
 	print(loaded_containers)
 	confirmation_box(2)
-
+#
 #Save Custom Pipette
+#
 def action_save_pip():
 	if var_p_a.get() == 0:
 		axis = 'b'
@@ -447,16 +461,6 @@ def action_save_pip():
 
 	loadpipette (axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
 	print(loaded_pipette_list)
-
-
-def list_containers():
-
-	return 
-
-#def graphicalUIprotocol(): # Start Graphical Protocal Interface
-#	pass
-
-
 ###########################################################################################################
 
 
@@ -554,6 +558,15 @@ def graphicalUIprotocol():
 		proroot.destroy()
 		proroot.update()
 
+	s_menu = Menu(root)
+	proroot.config(menu = s_menu)
+
+	#Title
+	file_menu = Menu(s_menu)
+	s_menu.add_cascade(label = "File", menu = file_menu)
+	file_menu.add_command(label = "Exit", command = close_popup )
+
+
 	label = ttk.Label(proroot, textvariable=v1)
 	label.grid(column = 0, row = 0)
 	#Set Default Label
@@ -577,7 +590,6 @@ def graphicalUIprotocol():
 	v2.set("Volume Per Well: (uL)")
 	textboxA = Entry(proroot, width=12)
 	textboxA.grid(column = 1, row = 4)
-
 
 	label = ttk.Label(proroot, text = 'Aspirate:')
 	label.grid(column = 0, row = 5)

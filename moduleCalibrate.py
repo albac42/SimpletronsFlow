@@ -32,8 +32,10 @@ set_calibration_mode = 0
 def calibration_mode_toggle(option):
     if option == 1: #Enable
         set_calibration_mode = 1
+        print('Enable Calibration Mode')
     if option == 0: #Disable
         set_calibration_mode = 0
+        print('Disable Calibration Mode')
 
 
 
@@ -126,6 +128,11 @@ def move_pip_action_home(pipette):
     pipette.home()
     print('Homing Pipette')
     plungerPos=0
+
+
+def save_protocol():
+    pass
+
 
 
 #OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is fully integrated with UI

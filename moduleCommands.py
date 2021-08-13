@@ -7,6 +7,7 @@ import opentrons
 from opentrons import robot, containers, instruments
 
 from modulePipetting import *
+from moduleCalibrate import *
 #from moduleTransportation import getTransportposition
 from time import sleep
 
@@ -275,3 +276,11 @@ def setup_table(variable):
 
     else:
         print("Error! cannot create the database connection.")
+
+
+
+###########################################################################################################
+#
+# Robot Move Commands
+#
+###########################################################################################################
