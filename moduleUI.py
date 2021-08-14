@@ -549,14 +549,26 @@ def graphicalUIprotocol():
 	global well_2
 	global p_varpip
 
+
 	proroot = Toplevel(root)
 
 	proroot.title("Simpletrons - OT: Protocol")
 	#newWindow.geometry("200x60")
 
+	
+	
+
 	def close_popup():
 		proroot.destroy()
 		proroot.update()
+
+
+	def callback_a(eventObject):
+		print(eventObject.widget.get())
+
+	def callback_b(eventObject):
+		print(eventObject.widget.get())
+
 
 	s_menu = Menu(root)
 	proroot.config(menu = s_menu)
@@ -569,14 +581,14 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v1)
 	label.grid(column = 0, row = 0)
-	#Set Default Label
-	v1.set("Transfer: Basic")
+	v1.set("Transfer: Basic") #Set Default Label
 
 	label = ttk.Label(proroot, text = 'Shortcuts Function:')
 	label.grid(column = 0, row = 1)
+	
 	dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
-	dropdown_shortcuts['values'] = shortcuts # Replace to Global pipette variable
-	dropdown_shortcuts.current(0)
+	dropdown_shortcuts['values'] = shortcuts
+	dropdown_shortcuts.current(0)	#Set Default Selection
 	dropdown_shortcuts.grid(column = 0, row = 2)	
 
 	label = ttk.Label(proroot, text = 'Pipette:')
@@ -586,8 +598,7 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v2)
 	label.grid(column = 1, row = 3)
-	#Set Default Label
-	v2.set("Volume Per Well: (uL)")
+	v2.set("Volume Per Well: (uL)") #Set Default Label
 	textboxA = Entry(proroot, width=12)
 	textboxA.grid(column = 1, row = 4)
 
@@ -595,11 +606,11 @@ def graphicalUIprotocol():
 	label.grid(column = 0, row = 5)
 	dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
 	dropdown_aspirate_c.grid(column = 0, row = 6)
+	dropdown_aspirate_c.bind("<<ComboboxSelected>>", callback_a)
 
 	label = ttk.Label(proroot, textvariable=v3)
 	label.grid(column = 1, row = 5)
-	#Set Default Label
-	v3.set("Wells:")
+	v3.set("Wells:") #Set Default Label
 	textboxB = Entry(proroot, width=12)
 	textboxB.grid(column = 1, row = 6)
 
@@ -607,13 +618,15 @@ def graphicalUIprotocol():
 	label.grid(column = 2, row = 5)
 	dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
 	dropdown_dispense_c.grid(column = 2, row = 6)
+	dropdown_dispense_c.bind("<<ComboboxSelected>>", callback_b)
 
 	label = ttk.Label(proroot, textvariable=v4)
 	label.grid(column = 3, row = 5)
-	#Set Default Label
-	v4.set("Wells:")
+	v4.set("Wells:") #Set Default Label
 	textboxC = Entry(proroot, width=12)
 	textboxC.grid(column = 3, row = 6)
+
+
 
 	background_image2=PhotoImage(file='graphic/workspace.png')
 	background2 = ttk.Label(proroot, image = background_image2)
