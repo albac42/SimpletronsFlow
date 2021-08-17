@@ -18,7 +18,12 @@ from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
+###########################################################################################################
 
+# Python TK Graphical Interface Note: [Run on Start]
+# Note: Some Code is require 
+
+###########################################################################################################
 
 version = 'Version: Private Alpha 0.1'
 
@@ -31,6 +36,10 @@ loaded_containers = []
 count_CT = 0
 count_CTT = 0
 count_C = 0
+
+
+head_speed_p = 1 # Movenment Speed Pipette
+head_speed_a = 1 # Movenment Speed Arm
 
 ###########################################################################################################
 #
@@ -218,11 +227,13 @@ def save_pip_action():
 
 def move_pip_action_up():
 	pip = varpip.get()
-	calibrationControlPlugger(pip, 'z_up')
+	speed = head_speed_p.get()
+	calibrationControlPlugger(pip, 'z_up', speed)
 
 def move_pip_action_down():
 	pip = varpip.get()
-	calibrationControlPlugger(pip, 'z_down')
+	speed = head_speed_p.get()
+	calibrationControlPlugger(pip, 'z_down', speed)
 
 def move_prepip_action():
 	pip = varpip.get()
@@ -240,39 +251,45 @@ def move_prepip_action():
 #
 def move_x_neg():
 	try:
-		calibrationControl('x_left')
+		speed = head_speed_p.get()
+		calibrationControl('x_left', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")
 	
 
 def move_x_pos():
 	try:
-		calibrationControl('x_right')
+		speed = head_speed_p.get()
+		calibrationControl('x_right', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
 def move_y_neg():
 	try:
-		calibrationControl('y_down')
+		speed = head_speed_p.get()
+		calibrationControl('y_down', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
 def move_y_pos():
 	try:
-		calibrationControl('y_up')
+		speed = head_speed_p.get()
+		calibrationControl('y_up', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
 
 
 def move_z_neg():
 	try:
-		calibrationControl('z_down')
+		speed = head_speed_p.get()
+		calibrationControl('z_down', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
 def move_z_pos():
 	try:
-		calibrationControl('z_up')
+		speed = head_speed_p.get()
+		calibrationControl('z_up', speed)
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
 
@@ -548,6 +565,8 @@ def graphicalUIprotocol():
 	global well_1
 	global well_2
 	global p_varpip
+	global save_button_image_pro
+	global background_image2
 
 
 	proroot = Toplevel(root)
@@ -563,13 +582,19 @@ def graphicalUIprotocol():
 		proroot.update()
 
 
+	def draw_workspace_graphic():
+		pass
+
+
 	def callback_a(eventObject):
 		print(eventObject.widget.get())
+
 
 	def callback_b(eventObject):
 		print(eventObject.widget.get())
 
 
+	###
 	s_menu = Menu(root)
 	proroot.config(menu = s_menu)
 
@@ -577,7 +602,11 @@ def graphicalUIprotocol():
 	file_menu = Menu(s_menu)
 	s_menu.add_cascade(label = "File", menu = file_menu)
 	file_menu.add_command(label = "Exit", command = close_popup )
+	####
 
+	#background_image2=tk.PhotoImage(file='graphic/workspace_c.png')
+	#background2 = ttk.Label(proroot, image = background_image2)
+	#background2.grid(column = 4, row = 0)
 
 	label = ttk.Label(proroot, textvariable=v1)
 	label.grid(column = 0, row = 0)
@@ -626,11 +655,10 @@ def graphicalUIprotocol():
 	textboxC = Entry(proroot, width=12)
 	textboxC.grid(column = 3, row = 6)
 
+	save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
+	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = setup_workspace)
+	save_step.grid(column = 4, row = 7)
 
-
-	background_image2=PhotoImage(file='graphic/workspace.png')
-	background2 = ttk.Label(proroot, image = background_image2)
-	background2.grid(column = 0, row = 8, rowspan = 3, columnspan = 5)
 
 
 
@@ -790,14 +818,20 @@ dropdown.grid(column = 4, row = 0, padx = 1)
 dropdown.lift()
 
 #Save Button - Save Workspace 
+label = ttk.Label(tab1b, text='Save Workspace:', font = ('Arial', 12))
+label.grid(column = 1, row = 3)
+
 save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 save_w = ttk.Button(tab1b, image = save_button_image, width = 5, command = setup_workspace)
 save_w.grid(column = 2, row = 3)
 
 #Save Button - Load Pre-Configured Workspace
+label = ttk.Label(tab1b, text='Load Workspace:', font = ('Arial', 12))
+label.grid(column = 3, row = 3)
+
 pree_home_image = PhotoImage(file="graphic/content-save-settings.png")
 save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
-save_w.grid(column = 3, row = 3)
+save_w.grid(column = 4, row = 3)
 
 #Button
 
@@ -815,19 +849,19 @@ save_w.grid(column = 3, row = 3)
 varpip = StringVar(root, value='')
 
 #Selection 1 - Pipette
-label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 15))
-label.grid(column = 0, row = 1, padx = 1)
+label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
+label.grid(column = 1, row = 1, padx = 1)
 dropdown_varpip_c = ttk.Combobox(tab3, textvariable = varpip, postcommand = update_dropdown_pip_c)
-dropdown_varpip_c.grid(column = 0, row = 2, padx = 1)
+dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection
 varcon = StringVar(root, value='')
 
 #Selection 1 - Containers
-label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 15))
-label.grid(column = 0, row = 3, padx = 1)
+label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
+label.grid(column = 1, row = 3, padx = 1)
 dropdown_varcon_c = ttk.Combobox(tab3, textvariable = varcon, postcommand = update_dropdown_con_c)
-dropdown_varcon_c.grid(column = 0, row = 4, padx = 1)
+dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
 
 #Section 2 - Pipette Movement 
 
@@ -836,51 +870,67 @@ dropdown_varcon_c.grid(column = 0, row = 4, padx = 1)
 #Set Image to variable
 xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ X Axis Negative ]
 left_b = ttk.Button(tab3, image = xn_button_image, width = 5, command = move_x_neg)
-left_b.grid(column = 1, row = 2)
+left_b.grid(column = 3, row = 2)
 
 #Movement Pad - X Axis
 #Set Image to variable 
 xp_button_image = PhotoImage(file="graphic/arrow-right-bold-circle.png") # [ X Axis Positive ]
 right_b = ttk.Button(tab3, image = xp_button_image, width = 5, command = move_x_pos)
-right_b.grid(column = 3, row = 2)
+right_b.grid(column = 5, row = 2)
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Negative ]
 down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_neg)
-down_b.grid(column = 2, row = 1)
+down_b.grid(column = 4, row = 1)
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Positive ]
 up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_pos)
-up_b.grid(column = 2, row = 3)
+up_b.grid(column = 4, row = 3)
 
 
 #Movement Pad - Z Axis [Pipette Movement] Down
 zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png")  # [ Z Axis Negative ]
 z_up_b = ttk.Button(tab3, image = zd_button_image, width = 5, command = move_z_neg)
-z_up_b.grid(column = 1, row = 3)
+z_up_b.grid(column = 3, row = 3)
 
 #Movement Pad - Z Axis [Pipette Movement] UP
 zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") # [ z Axis Positive ]
 z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5, command = move_z_pos)
-z_down_b.grid(column = 1, row = 1)
+z_down_b.grid(column = 3, row = 1)
 
 #Home
 home_image = PhotoImage(file="graphic/home.png") 
 home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
-home_b.grid(column = 2, row = 4)
+home_b.grid(column = 4, row = 4)
 
 #Move to preconfigured 
 pre_home_image = PhotoImage(file="graphic/content-save-settings.png")
 pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
-pre_home_b.grid(column = 3, row = 4)
+pre_home_b.grid(column = 5, row = 4)
 
 #Save Button - Calibration 
 #save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 save_c = ttk.Button(tab3, image = save_button_image, width = 5)
-save_c.grid(column = 1, row = 4)
+save_c.grid(column = 3, row = 4)
+
+
+#Change Movement Speed
+label = ttk.Label(tab3, text='Set Movement Speed:', font = ('Arial', 10))
+label.grid(column = 1, row = 5)
+#Scale Bar
+scale_a = Scale(tab3, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_a)
+scale_a.grid(column = 1, row = 6)
+#Sync Entry Box
+text = Entry(tab3, width=4, textvariable=head_speed_a)
+text.grid(column = 0, row = 6, padx=5)
+text.bind("<Return>", lambda event: scale_a.configure(to=head_speed_a.get()))
+#Unit
+label = ttk.Label(tab3, text='mm', font = ('Arial', 12))
+label.grid(column = 2, row = 6)
+
 
 #Keybaord Input
 root.bind("<Left>", move_x_neg)
@@ -916,7 +966,7 @@ s_tip_rack = StringVar(root, value='')
 s_trash = StringVar(root, value='')
 
 #Selection 1 - Axis
-label = ttk.Label(tab1, text='Select a Axis', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
 label.grid(column = 1, row = 0)
 #Scale Bar
 scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
@@ -933,7 +983,7 @@ label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =
 #Selection 2 - Max Volume
 var_max_volume = IntVar()
 
-label = ttk.Label(tab1, text='Select a max volume', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
 scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
@@ -949,7 +999,7 @@ label.grid(column = 2, row = 3)
 #Selection 3 - Min Volume
 var_min_volume = IntVar()
 
-label = ttk.Label(tab1, text='Select a min volume', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
 scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
@@ -965,7 +1015,7 @@ label.grid(column = 2, row = 5)
 #Selection 3 - aspirate_speed
 var_aspirate_speed = IntVar()
 
-label = ttk.Label(tab1, text='Select aspirate speed', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
 scale_4 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
@@ -985,7 +1035,7 @@ separator.grid(row=0,column=4, rowspan=10, ipady=180)
 #Selection 4 - dispense_speed
 var_dispense_speed = IntVar()
 
-label = ttk.Label(tab1, text='Select a dispense speed', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
 #Scale Bar
 scale_5 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
@@ -999,22 +1049,24 @@ label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
 
 #Selection 5 - Select a Tip Rack
-label = ttk.Label(tab1, text='Select a Tip Rack', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Tip Rack:', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
 
 #Selection 6 - Select a Bin
-label = ttk.Label(tab1, text='Select a Bin', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Bin:', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1, textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_trash.grid(column = 6, row = 3)
 
 # Save Button
+label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
+label.grid(column = 6, row = 4)
 save_pip = ttk.Button(tab1, image = save_button_image, width = 5, command = action_save_pip)
-save_pip.grid(column = 6, row = 4)
+save_pip.grid(column = 6, row = 5)
 
 # Separator object
 separator = ttk.Separator(tab1, orient='vertical')
@@ -1022,10 +1074,9 @@ separator.grid(row=0,column=8, rowspan=10, ipady=180)
 
 #Use Pre-Configured Pipetting in script/database
 label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
-label.grid(column = 6, row = 5)
-
+label.grid(column = 6, row = 6)
 pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5, command = load_pre_pip)
-pre_select_pip.grid(column = 6, row = 6)
+pre_select_pip.grid(column = 6, row = 7)
 
 
 #########################################################################################################
@@ -1034,40 +1085,56 @@ pre_select_pip.grid(column = 6, row = 6)
 #
 #########################################################################################################
 #Selection 1 - Pipette
-label = ttk.Label(tab2, text='Select a Pipette', font = ('Arial', 15))
-label.grid(column = 0, row = 1, padx = 1)
+label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
+label.grid(column = 1, row = 1, padx = 1)
 dropdown_cpip = ttk.Combobox(tab2, textvariable = varpip, postcommand = update_dropdown_pip)
-dropdown_cpip.grid(column = 0, row = 2, padx = 1)
+dropdown_cpip.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection
 pippos = StringVar(root, value=' ')
 #Selection 2 - Which Selection
-label = ttk.Label(tab2, text='Select a Position', font = ('Arial', 15))
-label.grid(column = 0, row = 3, padx = 1)
+label = ttk.Label(tab2, text='Select a Position:', font = ('Arial', 12))
+label.grid(column = 1, row = 3, padx = 1)
 dropdown_cpos = ttk.Combobox(tab2, textvariable = pippos)
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
-dropdown_cpos.grid(column = 0, row = 4, padx = 1)
+dropdown_cpos.grid(column = 1, row = 4, padx = 1)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
 z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5, command = move_pip_action_up)
-z_up_bp.grid(column = 1, row = 3)
+z_up_bp.grid(column = 3, row = 3)
 
 #Movement Pad - Z Axis [Pipette Movement] UP 
 z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5, command = move_pip_action_down)
-z_down_bp.grid(column = 1, row = 1)
+z_down_bp.grid(column = 3, row = 1)
 
 #Home Button
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
-home_b.grid(column = 2, row = 4)
+home_b.grid(column = 4, row = 4)
 
 #Move to preconfigured 
 pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5, command = move_prepip_action)
-pre_home_b.grid(column = 3, row = 4)
+pre_home_b.grid(column = 5, row = 4)
 
 #Save Button - Calibration  
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
-save_p.grid(column = 1, row = 4)
+save_p.grid(column = 3, row = 4)
+
+
+
+#Change Movement Speed
+label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
+label.grid(column = 1, row = 5)
+#Scale Bar
+scale_b = Scale(tab2, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_p)
+scale_b.grid(column = 1, row = 6)
+#Sync Entry Box
+text = Entry(tab2, width=4, textvariable=head_speed_p)
+text.grid(column = 0, row = 6, padx=5)
+text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
+#Unit
+label = ttk.Label(tab2, text='mm', font = ('Arial', 12))
+label.grid(column = 2, row = 6)
 
 #Keybaord Input
 root.bind("<Prior>", move_pip_action_up) #Page UP

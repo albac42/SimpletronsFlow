@@ -21,13 +21,7 @@ from tkinter import ttk
 
 set_calibration_mode = 0
 
-#Self Debugging 
-#robot.connect('/dev/ttyACM0')
 
-#robot.connect()
-
-#input("Robot will now home, press enter to continue.")
-#robot.home()
 
 def calibration_mode_toggle(option):
     if option == 1: #Enable
@@ -51,9 +45,13 @@ def changeDirectionSpeed(speed):
         movementAmount = speed
         return print('Speed Set', movementAmount)
 
-def calibrationControl(direction):
+def calibrationControl(direction, speed):
     global position
     global movementAmount
+
+    #Change Movenment Speed 
+    changeDirectionSpeed(speed)
+
 
     if ((direction == "z_up") and (set_calibration_mode == 1)):
         position[2]=position[2]+movementAmount
@@ -113,8 +111,10 @@ def saveCalibration(rack, pipette):
 def saveCalibrationPip(pipette, plungerPos):
     pipette.calibrate(plungerPos)
 
-def calibrationControlPlugger(pipette, key):
+def calibrationControlPlugger(pipette, key, speed):
     global movementAmount
+
+    changeDirectionSpeed(speed)
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
@@ -135,10 +135,19 @@ def save_protocol():
 
 
 
-#OLD Curse Calibration Software - NOT FUNCTIONAL - REMOVE CODE WHEN Calibration is fully integrated with UI
-#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference 
+#OLD Curse Calibration Code - NOT FUNCTIONAL WITH CURRENT LIBRARY - REMOVE CODE WHEN Calibration is fully integrated with UI
+#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference
+
 #equipment=getEquipment()
 #Load Default Containers 
+
+#Self Debugging 
+#robot.connect('/dev/ttyACM0')
+
+#robot.connect()
+
+#input("Robot will now home, press enter to continue.")
+#robot.home()
 
 #load_dd_container()
 
