@@ -98,6 +98,55 @@ def confirmation_box(variable):
 		save_w.grid(column = 0, row = 1)
 ###########################################################################################################
 
+
+###########################################################################################################
+#
+# Connection To Robot [Pop Up]
+#
+###########################################################################################################
+
+def connect_robot():
+	connect()
+	pass
+
+def reset_robot():
+	reset_all()
+	pass
+
+
+def connecton_graphical():
+	conroot = Toplevel(root)
+
+	conroot.title("Simpletrons - OT: Protocol - Connection")
+
+	conroot.lift()
+	conroot. attributes("-topmost", True)
+
+	def close_popup():
+		conroot.destroy()
+		conroot.update()
+	###
+	s_menu = Menu(root)
+	conroot.config(menu = s_menu)
+
+	#Title
+	file_menu = Menu(s_menu)
+	s_menu.add_cascade(label = "File", menu = file_menu)
+	file_menu.add_command(label = "Exit", command = close_popup )
+
+
+	label = ttk.Label(conroot, text = 'Robot Connection Options:')
+	label.grid(column = 0, row = 1)
+
+	save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect_robot)
+	save_step.grid(column = 0, row = 2)
+
+	save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_robot)
+	save_step.grid(column = 0, row = 3)
+
+
+###########################################################################################################
+
 ###########################################################################################################
 #
 # Update Posistion Pipetting 
@@ -555,14 +604,6 @@ def containersCreationUi():
 
 ###########################################################################################################
 #
-# Connection To Robot [Pop Up]
-#
-###########################################################################################################
-
-
-
-###########################################################################################################
-#
 # UI Protocol [Pop Up]
 #
 ###########################################################################################################
@@ -761,8 +802,13 @@ root.config(menu = s_menu)
 file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
+file_menu.add_command(label = "Connections Options", command = connecton_graphical)
 file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
+
+
+#Start Up UI
+connecton_graphical()
 ########################################################################################################
 #
 #Container Setup
@@ -1239,6 +1285,12 @@ def key_press(event):
 		move_pip_action_down()
 
 root.bind("<Key>", key_press)
+
+
+
+
+
+
 
 
 #########################################################################################################
