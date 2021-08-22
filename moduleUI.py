@@ -21,7 +21,7 @@ from modulePipetting import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
-# Note: Some Code is require 
+# Note: Code is require in this module for graphical UI to function
 
 ###########################################################################################################
 
@@ -98,10 +98,36 @@ def confirmation_box(variable):
 		save_w.grid(column = 0, row = 1)
 ###########################################################################################################
 
+###########################################################################################################
+#
+# Update Posistion Pipetting 
+#
+###########################################################################################################
+
+
+position_display_xx = StringVar()
+
+position_display_x = StringVar()
+position_display_y = StringVar()
+position_display_z = StringVar()
 
 
 
+def update_position_display():
+	position=list(robot._driver.get_head_position()["current"]) 
 
+	position_display_x = ("X:", position[0])
+	position_display_y = ("Y:", position[1])
+	position_display_z = ("Z:", position[2])
+
+def update_position_display_x():
+	plungerPos = pipette._get_plunger_position(plungerTarget)
+
+	position_display_xx = ("X:", plungerTarget)
+
+
+
+###########################################################################################################
 
 ###########################################################################################################
 #
@@ -226,14 +252,22 @@ def save_pip_action():
 	print('Command Sucessfull Saved Calibration')
 
 def move_pip_action_up():
-	pip = varpip.get()
-	speed = head_speed_p.get()
-	calibrationControlPlugger(pip, 'z_up', speed)
+	try:
+		pip = varpip.get()
+		speed = head_speed_p.get()
+		calibrationControlPlugger(pip, 'z_up', speed)
+		update_position_display_x()
+	except:
+		print("[K2] Keyboard Input Not Accpeted At this Stage")	
 
 def move_pip_action_down():
-	pip = varpip.get()
-	speed = head_speed_p.get()
-	calibrationControlPlugger(pip, 'z_down', speed)
+	try:
+		pip = varpip.get()
+		speed = head_speed_p.get()
+		calibrationControlPlugger(pip, 'z_down', speed)
+		update_position_display_x()
+	except:
+		print("[K2] Keyboard Input Not Accpeted At this Stage")	
 
 def move_prepip_action():
 	pip = varpip.get()
@@ -253,6 +287,7 @@ def move_x_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('x_left', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")
 	
@@ -261,6 +296,7 @@ def move_x_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('x_right', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
@@ -268,6 +304,7 @@ def move_y_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('y_down', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
@@ -275,6 +312,7 @@ def move_y_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('y_up', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
 
@@ -283,6 +321,7 @@ def move_z_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('z_down', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	
 
@@ -290,6 +329,7 @@ def move_z_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('z_up', speed)
+		update_position_display()
 	except:
 		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
 
@@ -511,6 +551,15 @@ def containersCreationUi():
 	
 	e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
 	e_container_name.grid(column = 0, row = 2)	
+
+
+###########################################################################################################
+#
+# Connection To Robot [Pop Up]
+#
+###########################################################################################################
+
+
 
 ###########################################################################################################
 #
@@ -928,25 +977,50 @@ text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
 text.bind("<Return>", lambda event: scale_a.configure(to=head_speed_a.get()))
 #Unit
-label = ttk.Label(tab3, text='mm', font = ('Arial', 12))
+label = ttk.Label(tab3, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
 
+label = ttk.Label(tab3, text='Robot Position:', font = ('Arial', 10))
+label.grid(column = 1, row = 7)
+#Display Coordinate
+label = ttk.Label(tab3, textvariable=position_display_x)
+label.grid(column = 0, row = 8)
+position_display_x.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab3, textvariable=position_display_y)
+label.grid(column = 1, row = 8)
+position_display_y.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab3, textvariable=position_display_z)
+label.grid(column = 2, row = 8)
+position_display_z.set("X: 0") #Set Default Label
+
 #Keybaord Input
-root.bind("<Left>", move_x_neg)
-root.bind("<Right>", move_x_pos)
-root.bind("<Up>", move_y_neg) 
-root.bind("<Down>", move_y_pos)
+# root.bind("<Left>", move_x_neg)
+# root.bind("<Right>", move_x_pos)
+# root.bind("<Up>", move_y_neg) 
+# root.bind("<Down>", move_y_pos)
 
 def key_press(event):
-	if event.char == "w":
+	if event.char == "R":
 		move_z_neg()
-	if event.char == "W":
+	if event.char == "r":
 		move_z_neg()
-	if event.char == "s":
+	if event.char == "f":
 		move_z_pos()
-	if event.char == "S":
-		move_z_pos()	
+	if event.char == "F":
+		move_z_pos()
+	if event.char == "a":
+		move_x_neg()
+	if event.char == "d":
+		move_x_pos()
+	if event.char == "w":
+		move_y_neg()
+	if event.char == "s":
+		move_y_pos()
+
+	pass
 
 root.bind("<Key>", key_press)
 
@@ -1120,8 +1194,6 @@ pre_home_b.grid(column = 5, row = 4)
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
 save_p.grid(column = 3, row = 4)
 
-
-
 #Change Movement Speed
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
 label.grid(column = 1, row = 5)
@@ -1133,16 +1205,45 @@ text = Entry(tab2, width=4, textvariable=head_speed_p)
 text.grid(column = 0, row = 6, padx=5)
 text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
 #Unit
-label = ttk.Label(tab2, text='mm', font = ('Arial', 12))
+label = ttk.Label(tab2, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
-#Keybaord Input
-root.bind("<Prior>", move_pip_action_up) #Page UP
-root.bind("<Next>", move_pip_action_down) #PageDown
+label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
+label.grid(column = 1, row = 7)
+#Display Coordinate
+label = ttk.Label(tab2, textvariable=position_display_x)
+label.grid(column = 0, row = 8)
+position_display_x.set("X: 0") #Set Default Label
 
+label = ttk.Label(tab2, textvariable=position_display_y)
+label.grid(column = 1, row = 8)
+position_display_y.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab2, textvariable=position_display_z)
+label.grid(column = 2, row = 8)
+position_display_z.set("X: 0") #Set Default Label
+
+#Keybaord Input
+# root.bind("<Prior>", move_pip_action_up) #Page UP
+# root.bind("<Next>", move_pip_action_down) #PageDown
+
+
+def key_press(event):
+	if event.char == "R":
+		move_pip_action_up()
+	if event.char == "r":
+		move_pip_action_up()
+	if event.char == "f":
+		move_pip_action_down()
+	if event.char == "F":
+		move_pip_action_down()
+
+root.bind("<Key>", key_press)
+
+
+#########################################################################################################
 
 root.mainloop() 
 #########################################################################################################
 
 #Debugging (Run Graphical Interface without backend code)
-#graphicalUIcalibrate()

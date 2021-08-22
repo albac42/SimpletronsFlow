@@ -3,6 +3,7 @@ import opentrons
 import curses
 import time
 
+
 from curses import wrapper
 
 from moduleCommands import *
@@ -20,6 +21,7 @@ from tkinter import ttk
 
 
 set_calibration_mode = 0
+
 
 
 
@@ -55,35 +57,34 @@ def calibrationControl(direction, speed):
 
     if ((direction == "z_up") and (set_calibration_mode == 1)):
         position[2]=position[2]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
 
     if ((direction == "z_down") and (set_calibration_mode == 1)):
         position[2]=position[2]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
 
     if ((direction == "x_left") and (set_calibration_mode == 1)):
         position[0]=position[0]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
 
     if ((direction == "x_right") and (set_calibration_mode == 1)):
         direction[0]=position[0]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
 
     if ((direction == "y_up") and (set_calibration_mode == 1)):
         position[1]=position[1]+movementAmount
-        position=list(robot._driver.get_head_position()["current"])
 
     if ((direction == "y_down") and (set_calibration_mode == 1)):
         position[1]=position[1]-movementAmount
-        position=list(robot._driver.get_head_position()["current"])
+    
+    #Send Command To Robot
+    robot.move_head(x=position[0],y=position[1],z=position[2])
+    position=list(robot._driver.get_head_position()["current"])
 
+    #Home Command 
     if ((direction == "home") and (set_calibration_mode == 1)):
         robot.home()
         position=list(robot._driver.get_head_position()["current"])
+
     else:
         print('Warning: Calibration Keyboard Is Pressed, Please check your in calaibration mode')
-
-        position=list(robot._driver.get_head_position()["current"])
+        #position=list(robot._driver.get_head_position()["current"])
 
 def moveDefaultLocation_C(pipette, container):
     global position
