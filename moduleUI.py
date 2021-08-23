@@ -689,9 +689,9 @@ def graphicalUIprotocol():
 		proroot.destroy()
 		proroot.update()
 
-	#Save Step
-
 	#Start Protocol
+	def start_protocol():
+		pass
 
 	#Draw Graphic
 	def draw_workspace_graphic():
@@ -705,10 +705,9 @@ def graphicalUIprotocol():
 	#Draw Grahpics - Second Container
 	def callback_b(eventObject):
 		print(eventObject.widget.get())
-		value3 = eventObject.widget.get()
 
 
-	def process_step():
+	def save_step():
 		global step
 
 		try:
@@ -845,7 +844,7 @@ def graphicalUIprotocol():
 
 	#Save Button
 	save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
-	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = setup_workspace)
+	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
 	save_step.grid(column = 4, row = 7)
 
 
