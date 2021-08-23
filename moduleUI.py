@@ -26,21 +26,7 @@ from moduleProtocol import *
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 0.1'
-
-#Global Variable
-shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', '96-PCR-flat', '96-PCR-tall',  '96-deep-well']
-loaded_pipette_list = ['','']
-loaded_container_type = []
-loaded_containers = []
-count_CT = 0
-count_CTT = 0
-count_C = 0
-
-
-head_speed_p = 1 # Movenment Speed Pipette
-head_speed_a = 1 # Movenment Speed Arm
+version = 'Version: Private Alpha 0.1 Dev'
 
 ###########################################################################################################
 #
@@ -57,6 +43,30 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
+
+###########################################################################################################
+
+###########################################################################################################
+#
+# Global Variable
+#
+##########################################################################################################
+#
+shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', '96-PCR-flat', '96-PCR-tall',  '96-deep-well']
+loaded_pipette_list = ['','']
+loaded_container_type = []
+loaded_containers = []
+count_CT = IntVar()
+count_CTT = IntVar()
+count_C = IntVar()
+
+
+head_speed_p = IntVar() # Movenment Speed Pipette
+head_speed_a = IntVar() # Movenment Speed Arm
+head_speed_p = 1 # Movenment Speed Pipette
+head_speed_a = 1 # Movenment Speed Arm
+###########################################################################################################
 
 ###########################################################################################################
 #
@@ -308,7 +318,7 @@ def move_pip_action_up():
 		calibrationControlPlugger(pip, 'z_up', speed)
 		update_position_display_x()
 	except:
-		print("[K2] Keyboard Input Not Accpeted At this Stage")	
+		print("[K2] Keyboard Input Not Accepted At this Stage")	
 
 def move_pip_action_down():
 	try:
@@ -317,7 +327,7 @@ def move_pip_action_down():
 		calibrationControlPlugger(pip, 'z_down', speed)
 		update_position_display_x()
 	except:
-		print("[K2] Keyboard Input Not Accpeted At this Stage")	
+		print("[K2] Keyboard Input Not Accepted At this Stage")	
 
 def move_prepip_action():
 	pip = varpip.get()
@@ -339,7 +349,7 @@ def move_x_neg():
 		calibrationControl('x_left', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")
+		print("[K1] Keyboard Input Not Accepted At this Stage")
 	
 
 def move_x_pos():
@@ -348,7 +358,7 @@ def move_x_pos():
 		calibrationControl('x_right', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_y_neg():
 	try:
@@ -356,7 +366,7 @@ def move_y_neg():
 		calibrationControl('y_down', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_y_pos():
 	try:
@@ -364,7 +374,7 @@ def move_y_pos():
 		calibrationControl('y_up', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+		print("[K1] Keyboard Input Not Accepted At this Stage")	 
 
 
 def move_z_neg():
@@ -373,7 +383,7 @@ def move_z_neg():
 		calibrationControl('z_down', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_z_pos():
 	try:
@@ -381,13 +391,13 @@ def move_z_pos():
 		calibrationControl('z_up', speed)
 		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+		print("[K1] Keyboard Input Not Accepted At this Stage")	 
 
 def home_axis():
 	try:
 		calibrationControl('home')
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 
 def load_axis():
@@ -658,6 +668,13 @@ def graphicalUIprotocol():
 	global p_varpip
 	global save_button_image_pro
 	global background_image2
+	global step
+
+	f_name = StringVar()
+	volume_well = DoubleVar()
+	value_b = StringVar()
+	value_c = StringVar()
+	f_note = StringVar()
 
 
 	proroot = Toplevel(root)
@@ -672,7 +689,11 @@ def graphicalUIprotocol():
 		proroot.destroy()
 		proroot.update()
 
+	#Save Step
 
+	#Start Protocol
+
+	#Draw Graphic
 	def draw_workspace_graphic():
 		pass
 
@@ -684,9 +705,61 @@ def graphicalUIprotocol():
 	#Draw Grahpics - Second Container
 	def callback_b(eventObject):
 		print(eventObject.widget.get())
+		value3 = eventObject.widget.get()
 
 
 	def process_step():
+		global step
+
+		try:
+			# Reference
+			# shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+			if shortcuts.get() == "Transfer: Basic":
+				#Check if Friendly Name is avaiable if not set a default based of step
+				if f_name.get() == " ":
+					name = "step" + str(step)
+
+				else:
+					name = f_name.get()
+
+				print(name)
+
+				#Volume
+				volume = volume_well.get()
+				#Value 1 (Pipette)
+				sel_pipette = p_varpip.get()
+				#Value 2 (First Container)
+				value1 = aspirate_con.get()
+				#Value 2 (First Container Syntax)
+				value2 = value_b.get()
+				#Value 3 (Second Container)
+				value3 = dispense_con.get()
+				#Value 4 (Second Container Syntax)
+				value4 = value_c.get()
+
+				if f_note.get() == " ":
+					notes = "Blank"
+
+				else:
+					name = f_note.get()
+
+				print(name)
+
+			if shortcuts.get() == "Multiple_Wells_Transfer":
+				pass
+
+			if shortcuts.get() == "One_to_Many":
+				pass
+
+			if shortcuts.get() == "Few_to_Many":
+				pass
+
+
+			insert = (step,name,shortcuts, sel_pipette,volume,value1,value2,value3,value4,notes)
+			save_data("custom_protocol", insert)
+			step = step + 1
+		except:
+			print("[K3] ")
 		pass
 
 
@@ -704,30 +777,48 @@ def graphicalUIprotocol():
 	#background2 = ttk.Label(proroot, image = background_image2)
 	#background2.grid(column = 4, row = 0)
 
+
+
+
+	# Short Cut Function
 	label = ttk.Label(proroot, textvariable=v1)
 	label.grid(column = 0, row = 0)
 	v1.set("Transfer: Basic") #Set Default Label
 
-	label = ttk.Label(proroot, text = 'Shortcuts Function:')
+	label = ttk.Label(proroot, text = 'Shortcuts Function:*')
 	label.grid(column = 0, row = 1)
 	
 	dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
 	dropdown_shortcuts['values'] = shortcuts
 	dropdown_shortcuts.current(0)	#Set Default Selection
-	dropdown_shortcuts.grid(column = 0, row = 2)	
+	dropdown_shortcuts.grid(column = 0, row = 2)
 
-	label = ttk.Label(proroot, text = 'Pipette:')
+	# Friendly Note Input
+	label = ttk.Label(proroot, text="Friendly Note:")
+	label.grid(column = 2, row = 1)
+	textboxF = Entry(proroot, textvariable=f_name)
+	textboxF.grid(column = 2, row = 2)
+
+	# Friendly Name Input
+	label = ttk.Label(proroot, text="Friendly Name:")
+	label.grid(column = 1, row = 1)
+	textboxF = Entry(proroot, width=12, textvariable=f_name)
+	textboxF.grid(column = 1, row = 2)
+
+	#Select Pipette
+	label = ttk.Label(proroot, text = 'Pipette:*')
 	label.grid(column = 0, row = 3)
 	dropdown_ppip = ttk.Combobox(proroot, textvariable = p_varpip, postcommand = update_dropdown_source_pip)
 	dropdown_ppip.grid(column = 0, row = 4)
 
 	label = ttk.Label(proroot, textvariable=v2)
 	label.grid(column = 1, row = 3)
-	v2.set("Volume Per Well: (uL)") #Set Default Label
-	textboxA = Entry(proroot, width=12)
+	v2.set("Volume Per Well: (uL)*") #Set Default Label
+	textboxA = Entry(proroot, width=12, textvariable=volume_well)
 	textboxA.grid(column = 1, row = 4)
 
-	label = ttk.Label(proroot, text = 'Aspirate:')
+	#Frist Container
+	label = ttk.Label(proroot, text = 'Aspirate:*')
 	label.grid(column = 0, row = 5)
 	dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
 	dropdown_aspirate_c.grid(column = 0, row = 6)
@@ -735,11 +826,12 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v3)
 	label.grid(column = 1, row = 5)
-	v3.set("Wells:") #Set Default Label
-	textboxB = Entry(proroot, width=12)
+	v3.set("Wells:*") #Set Default Label
+	textboxB = Entry(proroot, width=12, textvariable=value_b)
 	textboxB.grid(column = 1, row = 6)
 
-	label = ttk.Label(proroot, text = 'Dispense:')
+	#Second Container
+	label = ttk.Label(proroot, text = 'Dispense:*')
 	label.grid(column = 2, row = 5)
 	dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
 	dropdown_dispense_c.grid(column = 2, row = 6)
@@ -747,10 +839,11 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v4)
 	label.grid(column = 3, row = 5)
-	v4.set("Wells:") #Set Default Label
-	textboxC = Entry(proroot, width=12)
+	v4.set("Wells:*") #Set Default Label
+	textboxC = Entry(proroot, width=12, textvariable=value_c)
 	textboxC.grid(column = 3, row = 6)
 
+	#Save Button
 	save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
 	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = setup_workspace)
 	save_step.grid(column = 4, row = 7)

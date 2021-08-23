@@ -246,8 +246,8 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(id,name,grid_c,shortcuts,volume,value1,value2,value3,value4,notes)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(id,grid_c,shortcuts,pipette, volume,value1,value2,value3,value4,notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -311,7 +311,8 @@ def setup_table(variable):
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
                                             shortcuts text,
-                                            volume text,
+                                            pipette text,
+                                            volume REAL,
                                             value1 text,
                                             value2 text,
                                             value3 text,
