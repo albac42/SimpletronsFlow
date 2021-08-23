@@ -233,10 +233,58 @@ def deleteTable(variable):
             conn.close()
             print("the sqlite connection is closed")
 
+
+#Save Data to specific database
+def save_data(table, insert):
+
+    if table == "custom_container":
+        sql_insert_template = ''' INSERT INTO custom_container(id,name,grid_c,grid_r,spacing_c,diameter,depth)
+            VALUES(?,?,?,?,?,?,?) '''
+
+    if table == "custom_workspace":
+        sql_insert_template = ''' INSERT INTO custom_workspace(id,name,grid_c,container,location,)
+            VALUES(?,?,?,?,?) '''        
+
+    if table == "custom_protocol":
+        sql_insert_template = ''' INSERT INTO custom_protocol(id,name,grid_c,shortcuts,volume,value1,value2,value3,value4,notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+
+    #Excute Task to Database
+    c.execute(sql_insert_template, insert)
+    conn.commit()
+    print("Record Added successfully to", table)
+    conn.close()  
+
+
+
+# #Read Data
+# def read_data(table):
+#     conn = sqlite3.connect(db_file)
+#     c = conn.cursor()
+
+#     #Read Number of rows
+#     if table == "custom_container":
+#         cursor_obj.execute("SELECT * FROM custom_container")
+#     if table == "custom_workspace":
+#         cursor_obj.execute("SELECT * FROM custom_workspace")
+#     if table == "custom_protocol":
+#         cursor_obj.execute("SELECT * FROM custom_protocol")
+
+#     x = len(cursor_obj.fetchall())
+#     print(x)
+
+#     for x 
+
+#     #Close Database Connection
+#     conn.close()  
+#     return list
+
+
+
 #Setup New Table if none exist in DB File
 def setup_table(variable):
 
-
+    #Custom container Database Creation
     if variable == "custom_container":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_container (
                                             id integer PRIMARY KEY,
@@ -248,6 +296,7 @@ def setup_table(variable):
                                             depth REAL
                                         ); """
 
+    #Custom workspace Database Creation
     if variable == "custom_workspace":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_workspace (
                                             id integer PRIMARY KEY,
@@ -256,6 +305,7 @@ def setup_table(variable):
                                             location text,
                                         ); """
 
+    #Custom protocol Database Creation
     if variable == "custom_protocol":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
                                             id integer PRIMARY KEY,

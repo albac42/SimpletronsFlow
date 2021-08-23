@@ -18,6 +18,7 @@ from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
+from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
@@ -675,13 +676,18 @@ def graphicalUIprotocol():
 	def draw_workspace_graphic():
 		pass
 
-
+	#Draw Graphics - First Container
 	def callback_a(eventObject):
 		print(eventObject.widget.get())
+		#Grab Value From Entry Box
 
-
+	#Draw Grahpics - Second Container
 	def callback_b(eventObject):
 		print(eventObject.widget.get())
+
+
+	def process_step():
+		pass
 
 
 	###
