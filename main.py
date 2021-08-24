@@ -19,6 +19,8 @@ print('Loading UI')
 #robot.connect()
 #home_all()
 
+setup_table("custom_protocol")
+
 from moduleUI import *
 print('UI Closing')
 

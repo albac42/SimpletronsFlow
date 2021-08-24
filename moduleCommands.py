@@ -175,7 +175,7 @@ def create_table(conn, create_table_sql):
         print(e)
     finally:
         if conn:
-            con.close()
+            conn.close()
 
 #Delete A Single Record
 def deleteRecord(variable, id):
@@ -237,17 +237,20 @@ def deleteTable(variable):
 #Save Data to specific database
 def save_data(table, insert):
 
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
     if table == "custom_container":
-        sql_insert_template = ''' INSERT INTO custom_container(id,name,grid_c,grid_r,spacing_c,diameter,depth)
-            VALUES(?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_container(name,grid_c,grid_r,spacing_c,diameter,depth)
+            VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(id,name,grid_c,container,location,)
-            VALUES(?,?,?,?,?) '''        
+        sql_insert_template = ''' INSERT INTO custom_workspace(name,grid_c,container,location,)
+            VALUES(?,?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(id,grid_c,shortcuts,pipette, volume,value1,value2,value3,value4,notes)
-            VALUES(?,?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name,shortcuts,pipette,volume,value1,value2,value3,value4,notes)
+            VALUES(?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -302,7 +305,7 @@ def setup_table(variable):
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
                                             container text,
-                                            location text,
+                                            location text
                                         ); """
 
     #Custom protocol Database Creation
@@ -310,20 +313,23 @@ def setup_table(variable):
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
-                                            shortcuts text,
-                                            pipette text,
-                                            volume REAL,
+                                            shortcuts text NOT NULL,
+                                            pipette text NOT NULL,
+                                            volume REAL NOT NULL,
                                             value1 text,
                                             value2 text,
                                             value3 text,
                                             value4 text,
-                                            option text
-                                            notes text,
+                                            option text,
+                                            notes text
                                         ); """
+
+    conn = sqlite3.connect(db_file)
 
     if conn is not None:
         # create projects table
         create_table(conn, sql_create_projects_table)
+        print("Successfully Created", variable)
 
     else:
         print("Error! cannot create the database connection.")

@@ -55,7 +55,7 @@ root.title('Simpletrons - OT')
 #
 ##########################################################################################################
 #
-shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
 					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
 loaded_pipette_list = ['','']
@@ -623,13 +623,9 @@ def containersCreationUi():
 #
 ###########################################################################################################
 
-p_varpip = []
-volume_well = []
-aspirate_con = []
-dispense_con = []
+
 well_1 = 0
 well_2 = 0
-volume_well = 0
 dropdown_ppip = StringVar()
 
 #Update Protocol Dropdown
@@ -653,23 +649,21 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 
+step = 0
+
 def graphicalUIprotocol():
 
 	global v1
 	global v2
 	global v3 
 	global v4
-	global shortcuts
-	global shortcuts
+	global shortcuts_list
 	global dropdown_dispense_c
 	global dropdown_aspirate_c
 	global dropdown_ppip
-	global aspirate_con
 	global dispense_con
-	global volume_well
 	global well_1
 	global well_2
-	global p_varpip
 	global save_button_image_pro
 	global background_image2
 	global background_image2
@@ -680,28 +674,32 @@ def graphicalUIprotocol():
 	value_b = StringVar()
 	value_c = StringVar()
 	f_note = StringVar()
+	shortcuts = StringVar()
+	p_varpip = StringVar()
+	aspirate_con = StringVar()
+	dispense_con = StringVar()
 
 
 	proroot = Toplevel(root)
 
-	proroot.title("Simpletrons - OT: Protocol")
+	proroot.title("Simpletrons - OT: Protocol Designer")
 	#newWindow.geometry("200x60")
-
-
 
 	def close_popup():
 		proroot.destroy()
 		proroot.update()
 
+	###########################################################################################################
+	# Start Pre Configured Software 
+	##########################################################################################################
 	#Start Protocol
 	def start_protocol():
+
 		pass
 
-	#Draw Graphic
-	def draw_workspace_graphic():
-		pass
-
-
+	###########################################################################################################
+	# Draw Graphics
+	###########################################################################################################	
 	#container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
 	#				'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
 	#Draw Graphics - First Container
@@ -772,61 +770,123 @@ def graphicalUIprotocol():
 		background_image3 = ttk.Label(proroot, image = background_image3)
 		background_image3.grid(column = 0, row = 9, columnspan = 5)
 
+	###########################################################################################################
+	# Save Steps to Database
+	###########################################################################################################
+	# def save_step():
+	# 	global step
 
+	# 	try:
+	# 		# Reference
+	# 		# shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+	# 		if shortcuts.get() == "Transfer: Basic":
+	# 			#Check if Friendly Name is avaiable if not set a default based of step
+	# 			if f_name.get() == " ":
+	# 				name = "step" + str(step)
+
+	# 			else:
+	# 				name = f_name.get()
+
+	# 			print(name)
+
+	# 			#Volume
+	# 			volume = volume_well.get()
+	# 			#Value 1 (Pipette)
+	# 			sel_pipette = p_varpip.get()
+	# 			#Value 2 (First Container)
+	# 			value1 = aspirate_con.get()
+	# 			#Value 2 (First Container Syntax)
+	# 			value2 = value_b.get()
+	# 			#Value 3 (Second Container)
+	# 			value3 = dispense_con.get()
+	# 			#Value 4 (Second Container Syntax)
+	# 			value4 = value_c.get()
+
+	# 			if f_note.get() == " ":
+	# 				notes = "Blank"
+
+	# 			else:
+	# 				name = f_note.get()
+
+	# 			print(name)
+
+	# 		if shortcuts.get() == "Multiple_Wells_Transfer":
+	# 			pass
+
+	# 		if shortcuts.get() == "One_to_Many":
+	# 			pass
+
+	# 		if shortcuts.get() == "Few_to_Many":
+	# 			pass
+
+
+	# 		insert = (step, name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+	# 		save_data("custom_protocol", insert)
+	# 		step = step + 1
+	# 	except Exception as e: 
+	# 		print(e)
+	# 		print("[K3] ")
+	# 	pass
 	def save_step():
 		global step
+		notes = 'null'
+		# Reference
+		# shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+		print(shortcuts.get())
+		if shortcuts.get() == "Simple_Transfer":
+			#Check if Friendly Name is avaiable if not set a default based of step
+			if f_name.get() == " ":
+				name = "step" + str(step)
 
-		try:
-			# Reference
-			# shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-			if shortcuts.get() == "Transfer: Basic":
-				#Check if Friendly Name is avaiable if not set a default based of step
-				if f_name.get() == " ":
-					name = "step" + str(step)
+			else:
+				name = f_name.get()
 
-				else:
-					name = f_name.get()
+			print(name)
 
-				print(name)
+			#Volume
+			volume = volume_well.get()
+			#Value 1 (Pipette)
+			sel_pipette = p_varpip.get()
+			#Value 2 (First Container)
+			value1 = aspirate_con.get()
+			#Value 2 (First Container Syntax)
+			value2 = value_b.get()
+			#Value 3 (Second Container)
+			value3 = dispense_con.get()
+			#Value 4 (Second Container Syntax)
+			value4 = value_c.get()
 
-				#Volume
-				volume = volume_well.get()
-				#Value 1 (Pipette)
-				sel_pipette = p_varpip.get()
-				#Value 2 (First Container)
-				value1 = aspirate_con.get()
-				#Value 2 (First Container Syntax)
-				value2 = value_b.get()
-				#Value 3 (Second Container)
-				value3 = dispense_con.get()
-				#Value 4 (Second Container Syntax)
-				value4 = value_c.get()
+			if f_note.get() == " ":
+				notes = "null"
 
-				if f_note.get() == " ":
-					notes = "Blank"
+			else:
+				notes = f_note.get()
 
-				else:
-					name = f_note.get()
+			print(notes)
+			print(sel_pipette)
+			print(volume)
+			print(value1)
+			print(value2)
+			print(value3)
+			print(value4)
 
-				print(name)
+		if shortcuts.get() == "Multiple_Wells_Transfer":
+			pass
 
-			if shortcuts.get() == "Multiple_Wells_Transfer":
-				pass
+		if shortcuts.get() == "One_to_Many":
+			pass
 
-			if shortcuts.get() == "One_to_Many":
-				pass
-
-			if shortcuts.get() == "Few_to_Many":
-				pass
+		if shortcuts.get() == "Few_to_Many":
+			pass
 
 
-			insert = (step,name,shortcuts, sel_pipette,volume,value1,value2,value3,value4,notes)
-			save_data("custom_protocol", insert)
-			step = step + 1
-		except:
-			print("[K3] ")
-		pass
+		insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+		save_data("custom_protocol", insert)
+		step = step + 1
 
+	###########################################################################################################
+	# Menu
+	###########################################################################################################
 
 	###
 	s_menu = Menu(root)
@@ -838,6 +898,9 @@ def graphicalUIprotocol():
 	file_menu.add_command(label = "Exit", command = close_popup )
 	####
 
+	###########################################################################################################
+	# Draw Main Graphical Interface
+	###########################################################################################################
 
 	# Short Cut Function
 	label = ttk.Label(proroot, textvariable=v1)
@@ -848,14 +911,14 @@ def graphicalUIprotocol():
 	label.grid(column = 0, row = 1)
 	
 	dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
-	dropdown_shortcuts['values'] = shortcuts
+	dropdown_shortcuts['values'] = shortcuts_list
 	dropdown_shortcuts.current(0)	#Set Default Selection
 	dropdown_shortcuts.grid(column = 0, row = 2)
 
 	# Friendly Note Input
 	label = ttk.Label(proroot, text="Friendly Note:")
 	label.grid(column = 2, row = 1)
-	textboxF = Entry(proroot, textvariable=f_name)
+	textboxF = Entry(proroot, textvariable=f_note)
 	textboxF.grid(column = 2, row = 2)
 
 	# Friendly Name Input
@@ -1443,11 +1506,6 @@ def key_press(event):
 		move_pip_action_down()
 
 root.bind("<Key>", key_press)
-
-
-
-
-
 
 
 
