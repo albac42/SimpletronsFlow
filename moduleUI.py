@@ -13,33 +13,23 @@ from tkinter import ttk
 from opentrons import robot, containers, instruments
 import opentrons
 
+#Import RE
+import re
+
 #Custom moudle Imports
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
+from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
-# Note: Some Code is require 
+# Note: Code is require in this module for graphical UI to function
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 0.1'
-
-#Global Variable
-shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', '96-PCR-flat', '96-PCR-tall',  '96-deep-well']
-loaded_pipette_list = ['','']
-loaded_container_type = []
-loaded_containers = []
-count_CT = 0
-count_CTT = 0
-count_C = 0
-
-
-head_speed_p = 1 # Movenment Speed Pipette
-head_speed_a = 1 # Movenment Speed Arm
+version = 'Version: Private Alpha 0.1 Dev'
 
 ###########################################################################################################
 #
@@ -56,6 +46,31 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
+
+###########################################################################################################
+
+###########################################################################################################
+#
+# Global Variable
+#
+##########################################################################################################
+#
+shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
+					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
+loaded_pipette_list = ['','']
+loaded_container_type = []
+loaded_containers = []
+count_CT = 0
+count_CTT = 0
+count_C = 0
+
+
+head_speed_p = IntVar() # Movenment Speed Pipette
+head_speed_a = IntVar() # Movenment Speed Arm
+head_speed_p = 1 # Movenment Speed Pipette
+head_speed_a = 1 # Movenment Speed Arm
+###########################################################################################################
 
 ###########################################################################################################
 #
@@ -99,9 +114,84 @@ def confirmation_box(variable):
 ###########################################################################################################
 
 
+###########################################################################################################
+#
+# Connection To Robot [Pop Up]
+#
+###########################################################################################################
+
+def connect_robot():
+	connect()
+	pass
+
+def reset_robot():
+	reset_all()
+	pass
+
+
+def connecton_graphical():
+	conroot = Toplevel(root)
+
+	conroot.title("Simpletrons - OT: Protocol - Connection")
+
+	conroot.lift()
+	conroot. attributes("-topmost", True)
+
+	def close_popup():
+		conroot.destroy()
+		conroot.update()
+	###
+	s_menu = Menu(root)
+	conroot.config(menu = s_menu)
+
+	#Title
+	file_menu = Menu(s_menu)
+	s_menu.add_cascade(label = "File", menu = file_menu)
+	file_menu.add_command(label = "Exit", command = close_popup )
+
+
+	label = ttk.Label(conroot, text = 'Robot Connection Options:')
+	label.grid(column = 0, row = 1)
+
+	save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect_robot)
+	save_step.grid(column = 0, row = 2)
+
+	save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_robot)
+	save_step.grid(column = 0, row = 3)
+
+
+###########################################################################################################
+
+###########################################################################################################
+#
+# Update Posistion Pipetting 
+#
+###########################################################################################################
+
+
+position_display_xx = StringVar()
+
+position_display_x = StringVar()
+position_display_y = StringVar()
+position_display_z = StringVar()
 
 
 
+def update_position_display():
+	position=list(robot._driver.get_head_position()["current"]) 
+
+	position_display_x = ("X:", position[0])
+	position_display_y = ("Y:", position[1])
+	position_display_z = ("Z:", position[2])
+
+def update_position_display_x():
+	plungerPos = pipette._get_plunger_position(plungerTarget)
+
+	position_display_xx = ("X:", plungerTarget)
+
+
+
+###########################################################################################################
 
 ###########################################################################################################
 #
@@ -226,14 +316,22 @@ def save_pip_action():
 	print('Command Sucessfull Saved Calibration')
 
 def move_pip_action_up():
-	pip = varpip.get()
-	speed = head_speed_p.get()
-	calibrationControlPlugger(pip, 'z_up', speed)
+	try:
+		pip = varpip.get()
+		speed = head_speed_p.get()
+		calibrationControlPlugger(pip, 'z_up', speed)
+		update_position_display_x()
+	except:
+		print("[K2] Keyboard Input Not Accepted At this Stage")	
 
 def move_pip_action_down():
-	pip = varpip.get()
-	speed = head_speed_p.get()
-	calibrationControlPlugger(pip, 'z_down', speed)
+	try:
+		pip = varpip.get()
+		speed = head_speed_p.get()
+		calibrationControlPlugger(pip, 'z_down', speed)
+		update_position_display_x()
+	except:
+		print("[K2] Keyboard Input Not Accepted At this Stage")	
 
 def move_prepip_action():
 	pip = varpip.get()
@@ -253,51 +351,57 @@ def move_x_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('x_left', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")
+		print("[K1] Keyboard Input Not Accepted At this Stage")
 	
 
 def move_x_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('x_right', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_y_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('y_down', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_y_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('y_up', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+		print("[K1] Keyboard Input Not Accepted At this Stage")	 
 
 
 def move_z_neg():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('z_down', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 def move_z_pos():
 	try:
 		speed = head_speed_p.get()
 		calibrationControl('z_up', speed)
+		update_position_display()
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	 
+		print("[K1] Keyboard Input Not Accepted At this Stage")	 
 
 def home_axis():
 	try:
 		calibrationControl('home')
 	except:
-		print("[K1] Keyboard Input Not Accpeted At this Stage")	
+		print("[K1] Keyboard Input Not Accepted At this Stage")	
 
 
 def load_axis():
@@ -512,19 +616,16 @@ def containersCreationUi():
 	e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
 	e_container_name.grid(column = 0, row = 2)	
 
+
 ###########################################################################################################
 #
 # UI Protocol [Pop Up]
 #
 ###########################################################################################################
 
-p_varpip = []
-volume_well = []
-aspirate_con = []
-dispense_con = []
+
 well_1 = 0
 well_2 = 0
-volume_well = 0
 dropdown_ppip = StringVar()
 
 #Update Protocol Dropdown
@@ -548,51 +649,196 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 
+step = 0
+
 def graphicalUIprotocol():
 
 	global v1
 	global v2
 	global v3 
 	global v4
-	global shortcuts
-	global shortcuts
+	global shortcuts_list
 	global dropdown_dispense_c
 	global dropdown_aspirate_c
 	global dropdown_ppip
-	global aspirate_con
 	global dispense_con
-	global volume_well
 	global well_1
 	global well_2
-	global p_varpip
 	global save_button_image_pro
 	global background_image2
+	global background_image3
+	global background3
+	global background2
+	global step
+
+	f_name = StringVar()
+	volume_well = DoubleVar()
+	value_b = StringVar()
+	value_c = StringVar()
+	f_note = StringVar()
+	shortcuts = StringVar()
+	p_varpip = StringVar()
+	aspirate_con = StringVar()
+	dispense_con = StringVar()
 
 
 	proroot = Toplevel(root)
 
-	proroot.title("Simpletrons - OT: Protocol")
+	proroot.title("Simpletrons - OT: Protocol Designer")
 	#newWindow.geometry("200x60")
-
-	
-	
 
 	def close_popup():
 		proroot.destroy()
 		proroot.update()
 
+	###########################################################################################################
+	# Start Pre Configured Software 
+	##########################################################################################################
+	#Start Protocol
+	def start_protocol():
 
-	def draw_workspace_graphic():
 		pass
 
-
+	###########################################################################################################
+	# Draw Graphics
+	###########################################################################################################	
+	#container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
+	#				'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
+	#Draw Graphics - First Container
 	def callback_a(eventObject):
+
+		global background_image2
+		global background2
+
 		print(eventObject.widget.get())
+		container_lookup = eventObject.widget.get()
+		#Grab Value From Entry Box
+		if re.search('96-Deep-Well', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
+			print("Load Container Image:", container_lookup)
 
+		if re.search('96-PCR-flat', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
+			print("Load Container Image:", container_lookup)
 
+		if re.search('96-PCR-tall', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Tall.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('tiprack-10ul', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/Tiprack-10ul.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('tiprack-1000ul', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/Tiprack-1000.png')
+			print("Load Container Image:", container_lookup)			
+
+		if re.search('96-flat', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
+			print("Load Container Image:", container_lookup)
+
+		background2 = ttk.Label(proroot, image = background_image2)
+		background2.grid(column = 0, row = 8, columnspan = 5)
+
+	#Draw Grahpics - Second Container
 	def callback_b(eventObject):
-		print(eventObject.widget.get())
 
+		global background_image3
+		global background3
+
+		print(eventObject.widget.get())
+		container_lookup = eventObject.widget.get()
+		#Grab Value From Entry Box
+		if re.search('96-Deep-Well', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('96-PCR-flat', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('96-PCR-tall', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Tall.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('tiprack-10ul', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/Tiprack-10ul.png')
+			print("Load Container Image:", container_lookup)
+
+		if re.search('tiprack-1000ul', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/Tiprack-1000.png')
+			print("Load Container Image:", container_lookup)			
+
+		if re.search('96-flat', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
+			print("Load Container Image:", container_lookup)
+
+		background3 = ttk.Label(proroot, image = background_image3)
+		background3.grid(column = 0, row = 9, columnspan = 5)
+
+	###########################################################################################################
+	# Save Steps to Database
+	###########################################################################################################
+	def save_step():
+		global step
+		notes = 'null'
+		# Reference
+		# shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
+		print(shortcuts.get())
+		if shortcuts.get() == "Simple_Transfer":
+			#Check if Friendly Name is avaiable if not set a default based of step
+			if f_name.get() == " ":
+				name = "step" + str(step)
+
+			else:
+				name = f_name.get()
+
+			print(name)
+
+			#Volume
+			volume = volume_well.get()
+			#Value 1 (Pipette)
+			sel_pipette = p_varpip.get()
+			#Value 2 (First Container)
+			value1 = aspirate_con.get()
+			#Value 2 (First Container Syntax)
+			value2 = value_b.get()
+			#Value 3 (Second Container)
+			value3 = dispense_con.get()
+			#Value 4 (Second Container Syntax)
+			value4 = value_c.get()
+
+			if f_note.get() == " ":
+				notes = "null"
+
+			else:
+				notes = f_note.get()
+
+			print(notes)
+			print(sel_pipette)
+			print(volume)
+			print(value1)
+			print(value2)
+			print(value3)
+			print(value4)
+
+		if shortcuts.get() == "Multiple_Wells_Transfer":
+			pass
+
+		if shortcuts.get() == "One_to_Many":
+			pass
+
+		if shortcuts.get() == "Few_to_Many":
+			pass
+
+
+		insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+		save_data("custom_protocol", insert)
+		step = step + 1
+
+	###########################################################################################################
+	# Menu
+	###########################################################################################################
 
 	###
 	s_menu = Menu(root)
@@ -604,34 +850,49 @@ def graphicalUIprotocol():
 	file_menu.add_command(label = "Exit", command = close_popup )
 	####
 
-	#background_image2=tk.PhotoImage(file='graphic/workspace_c.png')
-	#background2 = ttk.Label(proroot, image = background_image2)
-	#background2.grid(column = 4, row = 0)
+	###########################################################################################################
+	# Draw Main Graphical Interface
+	###########################################################################################################
 
+	# Short Cut Function
 	label = ttk.Label(proroot, textvariable=v1)
 	label.grid(column = 0, row = 0)
 	v1.set("Transfer: Basic") #Set Default Label
 
-	label = ttk.Label(proroot, text = 'Shortcuts Function:')
+	label = ttk.Label(proroot, text = 'Shortcuts Function:*')
 	label.grid(column = 0, row = 1)
 	
 	dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
-	dropdown_shortcuts['values'] = shortcuts
+	dropdown_shortcuts['values'] = shortcuts_list
 	dropdown_shortcuts.current(0)	#Set Default Selection
-	dropdown_shortcuts.grid(column = 0, row = 2)	
+	dropdown_shortcuts.grid(column = 0, row = 2)
 
-	label = ttk.Label(proroot, text = 'Pipette:')
+	# Friendly Note Input
+	label = ttk.Label(proroot, text="Friendly Note:")
+	label.grid(column = 2, row = 1)
+	textboxF = Entry(proroot, textvariable=f_note)
+	textboxF.grid(column = 2, row = 2)
+
+	# Friendly Name Input
+	label = ttk.Label(proroot, text="Friendly Name:")
+	label.grid(column = 1, row = 1)
+	textboxF = Entry(proroot, width=12, textvariable=f_name)
+	textboxF.grid(column = 1, row = 2)
+
+	#Select Pipette
+	label = ttk.Label(proroot, text = 'Pipette:*')
 	label.grid(column = 0, row = 3)
 	dropdown_ppip = ttk.Combobox(proroot, textvariable = p_varpip, postcommand = update_dropdown_source_pip)
 	dropdown_ppip.grid(column = 0, row = 4)
 
 	label = ttk.Label(proroot, textvariable=v2)
 	label.grid(column = 1, row = 3)
-	v2.set("Volume Per Well: (uL)") #Set Default Label
-	textboxA = Entry(proroot, width=12)
+	v2.set("Volume Per Well: (uL)*") #Set Default Label
+	textboxA = Entry(proroot, width=12, textvariable=volume_well)
 	textboxA.grid(column = 1, row = 4)
 
-	label = ttk.Label(proroot, text = 'Aspirate:')
+	#Frist Container
+	label = ttk.Label(proroot, text = 'Aspirate:*')
 	label.grid(column = 0, row = 5)
 	dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
 	dropdown_aspirate_c.grid(column = 0, row = 6)
@@ -639,11 +900,12 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v3)
 	label.grid(column = 1, row = 5)
-	v3.set("Wells:") #Set Default Label
-	textboxB = Entry(proroot, width=12)
+	v3.set("Wells:*") #Set Default Label
+	textboxB = Entry(proroot, width=12, textvariable=value_b)
 	textboxB.grid(column = 1, row = 6)
 
-	label = ttk.Label(proroot, text = 'Dispense:')
+	#Second Container
+	label = ttk.Label(proroot, text = 'Dispense:*')
 	label.grid(column = 2, row = 5)
 	dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
 	dropdown_dispense_c.grid(column = 2, row = 6)
@@ -651,12 +913,13 @@ def graphicalUIprotocol():
 
 	label = ttk.Label(proroot, textvariable=v4)
 	label.grid(column = 3, row = 5)
-	v4.set("Wells:") #Set Default Label
-	textboxC = Entry(proroot, width=12)
+	v4.set("Wells:*") #Set Default Label
+	textboxC = Entry(proroot, width=12, textvariable=value_c)
 	textboxC.grid(column = 3, row = 6)
 
+	#Save Button
 	save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
-	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = setup_workspace)
+	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
 	save_step.grid(column = 4, row = 7)
 
 
@@ -712,8 +975,13 @@ root.config(menu = s_menu)
 file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
+file_menu.add_command(label = "Connections Options", command = connecton_graphical)
 file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
+
+
+#Start Up UI
+connecton_graphical()
 ########################################################################################################
 #
 #Container Setup
@@ -928,25 +1196,50 @@ text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
 text.bind("<Return>", lambda event: scale_a.configure(to=head_speed_a.get()))
 #Unit
-label = ttk.Label(tab3, text='mm', font = ('Arial', 12))
+label = ttk.Label(tab3, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
 
+label = ttk.Label(tab3, text='Robot Position:', font = ('Arial', 10))
+label.grid(column = 1, row = 7)
+#Display Coordinate
+label = ttk.Label(tab3, textvariable=position_display_x)
+label.grid(column = 0, row = 8)
+position_display_x.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab3, textvariable=position_display_y)
+label.grid(column = 1, row = 8)
+position_display_y.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab3, textvariable=position_display_z)
+label.grid(column = 2, row = 8)
+position_display_z.set("X: 0") #Set Default Label
+
 #Keybaord Input
-root.bind("<Left>", move_x_neg)
-root.bind("<Right>", move_x_pos)
-root.bind("<Up>", move_y_neg) 
-root.bind("<Down>", move_y_pos)
+# root.bind("<Left>", move_x_neg)
+# root.bind("<Right>", move_x_pos)
+# root.bind("<Up>", move_y_neg) 
+# root.bind("<Down>", move_y_pos)
 
 def key_press(event):
-	if event.char == "w":
+	if event.char == "R":
 		move_z_neg()
-	if event.char == "W":
+	if event.char == "r":
 		move_z_neg()
-	if event.char == "s":
+	if event.char == "f":
 		move_z_pos()
-	if event.char == "S":
-		move_z_pos()	
+	if event.char == "F":
+		move_z_pos()
+	if event.char == "a":
+		move_x_neg()
+	if event.char == "d":
+		move_x_pos()
+	if event.char == "w":
+		move_y_neg()
+	if event.char == "s":
+		move_y_pos()
+
+	pass
 
 root.bind("<Key>", key_press)
 
@@ -964,6 +1257,8 @@ var_aspirate_speed = DoubleVar()
 var_dispense_speed = DoubleVar()
 s_tip_rack = StringVar(root, value='')
 s_trash = StringVar(root, value='')
+
+
 
 #Selection 1 - Axis
 label = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
@@ -1084,6 +1379,40 @@ pre_select_pip.grid(column = 6, row = 7)
 #Calibrate Pipette
 #
 #########################################################################################################
+#Change Photo
+
+
+#Load Graphics According to Position Calibration
+vpc1 = StringVar()
+def callback_p(eventObject):
+	global vpc1
+
+	global background_img_pc
+	global background_image_pc
+
+	if eventObject.widget.get() == "top":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Top.png')
+		vpc1.set("Top: Plunger is positioned almost all the way up (but still being pressed down \n just a tiny bit")
+
+	if eventObject.widget.get() == "bottom":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Bottom.png')
+		vpc1.set("Bottom: Plunger is at or slightly above it’s “first-stop” or “soft-stop” ")
+
+	if eventObject.widget.get() == "blow_out":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
+		vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or “hard-stop”, \n making sure any attached tip do not get pushed off")
+
+	if eventObject.widget.get() == "drop_tip":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
+		vpc1.set("Drop Tip: Forces any attached tip to fall off ")
+
+	background_img_pc = ttk.Label(tab2, image = background_image_pc)
+	background_img_pc.grid(column = 5, row = 0, rowspan = 7)
+
+	label = ttk.Label(tab2, textvariable=vpc1)
+	label.grid(column = 6, row = 0)
+
+
 #Selection 1 - Pipette
 label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
@@ -1098,6 +1427,7 @@ label.grid(column = 1, row = 3, padx = 1)
 dropdown_cpos = ttk.Combobox(tab2, textvariable = pippos)
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
+dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
@@ -1120,8 +1450,6 @@ pre_home_b.grid(column = 5, row = 4)
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
 save_p.grid(column = 3, row = 4)
 
-
-
 #Change Movement Speed
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
 label.grid(column = 1, row = 5)
@@ -1133,16 +1461,46 @@ text = Entry(tab2, width=4, textvariable=head_speed_p)
 text.grid(column = 0, row = 6, padx=5)
 text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
 #Unit
-label = ttk.Label(tab2, text='mm', font = ('Arial', 12))
+label = ttk.Label(tab2, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
-#Keybaord Input
-root.bind("<Prior>", move_pip_action_up) #Page UP
-root.bind("<Next>", move_pip_action_down) #PageDown
+label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
+label.grid(column = 1, row = 7)
+#Display Coordinate
+label = ttk.Label(tab2, textvariable=position_display_x)
+label.grid(column = 0, row = 8)
+position_display_x.set("X: 0") #Set Default Label
 
+label = ttk.Label(tab2, textvariable=position_display_y)
+label.grid(column = 1, row = 8)
+position_display_y.set("X: 0") #Set Default Label
+
+label = ttk.Label(tab2, textvariable=position_display_z)
+label.grid(column = 2, row = 8)
+position_display_z.set("X: 0") #Set Default Label
+
+#Keybaord Input
+# root.bind("<Prior>", move_pip_action_up) #Page UP
+# root.bind("<Next>", move_pip_action_down) #PageDown
+
+
+def key_press(event):
+	if event.char == "R":
+		move_pip_action_up()
+	if event.char == "r":
+		move_pip_action_up()
+	if event.char == "f":
+		move_pip_action_down()
+	if event.char == "F":
+		move_pip_action_down()
+
+root.bind("<Key>", key_press)
+
+
+
+#########################################################################################################
 
 root.mainloop() 
 #########################################################################################################
 
 #Debugging (Run Graphical Interface without backend code)
-#graphicalUIcalibrate()
