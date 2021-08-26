@@ -666,7 +666,9 @@ def graphicalUIprotocol():
 	global well_2
 	global save_button_image_pro
 	global background_image2
-	global background_image2
+	global background_image3
+	global background3
+	global background2
 	global step
 
 	f_name = StringVar()
@@ -704,7 +706,9 @@ def graphicalUIprotocol():
 	#				'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
 	#Draw Graphics - First Container
 	def callback_a(eventObject):
+
 		global background_image2
+		global background2
 
 		print(eventObject.widget.get())
 		container_lookup = eventObject.widget.get()
@@ -738,7 +742,9 @@ def graphicalUIprotocol():
 
 	#Draw Grahpics - Second Container
 	def callback_b(eventObject):
+
 		global background_image3
+		global background3
 
 		print(eventObject.widget.get())
 		container_lookup = eventObject.widget.get()
@@ -767,66 +773,12 @@ def graphicalUIprotocol():
 			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
 			print("Load Container Image:", container_lookup)
 
-		background_image3 = ttk.Label(proroot, image = background_image3)
-		background_image3.grid(column = 0, row = 9, columnspan = 5)
+		background3 = ttk.Label(proroot, image = background_image3)
+		background3.grid(column = 0, row = 9, columnspan = 5)
 
 	###########################################################################################################
 	# Save Steps to Database
 	###########################################################################################################
-	# def save_step():
-	# 	global step
-
-	# 	try:
-	# 		# Reference
-	# 		# shortcuts = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-	# 		if shortcuts.get() == "Transfer: Basic":
-	# 			#Check if Friendly Name is avaiable if not set a default based of step
-	# 			if f_name.get() == " ":
-	# 				name = "step" + str(step)
-
-	# 			else:
-	# 				name = f_name.get()
-
-	# 			print(name)
-
-	# 			#Volume
-	# 			volume = volume_well.get()
-	# 			#Value 1 (Pipette)
-	# 			sel_pipette = p_varpip.get()
-	# 			#Value 2 (First Container)
-	# 			value1 = aspirate_con.get()
-	# 			#Value 2 (First Container Syntax)
-	# 			value2 = value_b.get()
-	# 			#Value 3 (Second Container)
-	# 			value3 = dispense_con.get()
-	# 			#Value 4 (Second Container Syntax)
-	# 			value4 = value_c.get()
-
-	# 			if f_note.get() == " ":
-	# 				notes = "Blank"
-
-	# 			else:
-	# 				name = f_note.get()
-
-	# 			print(name)
-
-	# 		if shortcuts.get() == "Multiple_Wells_Transfer":
-	# 			pass
-
-	# 		if shortcuts.get() == "One_to_Many":
-	# 			pass
-
-	# 		if shortcuts.get() == "Few_to_Many":
-	# 			pass
-
-
-	# 		insert = (step, name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
-	# 		save_data("custom_protocol", insert)
-	# 		step = step + 1
-	# 	except Exception as e: 
-	# 		print(e)
-	# 		print("[K3] ")
-	# 	pass
 	def save_step():
 		global step
 		notes = 'null'
@@ -1306,6 +1258,8 @@ var_dispense_speed = DoubleVar()
 s_tip_rack = StringVar(root, value='')
 s_trash = StringVar(root, value='')
 
+
+
 #Selection 1 - Axis
 label = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
 label.grid(column = 1, row = 0)
@@ -1425,6 +1379,40 @@ pre_select_pip.grid(column = 6, row = 7)
 #Calibrate Pipette
 #
 #########################################################################################################
+#Change Photo
+
+
+#Load Graphics According to Position Calibration
+vpc1 = StringVar()
+def callback_p(eventObject):
+	global vpc1
+
+	global background_img_pc
+	global background_image_pc
+
+	if eventObject.widget.get() == "top":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Top.png')
+		vpc1.set("Top: Plunger is positioned almost all the way up (but still being pressed down \n just a tiny bit")
+
+	if eventObject.widget.get() == "bottom":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Bottom.png')
+		vpc1.set("Bottom: Plunger is at or slightly above it’s “first-stop” or “soft-stop” ")
+
+	if eventObject.widget.get() == "blow_out":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
+		vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or “hard-stop”, \n making sure any attached tip do not get pushed off")
+
+	if eventObject.widget.get() == "drop_tip":
+		background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
+		vpc1.set("Drop Tip: Forces any attached tip to fall off ")
+
+	background_img_pc = ttk.Label(tab2, image = background_image_pc)
+	background_img_pc.grid(column = 5, row = 0, rowspan = 7)
+
+	label = ttk.Label(tab2, textvariable=vpc1)
+	label.grid(column = 6, row = 0)
+
+
 #Selection 1 - Pipette
 label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
@@ -1439,6 +1427,7 @@ label.grid(column = 1, row = 3, padx = 1)
 dropdown_cpos = ttk.Combobox(tab2, textvariable = pippos)
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
+dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
