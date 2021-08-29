@@ -872,14 +872,15 @@ def graphicalUIprotocol():
 		# shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 		print(shortcuts.get())
 		if shortcuts.get() == "Simple_Transfer":
-			#Check if Friendly Name is avaiable if not set a default based of step
+			#Check if Friendly Name is available if not set a default based of step
 			if f_name.get() == " ":
 				name = "step" + str(step)
 
 			else:
 				name = f_name.get()
 
-			print(name)
+			#Shortcut
+			shortcuts_v = shortcuts.get()
 
 			#Volume
 			volume = volume_well.get()
@@ -900,6 +901,7 @@ def graphicalUIprotocol():
 			else:
 				notes = f_note.get()
 
+			print(name)
 			print(notes)
 			print(sel_pipette)
 			print(volume)
@@ -918,9 +920,11 @@ def graphicalUIprotocol():
 			pass
 
 
-		insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+		insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, notes)
 		save_data("custom_protocol", insert)
 		step = step + 1
+
+	###########################################################################################################
 
 	###########################################################################################################
 	# Menu

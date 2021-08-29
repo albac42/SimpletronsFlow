@@ -263,31 +263,48 @@ def save_data(table, insert):
     print("Record Added successfully to", table)
     conn.close()  # Close database
 
+# def test_save_data():
+#     name = "Step 1"
+#     shortcuts = "Simple_Transfer"
+#     sel_pipette = "pipette_a"
+#     volume = 20
+#     value1 = "C1_24-well-plate"
+#     value2 = "C2"
+#     value3 = "C2_24-well-plate"
+#     value4 = "A2"
+#     notes = "test notes"
 
+#     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+#     save_data("custom_protocol", insert)
 
+# test_save_data()
 # #Read Data
-# def read_data(table):
-#     conn = sqlite3.connect(db_file)
-#     c = conn.cursor()
+def read_data(table):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
 
-#     #Read Number of rows
-#     if table == "custom_container":
-#         cursor_obj.execute("SELECT * FROM custom_container")
-#     if table == "custom_workspace":
-#         cursor_obj.execute("SELECT * FROM custom_workspace")
-#     if table == "custom_protocol":
-#         cursor_obj.execute("SELECT * FROM custom_protocol")
+    #Read Number of rows
+    if table == "custom_container":
+        sqlite_select_query = """SELECT * FROM custom_container"""
+    if table == "custom_workspace":
+        sqlite_select_query = """SELECT * FROM custom_workspace"""
+    if table == "custom_protocol":
+        sqlite_select_query = """SELECT * FROM custom_protocol"""
 
-#     x = len(cursor_obj.fetchall())
-#     print(x)
+    c.execute(sqlite_select_query)        
 
-#     for x 
+    x = c.fetchall()
+    print("Total rows are:  ", len(x))
+    print(x)
 
-#     #Close Database Connection
-#     conn.close()  
-#     return list
+    #for x
 
 
+    #Close Database Connection
+    conn.close()  
+    return list
+
+#read_data('custom_protocol')
 
 #Setup New Table if none exist in DB File
 def setup_table(variable):
