@@ -15,10 +15,6 @@ from moduleContainers import *
 print('Loaded Require Libaries')
 print('Loading UI')
 
-#reset_all()
-#robot.connect()
-#home_all()
-
 setup_table("custom_protocol")
 
 from moduleUI import *

@@ -83,7 +83,7 @@ def calibrationControl(direction, speed):
         position=list(robot._driver.get_head_position()["current"])
 
     else:
-        print('Warning: Calibration Keyboard Is Pressed, Please check your in calaibration mode')
+        print('Warning: Calibration Keyboard Is Pressed, Please check your in calibration mode')
         #position=list(robot._driver.get_head_position()["current"])
 
 def moveDefaultLocation_C(pipette, container):

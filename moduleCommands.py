@@ -18,15 +18,18 @@ import warnings
 import serial
 import serial.tools.list_ports
 import re
+
+import json
 ######################################################################
 
 # Self Find Serial Port #
-def find_arduino(serial_number):
+def find_robot(serial_number):
     for pinfo in serial.tools.list_ports.comports():
         if pinfo.serial_number == serial_number:
             return serial.Serial(pinfo.device)
     raise IOError("[#A1] Could not find an Robot - is it plugged in or is serial number setup correct?")
 
+# Read text file
 def check_file():
     try:
         with open('usbSerial.txt') as f:
@@ -39,14 +42,14 @@ def check_file():
         pass
 
     
-
+# Default Load QUT OT-1 Robot
 def find_ot():
     try:
         # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
         serial = check_file()
         print(serial)
         #robotUSB = find_arduino(serial_number='05012004AEFC104858093B9CF50020C3') #Configurable Serial
-        robotUSB = find_arduino(serial) #Configurable Serial
+        robotUSB = find_robot(serial) #Configurable Serial
         robotUSB = str(robotUSB) #Array to Convert to string
         robotUSB = re.findall(r"port='(.*?)'", robotUSB)
         robotUSB = str(robotUSB) #Array to Convert to string
@@ -55,12 +58,12 @@ def find_ot():
     except:
         print('[#A2] Error Phrasing serial number, please submit issue on github')
         pass
-
     #print(robotUSB)
 
 #######################################################################
+#Connection To both Robot
+#######################################################################
 
-#Connect To both Robot
 def connect():
     print('Connecting to Robots')
     try:
@@ -75,6 +78,7 @@ def connect():
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
 
+#Home Both Robot [Home Main Opentron Robot First - Then Storage]
 def home_all():
     try:
         print('Homing Opentrons Robot in progress')
@@ -95,7 +99,7 @@ def home_all():
         print('[#A5] Running Debugging Mode')
         pass
 
-#Homes All Axis For Opentrons Robot
+#Homes OT-1 Axis For Opentrons Robot
 def home_robot():
     try:
         print('Homing Opentrons Robot in progress')
@@ -106,7 +110,7 @@ def home_robot():
         print('[#H1] Unable to Home Robot')
         pass
 
-#Homes All Axis For Transport Robot
+#Homes Storage Robot Axis For Transport Robot
 def home_robot2():
     try:
         print('Homing Transport Robot in progress')
@@ -121,7 +125,7 @@ def home_robot2():
         print('[#H2] Unable to Home Robot2')
         pass
 
-#Reset Connection
+#Reset Connection [OT-1 First - Then Storage Robot]
 def reset_all():
     try:
         #Reset Robot Opentron Robot
@@ -148,6 +152,7 @@ def load_calibration():
 
 ##################################################################
 # Database
+##################################################################
 # Test Connection
 db_file = 'database/data.db'
 def create_connection():
@@ -183,7 +188,7 @@ def deleteRecord(variable, id):
         c = conn.cursor()
         print("Connected to SQLite")
 
-        # Deleting Whole Table Values
+        # Delete single row of data
         if variable == "custom_container":
             sql_delete_query = """DELETE FROM custom_container WHERE id=?;"""
 
@@ -254,35 +259,52 @@ def save_data(table, insert):
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
-    conn.commit()
+    conn.commit() # Save
     print("Record Added successfully to", table)
-    conn.close()  
+    conn.close()  # Close database
 
+# def test_save_data():
+#     name = "Step 1"
+#     shortcuts = "Simple_Transfer"
+#     sel_pipette = "pipette_a"
+#     volume = 20
+#     value1 = "C1_24-well-plate"
+#     value2 = "C2"
+#     value3 = "C2_24-well-plate"
+#     value4 = "A2"
+#     notes = "test notes"
 
+#     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+#     save_data("custom_protocol", insert)
 
+# test_save_data()
 # #Read Data
-# def read_data(table):
-#     conn = sqlite3.connect(db_file)
-#     c = conn.cursor()
+def read_data(table):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
 
-#     #Read Number of rows
-#     if table == "custom_container":
-#         cursor_obj.execute("SELECT * FROM custom_container")
-#     if table == "custom_workspace":
-#         cursor_obj.execute("SELECT * FROM custom_workspace")
-#     if table == "custom_protocol":
-#         cursor_obj.execute("SELECT * FROM custom_protocol")
+    #Read Number of rows
+    if table == "custom_container":
+        sqlite_select_query = """SELECT * FROM custom_container"""
+    if table == "custom_workspace":
+        sqlite_select_query = """SELECT * FROM custom_workspace"""
+    if table == "custom_protocol":
+        sqlite_select_query = """SELECT * FROM custom_protocol"""
 
-#     x = len(cursor_obj.fetchall())
-#     print(x)
+    c.execute(sqlite_select_query)        
 
-#     for x 
+    x = c.fetchall()
+    print("Total rows are:  ", len(x))
+    print(x)
 
-#     #Close Database Connection
-#     conn.close()  
-#     return list
+    #for x
 
 
+    #Close Database Connection
+    conn.close()  
+    return list
+
+#read_data('custom_protocol')
 
 #Setup New Table if none exist in DB File
 def setup_table(variable):
@@ -324,8 +346,10 @@ def setup_table(variable):
                                             notes text
                                         ); """
 
+    #Data Base Connection                                    
     conn = sqlite3.connect(db_file)
 
+    #Check if connection is made sucessfully before writing data
     if conn is not None:
         # create projects table
         create_table(conn, sql_create_projects_table)
@@ -338,6 +362,15 @@ def setup_table(variable):
 
 ###########################################################################################################
 #
-# Robot Move Commands
+# JSON IMPORT FUNCTION
 #
 ###########################################################################################################
+#WIP - Require JSON file to be updated to have proper separation of each container
+def load_default_containers():
+    with open("database/default-containers.json") as file:
+        default_containers = json.load(file)
+
+    temp = default_containers['containers'][0]
+    print(temp)
+
+#load_default_containers()
