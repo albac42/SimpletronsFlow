@@ -57,7 +57,7 @@ root.title('Simpletrons - OT')
 #
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', 'point']
+					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', 'point', ]
 loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
@@ -113,14 +113,28 @@ def confirmation_box(variable):
 		save_w.grid(column = 0, row = 1)
 	elif variable == 4:
 		newWindow.geometry("180x60")
-		label = Label(newWindow, text='Successfully Save Calibration Pipette', font = ('Arial', 9))
+		label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
 		label.grid(column = 0, row = 0, sticky="NW")
 		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
 		save_w.grid(column = 0, row = 1)
 	elif variable == 5:
 		newWindow.geometry("180x60")
-		label = Label(newWindow, text='Successfully Save Calibration Pipette', font = ('Arial', 9))
+		label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+	elif variable == 6:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Successfully Save \n Pre-Configured Workspace', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+	elif variable == 7:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Successfully Save \n Pre-Configured Pipette', font = ('Arial', 9))
 		label.grid(column = 0, row = 0, sticky="NW")
 		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
@@ -186,7 +200,7 @@ def connecton_graphical():
 
 ###########################################################################################################
 #
-# Update Posistion Pipetting 
+# Update Position Pipetting 
 #
 ###########################################################################################################
 
@@ -290,31 +304,44 @@ def update_dropdown_con_c():
 # PRE LOAD
 #
 ###########################################################################################################
+count_preload_c = 0
+count_preload_p = 0
 
 # Load Pre Configured Workspace
 def load_pre_workspace(): #For Testing
-	load_container('A1_trash-box', 'A1', 'trash-box')
-	load_container('B1_tiprack-1000ul', 'B1', 'tiprack-1000ul')
-	load_container('B2_tiprack-1000ul', 'B2', 'tiprack-1000ul')
-	load_container('C1_96-flat', 'C1', '96-flat')
-	load_container('C2_96-flat', 'C2', '96-flat')
+
+	global count_preload_c
+
+	if count_preload_c == 0:
+		load_container('A1_trash-box', 'A1', 'trash-box')
+		load_container('B1_tiprack-1000ul', 'B1', 'tiprack-1000ul')
+		load_container('B2_tiprack-1000ul', 'B2', 'tiprack-1000ul')
+		load_container('C1_24-well-plate', 'C1', '24-well-plate')
+		load_container('C2_24-well-plate', 'C2', '24-well-plate')
 
 
-	update_containers_list('A1_trash-box')
-	update_containers_list('B1_tiprack-1000ul')
-	update_containers_list('B2_tiprack-1000ul')
-	update_containers_list('C1_96-flat')
-	update_containers_list('C2_96-flat')
+		update_containers_list('A1_trash-box')
+		update_containers_list('B1_tiprack-1000ul')
+		update_containers_list('B2_tiprack-1000ul')
+		update_containers_list('C1_24-well-plate')
+		update_containers_list('C2_24-well-plate')
 
-	print('Load Default Container Sucessfull')
-	pass
+		print('Load Default Container Successful')
+		confirmation_box(6)
+		count_preload_c = count_preload_c + 1
+	
 
 # Load Pre Configured PIp
 def load_pre_pip(): #For Testing
-	loadpipette ('a', 1000, 100, 800, 1200, 'B1_tiprack-1000ul', 'A2_trash-box')
-	update_pipette('pipette_a', 1)
-	loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
-	update_pipette('pipette_b', 0)
+	global count_preload_p
+
+	if count_preload_p == 0:
+		loadpipette ('a', 1000, 100, 800, 1200, 'B1_tiprack-1000ul', 'A2_trash-box')
+		update_pipette('pipette_a', 1)
+		loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
+		update_pipette('pipette_b', 0)
+		confirmation_box(7)
+		count_preload_p = count_preload_p + 1
 ###########################################################################################################
 
 ###########################################################################################################
@@ -741,41 +768,56 @@ def graphicalUIprotocol():
 		global background_image2
 		global background2
 
+		temp = 0
+
 		print(eventObject.widget.get())
 		container_lookup = eventObject.widget.get()
 		#Grab Value From Entry Box
 		if re.search('96-Deep-Well', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('96-PCR-flat', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('96-PCR-tall', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Tall.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('tiprack-10ul', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/Tiprack-10ul.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('tiprack-1000ul', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/Tiprack-1000.png')
 			print("Load Container Image:", container_lookup)			
+			temp = 1
 
 		if re.search('96-flat', container_lookup):
 			background_image2=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
+
+		if re.search('24-well-plate', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		background2 = ttk.Label(proroot, image = background_image2)
-		background2.grid(column = 0, row = 8, columnspan = 5)
+		background2.grid(column = 0, row = 10, columnspan = 5)
 
-	#Draw Grahpics - Second Container
+	#Draw Graphics - Second Container
 	def callback_b(eventObject):
 
 		global background_image3
 		global background3
+
+		temp = 0
 
 		print(eventObject.widget.get())
 		container_lookup = eventObject.widget.get()
@@ -783,29 +825,42 @@ def graphicalUIprotocol():
 		if re.search('96-Deep-Well', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('96-PCR-flat', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('96-PCR-tall', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Tall.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('tiprack-10ul', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/Tiprack-10ul.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		if re.search('tiprack-1000ul', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/Tiprack-1000.png')
-			print("Load Container Image:", container_lookup)			
+			print("Load Container Image:", container_lookup)	
+			temp = 1		
 
 		if re.search('96-flat', container_lookup):
 			background_image3=tk.PhotoImage(file='graphic/labware/96-PCR-Flatt.png')
 			print("Load Container Image:", container_lookup)
+			temp = 1
+
+		if re.search('24-well-plate', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
 
 		background3 = ttk.Label(proroot, image = background_image3)
-		background3.grid(column = 0, row = 9, columnspan = 5)
+		background3.grid(column = 0, row = 12, columnspan = 5)
+
+
 
 	###########################################################################################################
 	# Save Steps to Database

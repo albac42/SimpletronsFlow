@@ -18,6 +18,8 @@ import warnings
 import serial
 import serial.tools.list_ports
 import re
+
+import json
 ######################################################################
 
 # Self Find Serial Port #
@@ -343,6 +345,15 @@ def setup_table(variable):
 
 ###########################################################################################################
 #
-# Robot Move Commands
+# JSON IMPORT FUNCTION
 #
 ###########################################################################################################
+#WIP - Require JSON file to be updated to have proper separation of each container
+def load_default_containers():
+    with open("database/default-containers.json") as file:
+        default_containers = json.load(file)
+
+    temp = default_containers['containers'][0]
+    print(temp)
+
+#load_default_containers()
