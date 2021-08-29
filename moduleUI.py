@@ -57,7 +57,7 @@ root.title('Simpletrons - OT')
 #
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
+					'96-PCR-flat', '96-PCR-tall',  '96-deep-well', 'point']
 loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
@@ -66,10 +66,10 @@ count_CTT = 0
 count_C = 0
 
 
-head_speed_p = IntVar() # Movenment Speed Pipette
-head_speed_a = IntVar() # Movenment Speed Arm
-head_speed_p = 1 # Movenment Speed Pipette
-head_speed_a = 1 # Movenment Speed Arm
+head_speed_p = IntVar() # Movement Speed Pipette
+head_speed_a = IntVar() # Movement Speed Arm
+head_speed_p = 1 # Movement Speed Pipette
+head_speed_a = 1 # Movement Speed Arm
 ###########################################################################################################
 
 ###########################################################################################################
@@ -84,7 +84,7 @@ def confirmation_box(variable):
 
 	newWindow = Toplevel(root)
 
-	newWindow.title("Simpletrons - OT: Calibration")
+	newWindow.title("Simpletrons - OT")
 	newWindow.geometry("200x60")
 
 	def close_popup():
@@ -99,18 +99,40 @@ def confirmation_box(variable):
 		label2.grid(column = 0, row = 1, sticky="NW")
 	elif variable == 2:
 		newWindow.geometry("180x60")
-		label = Label(newWindow, text='Sucessfully Loaded Workspace', font = ('Arial', 9))
+		label = Label(newWindow, text='Successfully Loaded Workspace', font = ('Arial', 9))
 		label.grid(column = 0, row = 0, sticky="NW")
 		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
 		save_w.grid(column = 0, row = 1)
 	elif variable == 3:
 		newWindow.geometry("180x60")
-		label = Label(newWindow, text='Sucessfully Loaded Pipette', font = ('Arial', 9))
+		label = Label(newWindow, text='Successfully Loaded Pipette', font = ('Arial', 9))
 		label.grid(column = 0, row = 0, sticky="NW")
 		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
 		save_w.grid(column = 0, row = 1)
+	elif variable == 4:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Successfully Save Calibration Pipette', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+	elif variable == 5:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Successfully Save Calibration Pipette', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)
+	else:
+		newWindow.geometry("180x60")
+		label = Label(newWindow, text='Error: Please Check Terminal Windows', font = ('Arial', 9))
+		label.grid(column = 0, row = 0, sticky="NW")
+		save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+		save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+		save_w.grid(column = 0, row = 1)		
+
 ###########################################################################################################
 
 
@@ -199,7 +221,7 @@ def update_position_display_x():
 #
 ###########################################################################################################
 
-#Update Type of conatiners loaded
+#Update Type of containers loaded
 def update_containers_list_type():
 
 	global loaded_container_type
@@ -214,7 +236,7 @@ def update_containers_list_type():
 	loaded_container_type = sorted(loaded_container_type)
 	print('Loaded Container Type:', loaded_container_type)
 
-#Update Loaded Conatiner List
+#Update Loaded Container List
 def update_containers_list(name):
 	global loaded_containers
 	global count_CT
@@ -231,32 +253,32 @@ def update_pipette(name, num):
 def update_dropdown_tip_rack():
     list = loaded_containers
     dropdown_tip_rack['values'] = list
-    print('Updating Dropdown List: tip rack pipette setup')
+    print('Updating Drop-down List: tip rack pipette setup')
 
 #Update Tip Rack List in Setup Pipette
 def update_dropdown_trash():
     list = loaded_containers
     dropdown_trash['values'] = list
-    print('Updating Dropdown List: trash pipette setup')
+    print('Updating Drop-down List: trash pipette setup')
 
 #Update Pipette in Pipette Dropdown
 def update_dropdown_pip():
     list = loaded_pipette_list
     dropdown_cpip['values'] = list
-    print('Updating Dropdown List: Pipette pipette calibrate')
+    print('Updating Drop-down List: Pipette pipette calibrate')
     calibration_mode_toggle(1)
 
 #Update Pipette in Calibration Dropdown
 def update_dropdown_pip_c():
     list = loaded_pipette_list
     dropdown_varpip_c['values'] = list
-    print('Updating Dropdown List: Pipette container calibrate')
+    print('Updating Drop-down List: Pipette container calibrate')
     calibration_mode_toggle(1)
 #Update Container in Calibration Dropdown
 def update_dropdown_con_c():
     list = loaded_containers
     dropdown_varcon_c['values'] = list
-    print('Updating Dropdown List: conatiners containers calibrate')
+    print('Updating Drop-down List: containers containers calibrate')
     calibration_mode_toggle(1)
 
 
@@ -297,7 +319,7 @@ def load_pre_pip(): #For Testing
 
 ###########################################################################################################
 #
-# Function Link
+# Function Link for Calibration
 #
 ###########################################################################################################
 
@@ -313,7 +335,8 @@ def save_pip_action():
 	print(pos)
 
 	saveCalibrationPip(pip, pos)
-	print('Command Sucessfull Saved Calibration')
+	print('Command Successful Saved Calibration')
+	confirmation_box(4)
 
 def move_pip_action_up():
 	try:
@@ -341,12 +364,12 @@ def move_prepip_action():
 	print(pos)
 
 	moveDefaultLocation_p(pip, plunger)
-	print('Scuessfully Moved To Saved Position')
+	print('Successfully Moved To Saved Position')
 
 
-#
-# Roboto Control
-#
+##
+# Robot Control for calibration
+##
 def move_x_neg():
 	try:
 		speed = head_speed_p.get()
@@ -402,6 +425,14 @@ def home_axis():
 		calibrationControl('home')
 	except:
 		print("[K1] Keyboard Input Not Accepted At this Stage")	
+
+#Save Container Calibration
+def save_containers_calibration():
+	pip = varpip,get()
+	con = varcon.get()
+
+	saveCalibration(con, pip)
+	confirmation_box(5)
 
 
 def load_axis():
@@ -588,7 +619,7 @@ def action_save_pip():
 
 ###########################################################################################################
 #
-# Containers Creation UI
+# Send Job to OT-1 [ WORKING IN PROGRESS ]
 #
 ###########################################################################################################
 def opencontainer(location):
@@ -599,7 +630,7 @@ def opencontainer(location):
 
 ###########################################################################################################
 #
-# Containers Creation UI
+# Containers Creation UI [ WORKING IN PROGRESS ]
 #
 ###########################################################################################################
 def containersCreationUi():
@@ -981,7 +1012,7 @@ file_menu.add_command(label = "Exit", command = root.quit )
 
 
 #Start Up UI
-connecton_graphical()
+#connecton_graphical()
 ########################################################################################################
 #
 #Container Setup
@@ -1181,7 +1212,7 @@ pre_home_b.grid(column = 5, row = 4)
 
 #Save Button - Calibration 
 #save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-save_c = ttk.Button(tab3, image = save_button_image, width = 5)
+save_c = ttk.Button(tab3, image = save_button_image, width = 5, command = save_containers_calibration)
 save_c.grid(column = 3, row = 4)
 
 
@@ -1380,8 +1411,6 @@ pre_select_pip.grid(column = 6, row = 7)
 #
 #########################################################################################################
 #Change Photo
-
-
 #Load Graphics According to Position Calibration
 vpc1 = StringVar()
 def callback_p(eventObject):
@@ -1479,7 +1508,7 @@ label = ttk.Label(tab2, textvariable=position_display_z)
 label.grid(column = 2, row = 8)
 position_display_z.set("X: 0") #Set Default Label
 
-#Keybaord Input
+#Keyboard Input
 # root.bind("<Prior>", move_pip_action_up) #Page UP
 # root.bind("<Next>", move_pip_action_down) #PageDown
 
