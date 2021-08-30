@@ -1,17 +1,21 @@
 ######################################################################
 #Import Require Library [Do NOT EDIT]
 import opentrons
-#import openworkstation
+
 from opentrons import robot, containers, instruments
-#from openworkstation import
-from time import sleep
-#from commands import *
+
+
 from modulePipetting import *
+from moduleCommands import *
+from moduleContainers import *
+
+#from time import sleep
+#import openworkstation
+#from openworkstation import
 #from moduleCrosslinker import *
 #from moduleStorage import *
 #from moduleTransportation import getTransportposition
-from moduleCommands import *
-from moduleContainers import *
+
 print('Loaded Require Libaries')
 print('Loading UI')
 
@@ -19,6 +23,8 @@ setup_table("custom_protocol")
 
 from moduleUI import *
 print('UI Closing')
+# Delete Temporary Record 
+deleteTable("custom_protocol")
 
 
 

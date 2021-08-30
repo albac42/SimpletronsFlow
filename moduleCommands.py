@@ -213,6 +213,7 @@ def deleteRecord(variable, id):
 #Delete Whole Table
 def deleteTable(variable):
     try:
+        conn = sqlite3.connect(db_file)
         c = conn.cursor()
         print("Connected to SQLite")
 
@@ -233,11 +234,6 @@ def deleteTable(variable):
 
     except sqlite3.Error as error:
         print("Failed to delete whole table from sqlite", error)
-    finally:
-        if conn:
-            conn.close()
-            print("the sqlite connection is closed")
-
 
 #Save Data to specific database
 def save_data(table, insert):
@@ -330,8 +326,24 @@ def setup_table(variable):
                                             location text
                                         ); """
 
-    #Custom protocol Database Creation
+    #Custom protocol Database Creation - Temp
     if variable == "custom_protocol":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
+                                            id integer PRIMARY KEY,
+                                            name text NOT NULL,
+                                            shortcuts text NOT NULL,
+                                            pipette text NOT NULL,
+                                            volume REAL NOT NULL,
+                                            value1 text,
+                                            value2 text,
+                                            value3 text,
+                                            value4 text,
+                                            option text,
+                                            notes text
+                                        ); """
+
+    # Persist Storage 
+    if variable == "persist_protocol":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
@@ -349,7 +361,7 @@ def setup_table(variable):
     #Data Base Connection                                    
     conn = sqlite3.connect(db_file)
 
-    #Check if connection is made sucessfully before writing data
+    #Check if connection is made successfully before writing data
     if conn is not None:
         # create projects table
         create_table(conn, sql_create_projects_table)

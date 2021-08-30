@@ -318,13 +318,17 @@ def load_pre_workspace(): #For Testing
 		load_container('B2_tiprack-1000ul', 'B2', 'tiprack-1000ul')
 		load_container('C1_24-well-plate', 'C1', '24-well-plate')
 		load_container('C2_24-well-plate', 'C2', '24-well-plate')
-
+		load_container('B3_point', 'B3', 'point')
+		load_container('A3_point', 'A3', 'point')
 
 		update_containers_list('A1_trash-box')
 		update_containers_list('B1_tiprack-1000ul')
 		update_containers_list('B2_tiprack-1000ul')
 		update_containers_list('C1_24-well-plate')
 		update_containers_list('C2_24-well-plate')
+		update_containers_list('B3_point')
+		update_containers_list('A3_point')
+
 
 		print('Load Default Container Successful')
 		confirmation_box(6)
@@ -808,6 +812,14 @@ def graphicalUIprotocol():
 			print("Load Container Image:", container_lookup)
 			temp = 1
 
+		if re.search('point', container_lookup):
+			background_image2=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
+			textboxC.grid_forget()
+
+		label = ttk.Label(proroot, text="Plate A")
+		label.grid(column = 0, row = 9)
 		background2 = ttk.Label(proroot, image = background_image2)
 		background2.grid(column = 0, row = 10, columnspan = 5)
 
@@ -818,6 +830,7 @@ def graphicalUIprotocol():
 		global background3
 
 		temp = 0
+
 
 		print(eventObject.widget.get())
 		container_lookup = eventObject.widget.get()
@@ -856,7 +869,14 @@ def graphicalUIprotocol():
 			background_image3=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
 			print("Load Container Image:", container_lookup)
 			temp = 1
+		if re.search('point', container_lookup):
+			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
+			textboxB.grid_forget()
 
+		label = ttk.Label(proroot, text="Plate B")
+		label.grid(column = 0, row = 11)
 		background3 = ttk.Label(proroot, image = background_image3)
 		background3.grid(column = 0, row = 12, columnspan = 5)
 
@@ -901,14 +921,14 @@ def graphicalUIprotocol():
 			else:
 				notes = f_note.get()
 
-			print(name)
-			print(notes)
-			print(sel_pipette)
-			print(volume)
-			print(value1)
-			print(value2)
-			print(value3)
-			print(value4)
+			# print(name)
+			# print(notes)
+			# print(sel_pipette)
+			# print(volume)
+			# print(value1)
+			# print(value2)
+			# print(value3)
+			# print(value4)
 
 		if shortcuts.get() == "Multiple_Wells_Transfer":
 			pass
@@ -918,7 +938,6 @@ def graphicalUIprotocol():
 
 		if shortcuts.get() == "Few_to_Many":
 			pass
-
 
 		insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, notes)
 		save_data("custom_protocol", insert)
@@ -1010,13 +1029,13 @@ def graphicalUIprotocol():
 	#Save Button
 	save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
 	save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
-	save_step.grid(column = 4, row = 7)
+	save_step.grid(column = 4, row = 6)
 
 
 
 
 
-###########################################################################################################
+##########################################################################################################
 
 ###########################################################################################################
 #
