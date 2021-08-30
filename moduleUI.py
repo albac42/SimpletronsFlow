@@ -25,7 +25,7 @@ from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
-# Note: Code is require in this module for graphical UI to function
+# Note: Functions cannot be moved
 
 ###########################################################################################################
 
@@ -771,6 +771,8 @@ def graphicalUIprotocol():
 
 		global background_image2
 		global background2
+		nonlocal textboxB
+
 
 		temp = 0
 
@@ -816,7 +818,13 @@ def graphicalUIprotocol():
 			background_image2=tk.PhotoImage(file='graphic/labware/point.png')
 			print("Load Container Image:", container_lookup)
 			temp = 1
-			textboxC.grid_forget()
+			textboxB.grid_forget()
+		if bool(re.search('point', container_lookup)) == False:
+			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
+			textboxB = Entry(proroot, width=12, textvariable=value_c)
+			textboxB.grid(column = 3, row = 6)	
 
 		label = ttk.Label(proroot, text="Plate A")
 		label.grid(column = 0, row = 9)
@@ -828,6 +836,7 @@ def graphicalUIprotocol():
 
 		global background_image3
 		global background3
+		nonlocal textboxC
 
 		temp = 0
 
@@ -873,7 +882,13 @@ def graphicalUIprotocol():
 			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
 			print("Load Container Image:", container_lookup)
 			temp = 1
-			textboxB.grid_forget()
+			textboxC.grid_forget()
+		if bool(re.search('point', container_lookup)) == False:
+			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Load Container Image:", container_lookup)
+			temp = 1
+			textboxC = Entry(proroot, width=12, textvariable=value_b)
+			textboxC.grid(column = 1, row = 6)	
 
 		label = ttk.Label(proroot, text="Plate B")
 		label.grid(column = 0, row = 11)
