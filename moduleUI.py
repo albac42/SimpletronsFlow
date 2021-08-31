@@ -819,12 +819,13 @@ def graphicalUIprotocol():
 			print("Load Container Image:", container_lookup)
 			temp = 1
 			textboxB.grid_forget()
+
 		if bool(re.search('point', container_lookup)) == False:
-			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-			print("Load Container Image:", container_lookup)
+			#background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Reload Entry Box", container_lookup)
 			temp = 1
 			textboxB = Entry(proroot, width=12, textvariable=value_c)
-			textboxB.grid(column = 3, row = 6)	
+			textboxB.grid(column = 1, row = 6)	
 
 		label = ttk.Label(proroot, text="Plate A")
 		label.grid(column = 0, row = 9)
@@ -883,12 +884,13 @@ def graphicalUIprotocol():
 			print("Load Container Image:", container_lookup)
 			temp = 1
 			textboxC.grid_forget()
+
 		if bool(re.search('point', container_lookup)) == False:
-			background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-			print("Load Container Image:", container_lookup)
+			#background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+			print("Reload Entry Box", container_lookup)
 			temp = 1
 			textboxC = Entry(proroot, width=12, textvariable=value_b)
-			textboxC.grid(column = 1, row = 6)	
+			textboxC.grid(column = 3, row = 6)	
 
 		label = ttk.Label(proroot, text="Plate B")
 		label.grid(column = 0, row = 11)
@@ -924,15 +926,22 @@ def graphicalUIprotocol():
 			#Value 2 (First Container)
 			value1 = aspirate_con.get()
 			#Value 2 (First Container Syntax)
-			value2 = value_b.get()
+			container_lookup = aspirate_con.get()
+			if re.search('point', container_lookup):
+				value2 = "A1"
+			else:
+				value2 = value_b.get()
 			#Value 3 (Second Container)
 			value3 = dispense_con.get()
 			#Value 4 (Second Container Syntax)
-			value4 = value_c.get()
+			container_lookup = dispense_con.get()
+			if re.search('point', container_lookup):
+				value4 = "A1"
+			else:
+				value4 = value_b.get()
 
 			if f_note.get() == " ":
-				notes = "null"
-
+				notes = "Null"
 			else:
 				notes = f_note.get()
 
