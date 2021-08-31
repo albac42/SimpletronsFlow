@@ -711,7 +711,7 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 
-step = 0
+step = 1
 
 def graphicalUIprotocol():
 
@@ -910,7 +910,7 @@ def graphicalUIprotocol():
 		print(shortcuts.get())
 		if shortcuts.get() == "Simple_Transfer":
 			#Check if Friendly Name is available if not set a default based of step
-			if f_name.get() == " ":
+			if len(f_name.get()) == 0:
 				name = "step" + str(step)
 
 			else:
@@ -940,8 +940,8 @@ def graphicalUIprotocol():
 			else:
 				value4 = value_b.get()
 
-			if f_note.get() == " ":
-				notes = "Null"
+			if len(f_note.get()) == 0:
+				notes = "NULL"
 			else:
 				notes = f_note.get()
 
