@@ -2,35 +2,40 @@
 # Please Do NOT Modify Unless You Know What you're doing #
 
 ######################################################################
-import opentrons
-# Opentrons 2.5.2 (pip install opentrons==2.5.2)
-from opentrons import robot, containers, instruments
 
-from modulePipetting import *
-from moduleCalibrate import *
-#from moduleTransportation import getTransportposition
-from time import sleep
+
+#from time import sleep
 
 import sqlite3
 from sqlite3 import Error
 
-import warnings
-import serial
-import serial.tools.list_ports
+#import json
 import re
 
-import json
+#import warnings
+import serial
+import serial.tools.list_ports
+
+#import opentrons
+# Opentrons 2.5.2 (pip install opentrons==2.5.2)
+from opentrons import robot
+#from opentrons import robot, containers, instruments
+
+#from moduleTransportation import getTransportposition
+#from modulePipetting import *
+#from moduleCalibrate import *
 ######################################################################
 
-# Self Find Serial Port #
+
 def find_robot(serial_number):
+    """ # Self Find Serial Port # """
     for pinfo in serial.tools.list_ports.comports():
         if pinfo.serial_number == serial_number:
             return serial.Serial(pinfo.device)
     raise IOError("[#A1] Could not find an Robot - is it plugged in or is serial number setup correct?")
 
-# Read text file
 def check_file():
+    """" Read text file """
     try:
         with open('usbSerial.txt') as f:
             lines = f.readlines() #Read UsbSerial file
@@ -44,6 +49,7 @@ def check_file():
     
 # Default Load QUT OT-1 Robot
 def find_ot():
+    """Load Serial Number from File"""
     try:
         # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
         serial = check_file()
@@ -53,7 +59,7 @@ def find_ot():
         robotUSB = str(robotUSB) #Array to Convert to string
         robotUSB = re.findall(r"port='(.*?)'", robotUSB)
         robotUSB = str(robotUSB) #Array to Convert to string
-        robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
+        robotUSB = str(robotUSB).strip('['']') #Remove Brackets
         robotUSB = eval(robotUSB) #Remove Quotation
     except:
         print('[#A2] Error Phrasing serial number, please submit issue on github')
@@ -65,6 +71,7 @@ def find_ot():
 #######################################################################
 
 def connect():
+    """Connect to Robot"""
     print('Connecting to Robots')
     try:
         find_ot()
@@ -78,8 +85,9 @@ def connect():
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
 
-#Home Both Robot [Home Main Opentron Robot First - Then Storage]
+
 def home_all():
+    """Home Both Robot [Home Main Opentron Robot First - Then Storage]"""
     try:
         print('Homing Opentrons Robot in progress')
         robot.home()
@@ -99,8 +107,9 @@ def home_all():
         print('[#A5] Running Debugging Mode')
         pass
 
-#Homes OT-1 Axis For Opentrons Robot
+
 def home_robot():
+    """Homes OT-1 Axis For Opentrons Robot"""
     try:
         print('Homing Opentrons Robot in progress')
         robot.home()
@@ -110,8 +119,8 @@ def home_robot():
         print('[#H1] Unable to Home Robot')
         pass
 
-#Homes Storage Robot Axis For Transport Robot
 def home_robot2():
+    """Homes Storage Robot Axis For Transport Robot"""
     try:
         print('Homing Transport Robot in progress')
         robot2._driver.send_command('G28.2 Y Z')
@@ -127,6 +136,7 @@ def home_robot2():
 
 #Reset Connection [OT-1 First - Then Storage Robot]
 def reset_all():
+    """Reset Connection"""
     try:
         #Reset Robot Opentron Robot
         print('Reseting Opentrons Robot')
@@ -146,8 +156,9 @@ def reset_all():
         print('[#H2] Unable to Home Robot2')
         pass
     
-def load_calibration():
-    print('Loaded Pre-Configured Robot Calibration')
+# def load_calibration():
+#     """create a table from the create_table_sql statement"""
+#     print('Loaded Pre-Configured Robot Calibration')
 
 
 ##################################################################
@@ -156,7 +167,7 @@ def load_calibration():
 # Test Connection
 db_file = 'database/data.db'
 def create_connection():
-    """ create a test database connection to a SQLite database """
+    """create a test database connection to a SQLite database"""
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -165,12 +176,10 @@ def create_connection():
     except Error as e:
         print(e)
         print('[#A7] Error Loading Database')
-    finally:
-        if conn:
-            conn.close()
+
 
 def create_table(conn, create_table_sql):
-    # create a table from the create_table_sql statement
+    """create a table from the create_table_sql statement"""
     try:
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
@@ -178,12 +187,10 @@ def create_table(conn, create_table_sql):
         conn.commit()
     except Error as e:
         print(e)
-    finally:
-        if conn:
-            conn.close()
 
 #Delete A Single Record
 def deleteRecord(variable, id):
+    """Delete Single Record Table"""
     try:
         c = conn.cursor()
         print("Connected to SQLite")
@@ -205,13 +212,10 @@ def deleteRecord(variable, id):
 
     except sqlite3.Error as error:
         print("Failed to delete record from sqlite table", error)
-    finally:
-        if conn:
-            conn.close()
-            print("the sqlite connection is closed")
 
 #Delete Whole Table
 def deleteTable(variable):
+    """Delete Table"""
     try:
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
@@ -237,7 +241,7 @@ def deleteTable(variable):
 
 #Save Data to specific database
 def save_data(table, insert):
-
+    """Insert/Save Data into table"""
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
@@ -274,8 +278,10 @@ def save_data(table, insert):
 #     save_data("custom_protocol", insert)
 
 # test_save_data()
+
 # #Read Data
 def read_data(table):
+    """Read Data from Database"""
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
@@ -289,9 +295,16 @@ def read_data(table):
 
     c.execute(sqlite_select_query)        
 
-    x = c.fetchall()
-    print("Total rows are:  ", len(x))
-    print(x)
+    row = c.fetchone()
+
+    while row is not None:
+        print(row)
+        row = c.fetchone()
+        
+
+    # x = c.fetchall()
+    # print("Total rows are:  ", len(x))
+    
 
     #for x
 
@@ -300,12 +313,10 @@ def read_data(table):
     conn.close()  
     return list
 
-#read_data('custom_protocol')
+read_data('custom_protocol')
 
-#Setup New Table if none exist in DB File
 def setup_table(variable):
-
-    #Custom container Database Creation
+    """Custom container Database Creation"""
     if variable == "custom_container":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_container (
                                             id integer PRIMARY KEY,
@@ -378,11 +389,11 @@ def setup_table(variable):
 #
 ###########################################################################################################
 #WIP - Require JSON file to be updated to have proper separation of each container
-def load_default_containers():
-    with open("database/default-containers.json") as file:
-        default_containers = json.load(file)
+# def load_default_containers():
+#     with open("database/default-containers.json") as file:
+#         default_containers = json.load(file)
 
-    temp = default_containers['containers'][0]
-    print(temp)
+#     temp = default_containers['containers'][0]
+#     print(temp)
 
 #load_default_containers()

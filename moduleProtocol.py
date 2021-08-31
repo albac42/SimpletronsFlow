@@ -9,18 +9,6 @@ from time import sleep
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # Old Cross Linking Paltform
 #transportposition = getTransportposition()
 
