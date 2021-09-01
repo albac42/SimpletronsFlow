@@ -113,6 +113,7 @@ def saveCalibrationPip(pipette, plungerPos):
     pipette.calibrate(plungerPos)
 
 def calibrationControlPlugger(pipette, key, speed):
+    """ Save Calibration For Pipette"""
     global movementAmount
 
     changeDirectionSpeed(speed)
@@ -124,8 +125,11 @@ def calibrationControlPlugger(pipette, key, speed):
 
     pipette.motor.move(plungerPos)
 
-def move_pip_action_home(pipette):
-    print(pip)
+def pip_action_home(pipette):
+    """ Move Pipe To Home Position """
+    global plungerPos
+    
+    print(pipette)
     pipette.home()
     print('Homing Pipette')
     plungerPos=0

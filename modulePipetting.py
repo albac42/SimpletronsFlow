@@ -8,9 +8,10 @@ from moduleCommands import *
 
 #New Pipetting Setup
 
-def loadpipette (axis_s,max_v_s, min_v_s, asp_s, dis_a,tiprack, trash):
+def loadpipette (axis_s, max_v_s, min_v_s, asp_s, dis_a, tiprack, trash):
+  """ Load Pipette"""
 
-  #Eror Check
+  #Error Check
   if max_v_s > 1000:
     max_v_s = 1000
     print('Loaded Default Max Volume due to exceed device max amount (1000 uL Max)')
@@ -18,11 +19,12 @@ def loadpipette (axis_s,max_v_s, min_v_s, asp_s, dis_a,tiprack, trash):
     min_v_s = 5
     print('Loaded Default Min Volume due to exceed device max amount (5 uL Min)')
 
+  print(axis_s)
 
   if axis_s == 'b':
     pipette_b = instruments.Pipette(
       axis='b',
-      name='pd1000',
+      #name='pd1000',
       max_volume=max_v_s,
       min_volume=min_v_s,
       channels = 1,
@@ -32,10 +34,11 @@ def loadpipette (axis_s,max_v_s, min_v_s, asp_s, dis_a,tiprack, trash):
       trash_container=trash
       )
     print ("Loaded B Axis Pipette")
-  elif axis_s == 'a':
+
+  if axis_s == 'a':
     pipette_a = instruments.Pipette(
       axis='a',
-      name='pd100',
+      #name='pd100',
       max_volume=asp_s,
       min_volume=dis_a,
       channels = 1,
@@ -44,13 +47,11 @@ def loadpipette (axis_s,max_v_s, min_v_s, asp_s, dis_a,tiprack, trash):
       tip_racks=tiprack,
       trash_container=trash
       )
-    print ("Loaded B Axis Pipette")
-  else:
-    print ("Please check your loadpipette axis is correct or not")
-
+    print ("Loaded A Axis Pipette")
 
 
 def pickuptip (pipette, well):
+  """ Pick up Tip"""
   if pipette == b:
     pipette_b.pick_up_tip(tiprack.wells('A1'))
   elif pipette == a:

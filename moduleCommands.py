@@ -85,6 +85,19 @@ def connect():
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
 
+def manual_connect():
+    """ Connect to Robot """
+    print('Manual - Connecting to Robots')
+    try:
+        robot.connect("/dev/ttyACM0")
+        versions = robot.versions()
+        print('Opentrons Robot Connected, Robot Firmware Version:', versions)
+        #robot2.connect()
+        #robot2.connect(robot2USB)
+        #print('Opentrons Robot Connected')
+    except:
+        print('Opentrons Robot Not Connected')
+        print('[#A3] Running Debugging Mode')
 
 def home_all():
     """Home Both Robot [Home Main Opentron Robot First - Then Storage]"""

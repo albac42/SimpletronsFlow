@@ -166,6 +166,7 @@ def reset_robot():
 
 
 def connecton_graphical():
+    """ Connection UI"""
     conroot = Toplevel(root)
 
     conroot.title("Simpletrons - OT: Protocol - Connection")
@@ -195,6 +196,11 @@ def connecton_graphical():
     save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_robot)
     save_step.grid(column = 0, row = 3)
 
+    save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
+    save_step.grid(column = 0, row = 4)
+
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_robot)
+    save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
 
@@ -214,16 +220,25 @@ position_display_z = StringVar()
 
 
 def update_position_display():
+    """ Update Graphic Position """
+    global position_display_x
+    global position_display_y
+    global position_display_z
+
     position=list(robot._driver.get_head_position()["current"]) 
 
     position_display_x = ("X:", position[0])
     position_display_y = ("Y:", position[1])
     position_display_z = ("Z:", position[2])
 
-def update_position_display_x():
-    plungerPos = pipette._get_plunger_position(plungerTarget)
+def update_position_display_x(pip):
+    """ Update Pipette Position"""
+    global position_display_xx
+    pipette = pip
 
-    position_display_xx = ("X:", plungerTarget)
+    plungerPos = pipette.get_plunger_position(plungerTarget)
+
+    position_display_xx = ("X:", plungerPos)
 
 
 
@@ -235,9 +250,9 @@ def update_position_display_x():
 #
 ###########################################################################################################
 
-#Update Type of containers loaded
-def update_containers_list_type():
 
+def update_containers_list_type():
+    """ Update Type of containers loaded """
     global loaded_container_type
     global count_C
 
@@ -250,8 +265,8 @@ def update_containers_list_type():
     loaded_container_type = sorted(loaded_container_type)
     print('Loaded Container Type:', loaded_container_type)
 
-#Update Loaded Container List
 def update_containers_list(name):
+    """ Update Loaded Container List """
     global loaded_containers
     global count_CT
 
@@ -370,24 +385,27 @@ def save_pip_action():
     confirmation_box(4)
 
 def move_pip_action_up():
-    try:
-        pip = varpip.get()
-        speed = head_speed_p.get()
-        calibrationControlPlugger(pip, 'z_up', speed)
-        update_position_display_x()
-    except:
-        print("[K2] Keyboard Input Not Accepted At this Stage") 
+    """ Send Pipette Down """
+
+    pip = varpip.get()
+    speed = head_speed_p.get()
+
+    calibrationControlPlugger(pip, 'z_up', speed)
+    update_position_display_x(pip)
 
 def move_pip_action_down():
-    try:
-        pip = varpip.get()
-        speed = head_speed_p.get()
-        calibrationControlPlugger(pip, 'z_down', speed)
-        update_position_display_x()
-    except:
-        print("[K2] Keyboard Input Not Accepted At this Stage") 
+    """ Send Pipette Down """
+
+    pip = varpip.get()
+    speed = head_speed_p.get()
+
+    calibrationControlPlugger(pip, 'z_down', speed)
+    update_position_display_x(pip)
+
+    print("[K2] Keyboard Input Not Accepted At this Stage") 
 
 def move_prepip_action():
+    """ Send Pipette Pre-Configured Position Command """
     pip = varpip.get()
     plunger = pippos.get()
 
@@ -397,6 +415,11 @@ def move_prepip_action():
     moveDefaultLocation_p(pip, plunger)
     print('Successfully Moved To Saved Position')
 
+def move_pip_action_home():
+    """ Send Pipette Home Command """
+    pip = varpip.get()
+    pip_action_home(pip)
+    print("Homed Pipette")
 
 ##
 # Robot Control for calibration
