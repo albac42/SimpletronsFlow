@@ -5,9 +5,9 @@ import opentrons
 from opentrons import robot, containers, instruments
 
 
-from modulePipetting import *
+#from modulePipetting import *
 from moduleCommands import *
-from moduleContainers import *
+#from moduleContainers import *
 
 #from time import sleep
 #import openworkstation

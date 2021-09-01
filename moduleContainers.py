@@ -9,7 +9,7 @@ from moduleCommands import *
 
     
 def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth):
-    #Creating Container
+    """ Creating Container """
     print('Creating "', name, '" Container') 
     containers.create(
         name,                    # name of you container
@@ -25,6 +25,7 @@ def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth
 
 
 def load_container(name, location, container):
+    """ Load Container """
     print('Loading Container', name) #                       
     name = containers.load(container, location) # Load Container to a location
     print('Loaded Container', name) # 
@@ -32,6 +33,7 @@ def load_container(name, location, container):
 
 #Load some useful default containers 
 def load_dd_container():
+    """ Load Default Container"""
     print ('Loading Default Preset Containers')
     #trashA = containers.load('trash-box', 'A1') 
     #P_A = containers.load('tiprack-1000ul-chem', 'A2')

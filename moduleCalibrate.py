@@ -128,12 +128,22 @@ def calibrationControlPlugger(pipette, key, speed):
 def pip_action_home(pipette):
     """ Move Pipe To Home Position """
     global plungerPos
-    
-    print(pipette)
-    pipette.home()
-    print('Homing Pipette')
-    plungerPos=0
+    global pipette_a
+    global pipette_b
 
+    print(pipette)
+    
+    print('Homing Pipette')
+    """ Pick up Tip"""
+    if pipette == "pipette_b":
+        pipette_b.home()
+        print('Successfully Home Pipette', pipette)
+    if pipette == "pipette_a":
+        pipette_a.home()
+        print('Successfully Home Pipette', pipette)
+
+    plungerPos=0
+    
 
 def save_protocol():
     pass

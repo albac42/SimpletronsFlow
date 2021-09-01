@@ -16,7 +16,7 @@ import opentrons
 #Import RE
 import re
 
-#Custom moudle Imports
+#Custom module Imports
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
@@ -97,6 +97,7 @@ def confirmation_box(variable):
         label.grid(column = 0, row = 0, sticky="NW")
         label2 = Label(newWindow, text=version, font = ('Arial', 15))
         label2.grid(column = 0, row = 1, sticky="NW")
+
     elif variable == 2:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Loaded Workspace', font = ('Arial', 9))
@@ -104,6 +105,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     elif variable == 3:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Loaded Pipette', font = ('Arial', 9))
@@ -111,6 +113,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     elif variable == 4:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
@@ -118,6 +121,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     elif variable == 5:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
@@ -125,6 +129,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     elif variable == 6:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Save \n Pre-Configured Workspace', font = ('Arial', 9))
@@ -132,6 +137,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     elif variable == 7:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Successfully Save \n Pre-Configured Pipette', font = ('Arial', 9))
@@ -139,6 +145,7 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
     else:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Error: Please Check Terminal Windows', font = ('Arial', 9))
@@ -1546,7 +1553,7 @@ def callback_p(eventObject):
 
     if eventObject.widget.get() == "top":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Top.png')
-        vpc1.set("Top: Plunger is positioned almost all the way up (but still being pressed down \n just a tiny bit")
+        vpc1.set("Top: Plunger is positioned almost all the way up (but still being \n pressed down just a tiny bit")
 
     if eventObject.widget.get() == "bottom":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Bottom.png')
@@ -1554,14 +1561,14 @@ def callback_p(eventObject):
 
     if eventObject.widget.get() == "blow_out":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
-        vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or “hard-stop”, \n making sure any attached tip do not get pushed off")
+        vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or \n “hard-stop”,  making sure any attached tip do not get pushed off")
 
     if eventObject.widget.get() == "drop_tip":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
         vpc1.set("Drop Tip: Forces any attached tip to fall off ")
 
     background_img_pc = ttk.Label(tab2, image = background_image_pc)
-    background_img_pc.grid(column = 5, row = 0, rowspan = 7)
+    background_img_pc.grid(column = 6, row = 0, rowspan = 7)
 
     label = ttk.Label(tab2, textvariable=vpc1)
     label.grid(column = 6, row = 0)
