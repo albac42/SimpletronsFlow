@@ -28,7 +28,9 @@ def loadpipette (axis_s, max_v_s, min_v_s, asp_s, dis_a, tiprack, trash):
         min_v_s = 5
         print('Loaded Default Min Volume due to exceed device max amount (5 uL Min)')
 
-    print(axis_s)
+    #print(axis_s)
+
+    pipette = {}
 
     if axis_s == 'b':
         pipette_b = instruments.Pipette(
@@ -57,6 +59,8 @@ def loadpipette (axis_s, max_v_s, min_v_s, asp_s, dis_a, tiprack, trash):
         trash_container=trash
         )
         print ("Loaded A Axis Pipette")
+
+    return(pipette)
 
 
 def pickuptip (pipette, well):
@@ -88,6 +92,7 @@ def pickuptip (pipette, well):
 #       equipment['100TiprackB1'] = containers.load('tiprack-1000ul', 'B1')
 #       equipment['TrashA2'] = containers.load('trash-box', 'A2')
 #       #equipment['custom'] = containers.load('custom', 'C2')
+
 #       #Setup Pipette Left
 #       equipment['pd1000'] = instruments.Pipette(
 #          name='pd1000',

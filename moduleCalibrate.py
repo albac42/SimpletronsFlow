@@ -26,6 +26,7 @@ set_calibration_mode = 0
 
 
 def calibration_mode_toggle(option):
+    """ Set Calibration """
     if option == 1: #Enable
         set_calibration_mode = 1
         print('Enable Calibration Mode')
@@ -36,6 +37,7 @@ def calibration_mode_toggle(option):
 
 
 def changeDirectionSpeed(speed):
+    """ Change Movement Speed Amount"""
     global movementAmount
     if speed > 80:
         print('Warning: Speed Exceed Max Speed Allowed, Please change to lower value <80')
@@ -43,9 +45,11 @@ def changeDirectionSpeed(speed):
     if speed < 0.1:
         print('Warning: Speed Exceed Min Speed Allowed, Please change to higher value <0.1')
         movementAmount = 0.1
-    else:    
-        movementAmount = speed
-        return print('Speed Set', movementAmount)
+
+    movementAmount = speed    
+    print('Speed Set', movementAmount)
+
+
 
 def calibrationControl(direction, speed):
     global position
@@ -84,10 +88,10 @@ def calibrationControl(direction, speed):
 
     else:
         print('Warning: Calibration Keyboard Is Pressed, Please check your in calibration mode')
-        #position=list(robot._driver.get_head_position()["current"])
 
 def moveDefaultLocation_C(pipette, container):
     global position
+
     well = container
     pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
     location = (pipette, pos)
@@ -100,30 +104,69 @@ def moveDefaultLocation_p(pipette, plungerTarget):
     plungerPos=pipette._get_plunger_position(plungerTarget)
 
 def saveCalibration(rack, pipette):
-    #pip = pipette
+    """ Save Container Calibration"""
+    global pipette_a
+    global pipette_b
+
     well = rack[0]
     pos = well.from_center(x=0, y=0, z=-1, reference=rack)
-    location = (pipette, pos)
-    pipette.calibrate_position(location)
+
+    if pipette == "pipette_b":
+        location = (pipette_b, pos)
+
+    if pipette == "pipette_a":
+        location = (pipette_a, pos)
+
+    if pipette == "pipette_b":
+        pipette_b.calibrate_position(location)
+        print('Successfully Save Pipette Calibration:', rack)
+
+    if pipette == "pipette_a":
+        pipette_a.calibrate_position(location)
+        print('Successfully Save Pipette Calibration:', rack)
+
     calibration_mode_toggle(0)
     print('Calibration Saved')
 
 
-def saveCalibrationPip(pipette, plungerPos):
-    pipette.calibrate(plungerPos)
+#             well = equipment[currentlyCalibrating][0]
+#             pos = well.from_center(x=0, y=0, z=-1, reference=equipment[currentlyCalibrating])
+#             location = (equipment[currentlyCalibrating], pos)
+#             equipment[currentPipette].calibrate_position(location)
 
-def calibrationControlPlugger(pipette, key, speed):
+def saveCalibrationPip(pipette, plungerPos):
+    """ Save Pip Calibration """
+    if pipette == "pipette_b":
+        pipette_b.calibrate(plungerPos)
+        print('Successfully Save Pipette Calibration:', pipette)
+
+    if pipette == "pipette_a":
+        pipette_a.calibrate(plungerPos)
+        print('Successfully Save Pipette Calibration:', pipette)
+
+    calibration_mode_toggle(0)
+
+def ControlPlugger(pipette, key, speed):
     """ Save Calibration For Pipette"""
     global movementAmount
+    global plungerPos
+    global pipette_a
+    global pipette_b
 
     changeDirectionSpeed(speed)
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
-    elif ((key == "z_down") and (set_calibration_mode == 1)):
+
+    if ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
 
-    pipette.motor.move(plungerPos)
+    if (pipette == "pipette_b" and (set_calibration_mode == 1)):
+        pipette_b.motor.move(plungerPos)
+        print('Successfully Moved Pipette', pipette)
+    if (pipette == "pipette_a" and (set_calibration_mode == 1)):
+        pipette_a.motor.move(plungerPos)
+        print('Successfully Moved Pipette', pipette)    
 
 def pip_action_home(pipette):
     """ Move Pipe To Home Position """
@@ -143,12 +186,6 @@ def pip_action_home(pipette):
         print('Successfully Home Pipette', pipette)
 
     plungerPos=0
-    
-
-def save_protocol():
-    pass
-
-
 
 #OLD Curse Calibration Code - NOT FUNCTIONAL WITH CURRENT LIBRARY - REMOVE CODE WHEN Calibration is fully integrated with UI
 #PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference

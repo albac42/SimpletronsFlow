@@ -74,8 +74,8 @@ def connect():
     """Connect to Robot"""
     print('Connecting to Robots')
     try:
-        find_ot()
-        robot.connect(robotUSB)
+        #find_ot()
+        robot.connect('Virtual Smoothie')
         versions = robot.versions()
         print('Opentrons Robot Connected, Robot Firmware Version:', versions)
         #robot2.connect()

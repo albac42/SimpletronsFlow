@@ -335,13 +335,13 @@ def load_pre_workspace(): #For Testing
     global count_preload_c
 
     if count_preload_c == 0:
-        load_container('A1_trash-box', 'A1', 'trash-box')
-        load_container('B1_tiprack-1000ul', 'B1', 'tiprack-1000ul')
-        load_container('B2_tiprack-1000ul', 'B2', 'tiprack-1000ul')
-        load_container('C1_24-well-plate', 'C1', '24-well-plate')
-        load_container('C2_24-well-plate', 'C2', '24-well-plate')
-        load_container('B3_point', 'B3', 'point')
-        load_container('A3_point', 'A3', 'point')
+        load_container('A1', 'A1', 'trash-box')
+        load_container('B1', 'B1', 'tiprack-1000ul')
+        load_container('B2', 'B2', 'tiprack-1000ul')
+        load_container('C1', 'C1', '24-well-plate')
+        load_container('C2', 'C2', '24-well-plate')
+        load_container('B3', 'B3', 'point')
+        load_container('A3', 'A3', 'point')
 
         update_containers_list('A1_trash-box')
         update_containers_list('B1_tiprack-1000ul')
@@ -352,6 +352,9 @@ def load_pre_workspace(): #For Testing
         update_containers_list('A3_point')
 
 
+        temp = robot.containers()
+        print("Robot Loaded Container List:", temp)
+        
         print('Load Default Container Successful')
         confirmation_box(6)
         count_preload_c = count_preload_c + 1
@@ -362,9 +365,9 @@ def load_pre_pip(): #For Testing
     global count_preload_p
 
     if count_preload_p == 0:
-        loadpipette ('a', 1000, 100, 800, 1200, 'B1_tiprack-1000ul', 'A2_trash-box')
+        loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
         update_pipette('pipette_a', 1)
-        loadpipette ('b', 1000, 100, 800, 1200, 'B2_tiprack-1000ul', 'A2_trash-box')
+        loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
         update_pipette('pipette_b', 0)
         confirmation_box(7)
         count_preload_p = count_preload_p + 1
@@ -388,28 +391,24 @@ def save_pip_action():
     print(pos)
 
     saveCalibrationPip(pip, pos)
-    print('Command Successful Saved Calibration')
+    #print('Command Successful Saved Calibration')
     confirmation_box(4)
 
 def move_pip_action_up():
     """ Send Pipette Down """
-
     pip = varpip.get()
     speed = head_speed_p.get()
 
-    calibrationControlPlugger(pip, 'z_up', speed)
+    ControlPlugger(pip, 'z_up', speed)
     update_position_display_x(pip)
 
 def move_pip_action_down():
     """ Send Pipette Down """
-
     pip = varpip.get()
     speed = head_speed_p.get()
 
-    calibrationControlPlugger(pip, 'z_down', speed)
+    ControlPlugger(pip, 'z_down', speed)
     update_position_display_x(pip)
-
-    print("[K2] Keyboard Input Not Accepted At this Stage") 
 
 def move_prepip_action():
     """ Send Pipette Pre-Configured Position Command """
@@ -420,13 +419,13 @@ def move_prepip_action():
     print(pos)
 
     moveDefaultLocation_p(pip, plunger)
-    print('Successfully Moved To Saved Position')
+    #print('Successfully Moved To Saved Position')
 
 def move_pip_action_home():
     """ Send Pipette Home Command """
     pip = varpip.get()
     pip_action_home(pip)
-    print("Homed Pipette")
+    #print("Homed Pipette")
 
 ##
 # Robot Control for calibration
@@ -489,10 +488,11 @@ def home_axis():
 
 #Save Container Calibration
 def save_containers_calibration():
-    pip = varpip,get()
+    pip = varpip.get()
     con = varcon.get()
 
     saveCalibration(con, pip)
+
     confirmation_box(5)
 
 
@@ -508,141 +508,180 @@ def load_axis():
 #
 # Dynamic Creation
 #
+# Global 
+A1 = None
+A2 = None
+A3 = None
 
+B1 = None
+B2 = None
+B3 = None
+
+C1 = None
+C2 = None
+C3 = None
+
+D1 = None
+D2 = None
+D3 = None
+
+E1 = None
+E2 = None
+E3 = None
 # Setup Workspace
 def setup_workspace():
+    """ Setup Workspace"""
+
     #Reset Counter
     global count_C
     global count_CT
+    global robot
+
     count_CT = 0
-    #count_C = 0
 
     loaded_containers.clear()
+    robot.reset() # Reset Containers
 
     if A1_W.get() != '':
         print('Entry Found in A1')
         AA = 'A1_'+str(A1_W.get())
         BB = A1_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'A1', BB)
+        load_container('A1', 'A1', BB)
+
     if A2_W.get() != '':
         print('Entry Found in A2')
         AA = 'A2_'+str(A2_W.get())
         BB = A2_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'A2', BB)
+        load_container('A2', 'A2', BB)
     if A3_W.get() != '':
         print('Entry Found in A3')
         AA = 'A3_'+str(A3_W.get())
         BB = A3_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'A3', BB)
+        load_container('A3', 'A3', BB)
+
     if B1_W.get() != '':
         print('Entry Found in B1')
         AA = 'B1_'+str(B1_W.get())
         BB = B1_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'B1', BB)
+        load_container('B1', 'B1', BB)
+
     if B2_W.get() != '':
         print('Entry Found in B2')
         AA = 'B2_'+str(B2_W.get())
         BB = B2_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'B2', BB)
+        load_container('B2', 'B2', BB)
+
     if B3_W.get() != '':
         print('Entry Found in B3')
         AA = 'B3_'+str(B3_W.get())
         BB = B3_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'B3', BB)
+        load_container('B3', 'B3', BB)
+
     if C1_W.get() != '':
         print('Entry Found in C1')
         AA = 'C1_'+str(C1_W.get())
         BB = C1_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'C1', BB)
+        load_container('C1', 'C1', BB)
+
     if C2_W.get() != '':
         print('Entry Found in C2')
         AA = 'C2_'+str(C2_W.get())
         BB = C2_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'C2', BB)
+        load_container('C2', 'C2', BB)
+
     if C3_W.get() != '':
         print('Entry Found in C3')
         AA = 'C3_'+str(C3_W.get())
         BB = C3_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'C3', BB)
+        load_container('C3', 'C3', BB)
+
     if D1_W.get() != '':
         print('Entry Found in D1')
         AA = 'D1_'+str(D1_W.get())
         BB = D1_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'D1', BB)
+        load_container('D1', 'D1', BB)
+
     if D2_W.get() != '':
         print('Entry Found in D2')
         AA = 'D2_'+str(D2_W.get())
         BB = D2_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'D2', BB)
+        load_container('D2', 'D2', BB)
+
     if D3_W.get() != '':
         print('Entry Found in D3')
         AA = 'D3_'+str(D3_W.get())
         BB = D3_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'D3', BB)
+        load_container('D3', 'D3', BB)
+
     if E1_W.get() != '':
         print('Entry Found in E1')
         AA = 'E1_'+str(E1_W.get())
         BB = E1_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'E1', BB)
+        load_container('E1', 'E1', BB)
+
     if E2_W.get() != '':
         print('Entry Found in E2')
         AA = 'E2_'+str(E2_W.get())
         BB = E2_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'E2', BB)
+        load_container('E2', 'E2', BB)
+
     if E3_W.get() != '':
         print('Entry Found in E3')
         AA = 'E3_'+str(E3_W.get())
         BB = E3_W.get()
-        print(AA)
+        #print(AA)
 
         update_containers_list(AA)
-        load_container(AA, 'E3', BB)
+        load_container('E3', 'E3', BB)
+
     #Update Loaded in Workspaec Container List
     update_containers_list_type()
     print(loaded_containers)
     confirmation_box(2)
+    temp = robot.containers()
+    print("Robot Loaded Container List:", temp)
 #
 #Save Custom Pipette
 #
@@ -661,8 +700,18 @@ def action_save_pip():
     asp_speed = var_aspirate_speed.get()
     dis_speed = var_dispense_speed.get()
 
-    tiprack = s_tip_rack.get()
-    trash = s_trash.get()
+
+    temp = s_tip_rack.get()
+    temp = temp[0:2]
+
+    tiprack = temp
+    print(temp)
+
+    temp = s_trash.get()
+    temp = temp[0:2]
+
+    trash = temp
+    print(temp)
 
     # print(max_vol)
     # print(min_vol)
@@ -672,7 +721,7 @@ def action_save_pip():
     # print(tiprack)
     # print(trash)
 
-    loadpipette (axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+    loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
     print(loaded_pipette_list)
 ###########################################################################################################
 
@@ -1378,7 +1427,7 @@ label = ttk.Label(tab3, textvariable=position_display_z)
 label.grid(column = 2, row = 8)
 position_display_z.set("X: 0") #Set Default Label
 
-#Keybaord Input
+#Keyboard Input
 # root.bind("<Left>", move_x_neg)
 # root.bind("<Right>", move_x_pos)
 # root.bind("<Up>", move_y_neg) 
@@ -1545,6 +1594,8 @@ pre_select_pip.grid(column = 6, row = 7)
 #Change Photo
 #Load Graphics According to Position Calibration
 vpc1 = StringVar()
+head_speed_p = None
+
 def callback_p(eventObject):
     global vpc1
 
@@ -1603,7 +1654,7 @@ z_down_bp.grid(column = 3, row = 1)
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
 home_b.grid(column = 4, row = 4)
 
-#Move to preconfigured 
+#Move to pre configured 
 pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5, command = move_prepip_action)
 pre_home_b.grid(column = 5, row = 4)
 
