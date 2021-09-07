@@ -238,12 +238,22 @@ def update_position_display():
     position_display_y = ("Y:", position[1])
     position_display_z = ("Z:", position[2])
 
-def update_position_display_x(pip):
+def update_position_display_x():
     """ Update Pipette Position"""
     global position_display_xx
-    pipette = pip
+    global pipette_a
+    global pipette_b
+    global plungerPos
 
-    plungerPos = pipette.get_plunger_position(plungerTarget)
+    pip = varpip.get()
+
+    if pip == "pipette_b":
+        plungerPos = pipette_b.get_plunger_position(plungerTarget)
+
+    if pip == "pipette_a":
+        plungerPos = pipette_a.get_plunger_position(plungerTarget)
+
+    #plungerPos = pipette.get_plunger_position(plungerTarget)
 
     position_display_xx = ("X:", plungerPos)
 
@@ -354,7 +364,7 @@ def load_pre_workspace(): #For Testing
 
         temp = robot.containers()
         print("Robot Loaded Container List:", temp)
-        
+
         print('Load Default Container Successful')
         confirmation_box(6)
         count_preload_c = count_preload_c + 1
@@ -391,7 +401,6 @@ def save_pip_action():
     print(pos)
 
     saveCalibrationPip(pip, pos)
-    #print('Command Successful Saved Calibration')
     confirmation_box(4)
 
 def move_pip_action_up():
@@ -400,7 +409,7 @@ def move_pip_action_up():
     speed = head_speed_p.get()
 
     ControlPlugger(pip, 'z_up', speed)
-    update_position_display_x(pip)
+    update_position_display_x()
 
 def move_pip_action_down():
     """ Send Pipette Down """
@@ -408,24 +417,19 @@ def move_pip_action_down():
     speed = head_speed_p.get()
 
     ControlPlugger(pip, 'z_down', speed)
-    update_position_display_x(pip)
+    update_position_display_x()
 
 def move_prepip_action():
     """ Send Pipette Pre-Configured Position Command """
     pip = varpip.get()
     plunger = pippos.get()
 
-    print(pip)
-    print(pos)
-
     moveDefaultLocation_p(pip, plunger)
-    #print('Successfully Moved To Saved Position')
 
 def move_pip_action_home():
     """ Send Pipette Home Command """
     pip = varpip.get()
     pip_action_home(pip)
-    #print("Homed Pipette")
 
 ##
 # Robot Control for calibration
@@ -505,29 +509,7 @@ def load_axis():
     pass
 
 
-#
-# Dynamic Creation
-#
-# Global 
-A1 = None
-A2 = None
-A3 = None
 
-B1 = None
-B2 = None
-B3 = None
-
-C1 = None
-C2 = None
-C3 = None
-
-D1 = None
-D2 = None
-D3 = None
-
-E1 = None
-E2 = None
-E3 = None
 # Setup Workspace
 def setup_workspace():
     """ Setup Workspace"""
@@ -1594,7 +1576,7 @@ pre_select_pip.grid(column = 6, row = 7)
 #Change Photo
 #Load Graphics According to Position Calibration
 vpc1 = StringVar()
-head_speed_p = None
+head_speed_p = DoubleVar()
 
 def callback_p(eventObject):
     global vpc1

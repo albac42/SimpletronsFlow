@@ -99,14 +99,47 @@ def moveDefaultLocation_C(pipette, container):
     position=list(robot._driver.get_head_position()["current"])
 
 
-def moveDefaultLocation_p(pipette, plungerTarget):
-    pipette.motor.move(pipette._get_plunger_position(plungerTarget))
-    plungerPos=pipette._get_plunger_position(plungerTarget)
+
+
+
+
+def returnContainer(rack):
+    """ Removed Unnecessary Information"""
+
+    temp = rack[0:2]
+
+
+    return temp
 
 def saveCalibration(rack, pipette):
     """ Save Container Calibration"""
     global pipette_a
     global pipette_b
+    global currentContainer
+
+    #Container Global
+    global A1
+    global A2
+    global A3
+
+    global B1
+    global B2
+    global B3
+
+    global C1
+    global C2
+    global C3
+
+    global D1
+    global D2
+    global D3
+
+    global E1
+    global E2 
+    global E3 
+
+    
+    rack = returnContainer(rack)
 
     well = rack[0]
     pos = well.from_center(x=0, y=0, z=-1, reference=rack)
@@ -119,20 +152,33 @@ def saveCalibration(rack, pipette):
 
     if pipette == "pipette_b":
         pipette_b.calibrate_position(location)
-        print('Successfully Save Pipette Calibration:', rack)
+        print('Successfully Save Pipette B Calibration for Container:', rack)
 
     if pipette == "pipette_a":
         pipette_a.calibrate_position(location)
-        print('Successfully Save Pipette Calibration:', rack)
+        print('Successfully Save Pipette A Calibration for Container:', rack)
 
     calibration_mode_toggle(0)
     print('Calibration Saved')
 
 
-#             well = equipment[currentlyCalibrating][0]
-#             pos = well.from_center(x=0, y=0, z=-1, reference=equipment[currentlyCalibrating])
-#             location = (equipment[currentlyCalibrating], pos)
-#             equipment[currentPipette].calibrate_position(location)
+def moveDefaultLocation_p(pipette, plungerTarget):
+    """ Moved to Default Pipette Location """
+    global pipette_a
+    global pipette_b
+
+    print(pip)
+    print(pos)
+
+    if pipette == "pipette_b":
+        pipette_b.motor.move(pipette_b._get_plunger_position(plungerTarget))
+        plungerPos=pipette_b._get_plunger_position(plungerTarget)
+        print('Successfully Move To Pipette B Calibration Locations:', pipette)
+
+    if pipette == "pipette_a":
+        pipette_a.motor.move(pipette_a._get_plunger_position(plungerTarget))
+        plungerPos=pipette_a._get_plunger_position(plungerTarget)
+        print('Successfully Move To Pipette A Calibration Locations:', pipette)    
 
 def saveCalibrationPip(pipette, plungerPos):
     """ Save Pip Calibration """
