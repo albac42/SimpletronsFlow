@@ -58,8 +58,10 @@ def load_container(name, location, container):
     name = containers.load(container, location, name) # Load Container to a location
     print('Loaded Container', name) # 
 
-    for well in name.wells():
-        print(well)
+    #For Debug - To check the loaded container is correct or not
+    
+    #for well in name.wells():
+    #    print(well)
 
 
 #Load some useful default containers 

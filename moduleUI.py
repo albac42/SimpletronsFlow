@@ -231,6 +231,7 @@ def update_position_display():
     global position_display_x
     global position_display_y
     global position_display_z
+    global robot
 
     position=list(robot._driver.get_head_position()["current"]) 
 
@@ -245,13 +246,13 @@ def update_position_display_x():
     global pipette_b
     global plungerPos
 
-    pip = varpip.get()
+    # pip = varpip.get()
 
-    if pip == "pipette_b":
-        plungerPos = pipette_b.get_plunger_position(plungerTarget)
+    # if pip == "pipette_b":
+    #     plungerPos = pipette_b._get_plunger_position(plungerTarget)
 
-    if pip == "pipette_a":
-        plungerPos = pipette_a.get_plunger_position(plungerTarget)
+    # if pip == "pipette_a":
+    #     plungerPos = pipette_a._get_plunger_position(plungerTarget)
 
     #plungerPos = pipette.get_plunger_position(plungerTarget)
 
@@ -364,8 +365,7 @@ def load_pre_workspace(): #For Testing
 
         temp = robot.containers()
         print("Robot Loaded Container List:", temp)
-
-        print('Load Default Container Successful')
+        
         confirmation_box(6)
         count_preload_c = count_preload_c + 1
     
@@ -658,12 +658,14 @@ def setup_workspace():
         update_containers_list(AA)
         load_container('E3', 'E3', BB)
 
-    #Update Loaded in Workspaec Container List
+    #Update Loaded in Workspace Container List
     update_containers_list_type()
     print(loaded_containers)
-    confirmation_box(2)
     temp = robot.containers()
     print("Robot Loaded Container List:", temp)
+
+    confirmation_box(2)
+
 #
 #Save Custom Pipette
 #

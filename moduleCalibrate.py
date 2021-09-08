@@ -23,8 +23,6 @@ from tkinter import ttk
 set_calibration_mode = 0
 
 
-
-
 def calibration_mode_toggle(option):
     """ Set Calibration """
     if option == 1: #Enable
@@ -52,10 +50,12 @@ def changeDirectionSpeed(speed):
 
 
 def calibrationControl(direction, speed):
+    """ Container Calibration Control """
     global position
     global movementAmount
+    global robot
 
-    #Change Movenment Speed 
+    #Change Movement Speed 
     changeDirectionSpeed(speed)
 
 
@@ -87,27 +87,62 @@ def calibrationControl(direction, speed):
         position=list(robot._driver.get_head_position()["current"])
 
     else:
-        print('Warning: Calibration Keyboard Is Pressed, Please check your in calibration mode')
+        print('Warning: Invalid Input')
 
 def moveDefaultLocation_C(pipette, container):
+    """ Move to Default Location for selected container"""
     global position
+    global pipette_a
+    global pipette_b
+
+    #Container Global
+    global A1
+    global A2
+    global A3
+
+    global B1
+    global B2
+    global B3
+
+    global C1
+    global C2
+    global C3
+
+    global D1
+    global D2
+    global D3
+
+    global E1
+    global E2 
+    global E3 
 
     well = container
-    pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
-    location = (pipette, pos)
-    pipette.move_to(location)
+
+    print(well)
+
+    if pipette == "pipette_b":
+        pos = well.from_center(x=0, y=0, z=-1, reference=pipette_b)
+
+    if pipette == "pipette_a":
+        pos = well.from_center(x=0, y=0, z=-1, reference=pipette_a)
+
+    print(pos)
+
+    if pipette == "pipette_b":
+        location = (pipette_b, pos)
+        pipette_b.move_to(location)
+
+    if pipette == "pipette_a":
+        location = (pipette_a, pos)
+        pipette_a   .move_to(location)
+
     position=list(robot._driver.get_head_position()["current"])
 
-
-
-
-
+    print("Successfully Moved to Default Location")
 
 def returnContainer(rack):
     """ Removed Unnecessary Information"""
-
     temp = rack[0:2]
-
 
     return temp
 
@@ -162,13 +197,20 @@ def saveCalibration(rack, pipette):
     print('Calibration Saved')
 
 
+###########################################################################################################
+#
+# Pipetting Calibration
+#
+###########################################################################################################
+
+
 def moveDefaultLocation_p(pipette, plungerTarget):
     """ Moved to Default Pipette Location """
     global pipette_a
     global pipette_b
 
-    print(pip)
-    print(pos)
+    print(pipette)
+    print(plungerTarget)
 
     if pipette == "pipette_b":
         pipette_b.motor.move(pipette_b._get_plunger_position(plungerTarget))
@@ -191,6 +233,9 @@ def saveCalibrationPip(pipette, plungerPos):
         print('Successfully Save Pipette Calibration:', pipette)
 
     calibration_mode_toggle(0)
+
+plungerPos = None
+
 
 def ControlPlugger(pipette, key, speed):
     """ Save Calibration For Pipette"""
