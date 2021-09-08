@@ -365,7 +365,7 @@ def load_pre_workspace(): #For Testing
 
         temp = robot.containers()
         print("Robot Loaded Container List:", temp)
-        
+
         confirmation_box(6)
         count_preload_c = count_preload_c + 1
     
@@ -485,10 +485,7 @@ def move_z_pos():
         print("[K1] Keyboard Input Not Accepted At this Stage")  
 
 def home_axis():
-    try:
-        calibrationControl('home')
-    except:
-        print("[K1] Keyboard Input Not Accepted At this Stage") 
+    calibrationControl('home')
 
 #Save Container Calibration
 def save_containers_calibration():
@@ -1650,7 +1647,7 @@ save_p.grid(column = 3, row = 4)
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
 label.grid(column = 1, row = 5)
 #Scale Bar
-scale_b = Scale(tab2, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_p)
+scale_b = Scale(tab2, from_=0.1, to=10, resolution = 0.1, orient="horizontal", variable = head_speed_p)
 scale_b.grid(column = 1, row = 6)
 #Sync Entry Box
 text = Entry(tab2, width=4, textvariable=head_speed_p)
