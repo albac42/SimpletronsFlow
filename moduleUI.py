@@ -503,7 +503,7 @@ def save_containers_calibration():
 
 def load_axis():
 
-    pip = varpip,get()
+    pip = varpip.get()
     con = varcon.get()
 
     moveDefaultLocation_C(pip, con)

@@ -121,19 +121,19 @@ def moveDefaultLocation_C(pipette, container):
 
     print(well)
 
-    if pipette == "pipette_b":
-        pos = well.from_center(x=0, y=0, z=-1, reference=pipette_b)
+    if pipette == "pipette_bb":
+        pos = well[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
 
-    if pipette == "pipette_a":
-        pos = well.from_center(x=0, y=0, z=-1, reference=pipette_a)
+    if pipette == "pipette_aa":
+        pos = well[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
 
     print(pos)
 
-    if pipette == "pipette_b":
+    if pipette == "pipette_bb":
         location = (pipette_b, pos)
         pipette_b.move_to(location)
 
-    if pipette == "pipette_a":
+    if pipette == "pipette_aa":
         location = (pipette_a, pos)
         pipette_a   .move_to(location)
 
