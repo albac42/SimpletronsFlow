@@ -66,10 +66,7 @@ count_CTT = 0
 count_C = 0
 
 
-head_speed_p = IntVar() # Movement Speed Pipette
-head_speed_a = IntVar() # Movement Speed Arm
-head_speed_p = 1 # Movement Speed Pipette
-head_speed_a = 1 # Movement Speed Arm
+
 ###########################################################################################################
 
 ###########################################################################################################
@@ -241,6 +238,7 @@ def update_position_display():
 
 def update_position_display_x():
     """ Update Pipette Position"""
+    """ Require more - testing """
     global position_display_xx
     global pipette_a
     global pipette_b
@@ -435,57 +433,63 @@ def move_pip_action_home():
 # Robot Control for calibration
 ##
 def move_x_neg():
-    try:
-        speed = head_speed_p.get()
-        calibrationControl('x_left', speed)
-        update_position_display()
-    except:
-        print("[K1] Keyboard Input Not Accepted At this Stage")
+
+    speed = head_speed_a.get()
+    changeDirectionSpeed(speed)
+    calibrationControl('x_left')
+    update_position_display()
+    #except:
+    #    print("[K1-XN] Keyboard Input Not Accepted At this Stage")
     
 
 def move_x_pos():
-    try:
-        speed = head_speed_p.get()
-        calibrationControl('x_right', speed)
-        update_position_display()
-    except:
-        print("[K1] Keyboard Input Not Accepted At this Stage") 
+ 
+    speed = head_speed_a.get()
+    changeDirectionSpeed(speed)
+    calibrationControl('x_right')
+    update_position_display()
+    #except:
+        #print("[K1-XP] Keyboard Input Not Accepted At this Stage") 
 
 def move_y_neg():
     try:
-        speed = head_speed_p.get()
-        calibrationControl('y_down', speed)
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('y_down')
         update_position_display()
     except:
-        print("[K1] Keyboard Input Not Accepted At this Stage") 
+        print("[K1-YN] Keyboard Input Not Accepted At this Stage") 
 
 def move_y_pos():
     try:
-        speed = head_speed_p.get()
-        calibrationControl('y_up', speed)
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('y_up')
         update_position_display()
     except:
-        print("[K1] Keyboard Input Not Accepted At this Stage")  
+        print("[K1-YP] Keyboard Input Not Accepted At this Stage")  
 
 
 def move_z_neg():
     try:
-        speed = head_speed_p.get()
-        calibrationControl('z_down', speed)
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('z_down')
         update_position_display()
     except:
-        print("[K1] Keyboard Input Not Accepted At this Stage") 
+        print("[K1-ZN] Keyboard Input Not Accepted At this Stage") 
 
 def move_z_pos():
     try:
-        speed = head_speed_p.get()
-        calibrationControl('z_up', speed)
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('z_up')
         update_position_display()
     except:
-        print("[K1] Keyboard Input Not Accepted At this Stage")  
+        print("[K1-ZP] Keyboard Input Not Accepted At this Stage")  
 
 def home_axis():
-    calibrationControl('home')
+    calibrationControlHome()
 
 #Save Container Calibration
 def save_containers_calibration():
@@ -1308,6 +1312,7 @@ save_w.grid(column = 4, row = 3)
 ########################################################################################################
 #Drop Down Default Selection
 varpip = StringVar(root, value='')
+head_speed_a = DoubleVar()
 
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
@@ -1341,14 +1346,14 @@ right_b.grid(column = 5, row = 2)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Negative ]
-down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_neg)
+yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Postive ]
+down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_pos)
 down_b.grid(column = 4, row = 1)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Positive ]
-up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_pos)
+yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Negative ]
+up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_neg)
 up_b.grid(column = 4, row = 3)
 
 
@@ -1624,11 +1629,11 @@ dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
-z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5, command = move_pip_action_up)
+z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5, command = move_pip_action_down)
 z_up_bp.grid(column = 3, row = 3)
 
 #Movement Pad - Z Axis [Pipette Movement] UP 
-z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5, command = move_pip_action_down)
+z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5, command = move_pip_action_up)
 z_down_bp.grid(column = 3, row = 1)
 
 #Home Button

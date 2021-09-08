@@ -47,19 +47,26 @@ def changeDirectionSpeed(speed):
         movementAmount = 0.1
 
     movementAmount = speed    
-    print('Speed Set', movementAmount)
+    #print('Speed Set', movementAmount)
 
+position = None
 
+def calibrationControlHome():
+    """ Home Robot """
+    """ Tested Working """
+    global position
+    
+    if set_calibration_mode == 1:
+        robot.home()
+        position=list(robot._driver.get_head_position()["current"])
+    
 
-def calibrationControl(direction, speed):
+def calibrationControl(direction):
     """ Container Calibration Control """
+    """ Tested Working """
     global position
     global movementAmount
     global robot
-
-    #Change Movement Speed 
-    changeDirectionSpeed(speed)
-
 
     if ((direction == "z_up") and (set_calibration_mode == 1)):
         position[2]=position[2]+movementAmount
@@ -71,7 +78,7 @@ def calibrationControl(direction, speed):
         position[0]=position[0]-movementAmount
 
     if ((direction == "x_right") and (set_calibration_mode == 1)):
-        direction[0]=position[0]+movementAmount
+        position[0]=position[0]+movementAmount
 
     if ((direction == "y_up") and (set_calibration_mode == 1)):
         position[1]=position[1]+movementAmount
@@ -82,14 +89,6 @@ def calibrationControl(direction, speed):
     #Send Command To Robot
     robot.move_head(x=position[0],y=position[1],z=position[2])
     position=list(robot._driver.get_head_position()["current"])
-
-    #Home Command 
-    if ((direction == "home") and (set_calibration_mode == 1)):
-        robot.home()
-        position=list(robot._driver.get_head_position()["current"])
-
-    else:
-        print('Warning: Invalid Input')
 
 def moveDefaultLocation_C(pipette, container):
     """ Move to Default Location for selected container"""
