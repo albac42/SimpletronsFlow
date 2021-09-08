@@ -25,6 +25,8 @@ set_calibration_mode = 0
 
 def calibration_mode_toggle(option):
     """ Set Calibration """
+    global set_calibration_mode
+    
     if option == 1: #Enable
         set_calibration_mode = 1
         print('Enable Calibration Mode')
@@ -206,6 +208,7 @@ def saveCalibration(rack, pipette):
 
 def moveDefaultLocation_p(pipette, plungerTarget):
     """ Moved to Default Pipette Location """
+    """ Tested Working """
     global pipette_a
     global pipette_b
 
@@ -239,32 +242,43 @@ plungerPos = None
 
 def ControlPlugger(pipette, key, speed):
     """ Save Calibration For Pipette"""
+    """ Tested Working """
     global movementAmount
     global plungerPos
     global pipette_a
     global pipette_b
+    global set_calibration_mode
 
     changeDirectionSpeed(speed)
+    print(set_calibration_mode)
+    #print(pipette)
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
+        print("Calcuate Pos:", plungerPos)
 
     if ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
+        print("Calcuate Pos:", plungerPos)
 
-    if (pipette == "pipette_b" and (set_calibration_mode == 1)):
+    if ((pipette == "pipette_b") and (set_calibration_mode == 1)):
         pipette_b.motor.move(plungerPos)
         print('Successfully Moved Pipette', pipette)
-    if (pipette == "pipette_a" and (set_calibration_mode == 1)):
+    if ((pipette == "pipette_a") and (set_calibration_mode == 1)):
         pipette_a.motor.move(plungerPos)
         print('Successfully Moved Pipette', pipette)    
 
 def pip_action_home(pipette):
     """ Move Pipe To Home Position """
+    """ Tested Working """
+
+    
     global plungerPos
     global pipette_a
     global pipette_b
-
+    
+    #robot = Robot()
+    
     print(pipette)
     
     print('Homing Pipette')
