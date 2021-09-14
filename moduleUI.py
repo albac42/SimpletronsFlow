@@ -379,6 +379,7 @@ def load_pre_pip(): #For Testing
         update_pipette('pipette_b', 0)
         confirmation_box(7)
         count_preload_p = count_preload_p + 1
+
 ###########################################################################################################
 
 ###########################################################################################################
@@ -433,23 +434,23 @@ def move_pip_action_home():
 # Robot Control for calibration
 ##
 def move_x_neg():
+    """ UI Link to Calibrate Control"""
 
     speed = head_speed_a.get()
     changeDirectionSpeed(speed)
     calibrationControl('x_left')
     update_position_display()
-    #except:
-    #    print("[K1-XN] Keyboard Input Not Accepted At this Stage")
+
     
 
 def move_x_pos():
+    """ UI Link to Calibrate Control"""
  
     speed = head_speed_a.get()
     changeDirectionSpeed(speed)
     calibrationControl('x_right')
     update_position_display()
-    #except:
-        #print("[K1-XP] Keyboard Input Not Accepted At this Stage") 
+
 
 def move_y_neg():
     try:
@@ -496,6 +497,8 @@ def save_containers_calibration():
     pip = varpip.get()
     con = varcon.get()
 
+    con = con[0:2]
+
     saveCalibration(con, pip)
 
     confirmation_box(5)
@@ -506,8 +509,10 @@ def load_axis():
     pip = varpip.get()
     con = varcon.get()
 
+    con = con[0:2]
+
     moveDefaultLocation_C(pip, con)
-    pass
+
 
 
 

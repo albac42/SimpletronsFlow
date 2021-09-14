@@ -7,10 +7,6 @@ from time import sleep
 from moduleCommands import *
 ##################################################################################
 
-
-
-
-    
 def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth):
     """ Creating Container """
     print('Creating "', name, '" Container') 

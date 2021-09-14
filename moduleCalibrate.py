@@ -90,6 +90,23 @@ def calibrationControl(direction):
     robot.move_head(x=position[0],y=position[1],z=position[2])
     position=list(robot._driver.get_head_position()["current"])
 
+# cont = {}
+
+# def defineContainer(input):
+#     """ Define Container - Return Select Container"""
+#     global cont
+    
+#     container_cell = input[0:2]
+#     container_name = input[3:]
+
+#     print(container_cell)
+#     print(container_name)
+
+#     #cont['default'] = containers.load(container_name, container_cell)
+#     cont['default'] = container_cell
+
+#     return cont
+
 def moveDefaultLocation_C(pipette, container):
     """ Move to Default Location for selected container"""
     global position
@@ -114,28 +131,82 @@ def moveDefaultLocation_C(pipette, container):
     global D3
 
     global E1
-    global E2 
-    global E3 
+    global E2
+    global E3
 
-    well = container
+    # if pipette == "pipette_b":
+    #     pos = well.from_center(x=0, y=0, z=-1, reference=pipette_b)
 
-    print(well)
+    # if pipette == "pipette_a":
+    #     pos = well.from_center(x=0, y=0, z=-1, reference=pipette_a)
 
-    if pipette == "pipette_bb":
-        pos = well[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+    if pipette == "pipette_b":
+        if container == A1:
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == A2:
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == A3:
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == B1:
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == B2:
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == B3:
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == C1:
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == C2:
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == C3:
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == D1:
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == D2:
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+        if container == D3:
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
 
-    if pipette == "pipette_aa":
-        pos = well[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+    if pipette == "pipette_a":
+        if container == A1:
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == A2:
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == A3:
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == B1:
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == B2:
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == B3:
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == C1:
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == C2:
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == C3:
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == D1:
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == D2:
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == D3:
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == E1:
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == E2:
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+        if container == E3:
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
 
     print(pos)
 
-    if pipette == "pipette_bb":
+    if pipette == "pipette_b":
         location = (pipette_b, pos)
         pipette_b.move_to(location)
 
-    if pipette == "pipette_aa":
+    if pipette == "pipette_a":
         location = (pipette_a, pos)
-        pipette_a   .move_to(location)
+        pipette_a.move_to(location)
 
     position=list(robot._driver.get_head_position()["current"])
 
@@ -204,6 +275,7 @@ def saveCalibration(rack, pipette):
 #
 ###########################################################################################################
 
+plungerPos = None
 
 def moveDefaultLocation_p(pipette, plungerTarget):
     """ Moved to Default Pipette Location """
@@ -235,9 +307,6 @@ def saveCalibrationPip(pipette, plungerPos):
         print('Successfully Save Pipette Calibration:', pipette)
 
     calibration_mode_toggle(0)
-
-plungerPos = None
-
 
 def ControlPlugger(pipette, key, speed):
     """ Save Calibration For Pipette"""
@@ -271,7 +340,6 @@ def pip_action_home(pipette):
     """ Move Pipe To Home Position """
     """ Tested Working """
 
-    
     global plungerPos
     global pipette_a
     global pipette_b

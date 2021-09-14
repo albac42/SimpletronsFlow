@@ -276,25 +276,41 @@ def save_data(table, insert):
     print("Record Added successfully to", table)
     conn.close()  # Close database
 
-# def test_save_data():
-#     name = "Step 1"
-#     shortcuts = "Simple_Transfer"
-#     sel_pipette = "pipette_a"
-#     volume = 20
-#     value1 = "C1_24-well-plate"
-#     value2 = "C2"
-#     value3 = "C2_24-well-plate"
-#     value4 = "A2"
-#     notes = "test notes"
+def test_save_data():
+    name = "Step 1"
+    shortcuts = "Simple_Transfer"
+    sel_pipette = "pipette_a"
+    volume = 20
+    value1 = "C1_24-well-plate"
+    value2 = "C2"
+    value3 = "C2_24-well-plate"
+    value4 = "A2"
+    notes = "test notes"
 
-#     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
-#     save_data("custom_protocol", insert)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+    save_data("custom_protocol", insert)
 
-# test_save_data()
+    name = "Step 2"
+    shortcuts = "Simple_Transfer"
+    sel_pipette = "pipette_a"
+    volume = 20
+    value1 = "C1_24-well-plate"
+    value2 = "D2"
+    value3 = "C2_24-well-plate"
+    value4 = "D2"
+    notes = "test notes"
+
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+    save_data("custom_protocol", insert)    
+
+#test_save_data()
+
+
+# Row Count
 
 # #Read Data
-def read_data(table):
-    """Read Data from Database"""
+def read_row(table):
+    """Read Number of Rows from Database"""
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
@@ -307,26 +323,30 @@ def read_data(table):
         sqlite_select_query = """SELECT * FROM custom_protocol"""
 
     c.execute(sqlite_select_query)        
+    x = c.fetchall()
 
-    row = c.fetchone()
-
-    while row is not None:
-        print(row)
-        row = c.fetchone()
-        
-
-    # x = c.fetchall()
-    # print("Total rows are:  ", len(x))
+    # row = c.fetchone()
     
 
-    #for x
+    # while row is not None:
+    #     print(row)
+    #     row = c.fetchone()
+    
+    print("Total rows are:  ", len(x))
+
 
 
     #Close Database Connection
     conn.close()  
-    return list
+    return len(x)
 
-read_data('custom_protocol')
+# read_row('custom_protocol')
+
+# def start_step():
+#     step_count = read_row('custom_protocol')
+
+
+
 
 def setup_table(variable):
     """Custom container Database Creation"""

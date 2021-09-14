@@ -8,11 +8,9 @@ from moduleCommands import *
 # Load Default Pipette
 pipette_a = instruments.Pipette(
     axis='b',
-    #name='my-p200',
     max_volume=200)
 pipette_b = instruments.Pipette(
     axis='a',
-    #name='my-p200',
     max_volume=200)
 
 #New Pipetting Setup
