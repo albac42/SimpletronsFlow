@@ -495,7 +495,7 @@ def home_axis():
 #Save Container Calibration
 def save_containers_calibration():
     pip = varpip.get()
-    con = varcon.get()
+    con = c_varcon.get()
 
     con = con[0:2]
 
@@ -507,11 +507,14 @@ def save_containers_calibration():
 def load_axis():
 
     pip = varpip.get()
-    con = varcon.get()
-
+    con = c_varcon.get()
+    
+    print("Before:", con)
+    contype = con[3:]
     con = con[0:2]
+    print(con)
 
-    moveDefaultLocation_C(pip, con)
+    moveDefaultLocation_C(pip, con, contype)
 
 
 
@@ -1326,12 +1329,12 @@ dropdown_varpip_c = ttk.Combobox(tab3, textvariable = varpip, postcommand = upda
 dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection
-varcon = StringVar(root, value='')
+c_varcon = StringVar(root, value='')
 
 #Selection 1 - Containers
 label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
-dropdown_varcon_c = ttk.Combobox(tab3, textvariable = varcon, postcommand = update_dropdown_con_c)
+dropdown_varcon_c = ttk.Combobox(tab3, textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
 
 #Section 2 - Pipette Movement 
@@ -1452,7 +1455,7 @@ root.bind("<Key>", key_press)
 #
 #########################################################################################################
 #Drop Down Default Selection
-varcon = StringVar(root, value='')
+#varcon = StringVar(root, value='')
 var_p_a = IntVar()
 var_max_volume = DoubleVar()
 var_min_volume = DoubleVar()
