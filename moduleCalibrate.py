@@ -138,87 +138,160 @@ def moveDefaultLocation_C(pipette, container, container_type):
     
     print(pipette)
     print(container)
-    
-
-
-    # if pipette == "pipette_b":
-    #     pos = well.from_center(x=0, y=0, z=-1, reference=pipette_b)
-
-    # if pipette == "pipette_a":
-    #     pos = well.from_center(x=0, y=0, z=-1, reference=pipette_a)
 
     if pipette == "pipette_b":
         if container == 'A1':
-            pos = A1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            A1 = containers.load(container_type, 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_b.move_to(location)
         if container == 'A2':
-            pos = A2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            A2 = containers.load(container_type, 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_b.move_to(location)
         if container == 'A3':
-            pos = A3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            A3 = containers.load(container_type, 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_b.move_to(location)
         if container == 'B1':
             B1 = containers.load(container_type, 'B1')
             pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
-            #pos.remove(z=0.00)
             location = (B1, pos)
-            print(location)
             pipette_b.move_to(location)
         if container == 'B2':
-            pos = B2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            B2 = containers.load(container_type, 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_b.move_to(location)
         if container == 'B3':
-            pos = B3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            B3 = containers.load(container_type, 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_b.move_to(location)
         if container == 'C1':
-            pos = C1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            C1 = containers.load(container_type, 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_b.move_to(location)
         if container == 'C2':
-            pos = C2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            C2 = containers.load(container_type, 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_b.move_to(location)
         if container == 'C3':
-            pos = C3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            C3 = containers.load(container_type, 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_b.move_to(location)
         if container == 'D1':
-            pos = D1[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            D1 = containers.load(container_type, 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_b.move_to(location)
         if container == 'D2':
-            pos = D2[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            D2 = containers.load(container_type, 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_b.move_to(location)
         if container == 'D3':
-            pos = D3[0].from_center(x=0, y=0, z=-1, reference=pipette_b)
+            D3 = containers.load(container_type, 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_b.move_to(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_b.move_to(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_b.move_to(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_b.move_to(location)
 
     if pipette == "pipette_a":
         if container == 'A1':
-            pos = A1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            A1 = containers.load(container_type, 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_a.move_to(location)
         if container == 'A2':
-            pos = A2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            A2 = containers.load(container_type, 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_a.move_to(location)
         if container == 'A3':
-            pos = A3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            A3 = containers.load(container_type, 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_a.move_to(location)
         if container == 'B1':
-            pos = B1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            B1 = containers.load(container_type, 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_a.move_to(location)
         if container == 'B2':
-            pos = B2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            B2 = containers.load(container_type, 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_a.move_to(location)
         if container == 'B3':
-            pos = B3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            B3 = containers.load(container_type, 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_a.move_to(location)
         if container == 'C1':
-            pos = C1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            C1 = containers.load(container_type, 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_a.move_to(location)
         if container == 'C2':
-            pos = C2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            C2 = containers.load(container_type, 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_a.move_to(location)
         if container == 'C3':
-            pos = C3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            C3 = containers.load(container_type, 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_a.move_to(location)
         if container == 'D1':
-            pos = D1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            D1 = containers.load(container_type, 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_a.move_to(location)
         if container == 'D2':
-            pos = D2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            D2 = containers.load(container_type, 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_a.move_to(location)
         if container == 'D3':
-            pos = D3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            D3 = containers.load(container_type, 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_a.move_to(location)
         if container == 'E1':
-            pos = E1[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            E1 = containers.load(container_type, 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_a.move_to(location)
         if container == 'E2':
-            pos = E2[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
+            E2 = containers.load(container_type, 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_a.move_to(location)
         if container == 'E3':
-            pos = E3[0].from_center(x=0, y=0, z=-1, reference=pipette_a)
-
-    #print(pos)
-
-#     if pipette == "pipette_b":
-#         location = (pipette_b, pos)
-#         pipette_b.move_to(location)
-# 
-#     if pipette == "pipette_a":
-#         location = (pipette_a, pos)
-#         pipette_a.move_to(location)
+            E3 = containers.load(container_type, 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_a.move_to(location)
 
     position=list(robot._driver.get_head_position()["current"])
 
