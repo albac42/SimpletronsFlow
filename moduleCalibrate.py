@@ -109,30 +109,10 @@ def calibrationControl(direction):
 
 def moveDefaultLocation_C(pipette, container, container_type):
     """ Move to Default Location for selected container"""
+    """ Tested Working """
     global position
     global pipette_a
     global pipette_b
-
-    #Container Global
-    global A1
-    global A2
-    global A3
-
-    global B1
-    global B2
-    global B3
-
-    global C1
-    global C2
-    global C3
-
-    global D1
-    global D2
-    global D3
-
-    global E1
-    global E2
-    global E3
     
     pos = None
     
