@@ -971,12 +971,16 @@ def graphicalUIprotocol():
         background3 = ttk.Label(proroot, image = background_image3)
         background3.grid(column = 0, row = 12, columnspan = 5)
 
+    def run_step():
 
+
+        pass
 
     ###########################################################################################################
     # Save Steps to Database
     ###########################################################################################################
     def save_step():
+        """ Save Step to Database """
         global step
         notes = 'null'
         # Reference
