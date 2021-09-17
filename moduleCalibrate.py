@@ -90,23 +90,6 @@ def calibrationControl(direction):
     robot.move_head(x=position[0],y=position[1],z=position[2])
     position=list(robot._driver.get_head_position()["current"])
 
-# cont = {}
-
-# def defineContainer(input):
-#     """ Define Container - Return Select Container"""
-#     global cont
-    
-#     container_cell = input[0:2]
-#     container_name = input[3:]
-
-#     print(container_cell)
-#     print(container_name)
-
-#     #cont['default'] = containers.load(container_name, container_cell)
-#     cont['default'] = container_cell
-
-#     return cont
-
 def moveDefaultLocation_C(pipette, container, container_type):
     """ Move to Default Location for selected container"""
     """ Tested Working """
@@ -277,58 +260,165 @@ def moveDefaultLocation_C(pipette, container, container_type):
 
     print("Successfully Moved to Default Location")
 
-def returnContainer(rack):
-    """ Removed Unnecessary Information"""
-    temp = rack[0:2]
 
-    return temp
-
-def saveCalibration(rack, pipette):
+def saveCalibration(rack, pipette, container_type):
     """ Save Container Calibration"""
     global pipette_a
     global pipette_b
-    global currentContainer
-
-    #Container Global
-    global A1
-    global A2
-    global A3
-
-    global B1
-    global B2
-    global B3
-
-    global C1
-    global C2
-    global C3
-
-    global D1
-    global D2
-    global D3
-
-    global E1
-    global E2 
-    global E3 
-
-    
-    rack = returnContainer(rack)
-
-    well = rack[0]
-    pos = well.from_center(x=0, y=0, z=-1, reference=rack)
 
     if pipette == "pipette_b":
-        location = (pipette_b, pos)
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_b.calibrate_position(location)
 
     if pipette == "pipette_a":
-        location = (pipette_a, pos)
-
-    if pipette == "pipette_b":
-        pipette_b.calibrate_position(location)
-        print('Successfully Save Pipette B Calibration for Container:', rack)
-
-    if pipette == "pipette_a":
-        pipette_a.calibrate_position(location)
-        print('Successfully Save Pipette A Calibration for Container:', rack)
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_a.calibrate_position(location)
 
     calibration_mode_toggle(0)
     print('Calibration Saved')

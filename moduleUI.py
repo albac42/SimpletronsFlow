@@ -434,23 +434,25 @@ def move_pip_action_home():
 # Robot Control for calibration
 ##
 def move_x_neg():
-    """ UI Link to Calibrate Control"""
-
-    speed = head_speed_a.get()
-    changeDirectionSpeed(speed)
-    calibrationControl('x_left')
-    update_position_display()
-
+    """ Move Robot X Negative"""
+    try:
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('x_left')
+        update_position_display()
+    except:
+        print("[K1-XP] Keyboard Input Not Accepted At this Stage") 
     
 
 def move_x_pos():
     """ UI Link to Calibrate Control"""
- 
-    speed = head_speed_a.get()
-    changeDirectionSpeed(speed)
-    calibrationControl('x_right')
-    update_position_display()
-
+    try:
+        speed = head_speed_a.get()
+        changeDirectionSpeed(speed)
+        calibrationControl('x_right')
+        update_position_display()
+    except:
+        print("[K1-XP] Keyboard Input Not Accepted At this Stage") 
 
 def move_y_neg():
     try:
