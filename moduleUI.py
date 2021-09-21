@@ -46,7 +46,8 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
-root.geometry("740x420")
+root.geometry("740x400")
+root.pack_propagate(0)
 
 ###########################################################################################################
 
@@ -245,15 +246,16 @@ def update_position_display_x():
     global pipette_b
     global plungerPos
 
-    # pip = varpip.get()
+    pip = varpip.get()
+    plungerTarget = pippos.get()
 
-    # if pip == "pipette_b":
-    #     plungerPos = pipette_b._get_plunger_position(plungerTarget)
+    if pip == "pipette_b":
+        plungerPos = pipette_b._get_plunger_position(plungerTarget)
 
-    # if pip == "pipette_a":
-    #     plungerPos = pipette_a._get_plunger_position(plungerTarget)
+    if pip == "pipette_a":
+         plungerPos = pipette_a._get_plunger_position(plungerTarget)
 
-    #plungerPos = pipette.get_plunger_position(plungerTarget)
+    plungerPos = pipette.get_plunger_position(plungerTarget)
 
     position_display_xx = ("X:", plungerPos)
 
@@ -1422,11 +1424,11 @@ position_display_x.set("X: 0") #Set Default Label
 
 label = ttk.Label(tab3, textvariable=position_display_y)
 label.grid(column = 1, row = 8)
-position_display_y.set("X: 0") #Set Default Label
+position_display_y.set("y: 0") #Set Default Label
 
 label = ttk.Label(tab3, textvariable=position_display_z)
 label.grid(column = 2, row = 8)
-position_display_z.set("X: 0") #Set Default Label
+position_display_z.set("z: 0") #Set Default Label
 
 #Keyboard Input
 # root.bind("<Left>", move_x_neg)
