@@ -263,7 +263,7 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name,grid_c,container,location,)
+        sql_insert_template = ''' INSERT INTO custom_workspace(name,grid_c,container,location)
             VALUES(?,?,?,?) '''        
 
     if table == "custom_protocol":
@@ -276,34 +276,6 @@ def save_data(table, insert):
     print("Record Added successfully to", table)
     conn.close()  # Close database
 
-def test_save_data():
-    name = "Step 1"
-    shortcuts = "Simple_Transfer"
-    sel_pipette = "pipette_a"
-    volume = 20
-    value1 = "C1_24-well-plate"
-    value2 = "C2"
-    value3 = "C2_24-well-plate"
-    value4 = "A2"
-    notes = "test notes"
-
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
-    save_data("custom_protocol", insert)
-
-    name = "Step 2"
-    shortcuts = "Simple_Transfer"
-    sel_pipette = "pipette_a"
-    volume = 20
-    value1 = "C1_24-well-plate"
-    value2 = "D2"
-    value3 = "C2_24-well-plate"
-    value4 = "D2"
-    notes = "test notes"
-
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
-    save_data("custom_protocol", insert)    
-
-#test_save_data()
 
 
 # Row Count
@@ -325,7 +297,7 @@ def read_row(table):
     c.execute(sqlite_select_query)        
     x = c.fetchall()
 
-    # row = c.fetchone()
+    result = c.fetchall()
     
 
     # while row is not None:
@@ -334,19 +306,14 @@ def read_row(table):
     
     print("Total rows are:  ", len(x))
 
-
+    for row in result:
+        print(row)
 
     #Close Database Connection
     conn.close()  
     return len(x)
 
-# read_row('custom_protocol')
-
-# def start_step():
-#     step_count = read_row('custom_protocol')
-
-
-
+#read_row('custom_protocol')
 
 def setup_table(variable):
     """Custom container Database Creation"""
@@ -359,6 +326,20 @@ def setup_table(variable):
                                             spacing_c REAL,
                                             diameter REAL,
                                             depth REAL
+                                        ); """
+
+    """Custom Pipette Database Creation"""
+    if variable == "custom_pipette":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_pipette (
+                                            id integer PRIMARY KEY,
+                                            axis text NOT NULL,
+                                            max_volume REAL,
+                                            min_volume REAL,
+                                            channels int,
+                                            aspirate_speed REAL,
+                                            dispense_speed REAL,
+                                            tip_racks text,
+                                            trash_container text
                                         ); """
 
     #Custom workspace Database Creation

@@ -32,4 +32,4 @@ elif [[ "$OSTYPE" == "freebsd"* ]]; then
 	python3 pip install opentrons==2.5.2
 	python3 pip install curse
 	python3 pip install mysql-connector-python 
-else
+fi

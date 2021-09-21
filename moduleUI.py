@@ -21,7 +21,7 @@ from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
-from moduleProtocol import *
+#from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
