@@ -46,6 +46,7 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
+root.geometry("740x420")
 
 ###########################################################################################################
 
@@ -104,7 +105,7 @@ def confirmation_box(variable):
         save_w.grid(column = 0, row = 1)
 
     elif variable == 3:
-        newWindow.geometry("180x60")
+        newWindow.geometry("170x60")
         label = Label(newWindow, text='Successfully Loaded Pipette', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
@@ -128,7 +129,7 @@ def confirmation_box(variable):
         save_w.grid(column = 0, row = 1)
 
     elif variable == 6:
-        newWindow.geometry("180x60")
+        newWindow.geometry("170x60")
         label = Label(newWindow, text='Successfully Save \n Pre-Configured Workspace', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
@@ -136,7 +137,7 @@ def confirmation_box(variable):
         save_w.grid(column = 0, row = 1)
 
     elif variable == 7:
-        newWindow.geometry("180x60")
+        newWindow.geometry("140x60")
         label = Label(newWindow, text='Successfully Save \n Pre-Configured Pipette', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
