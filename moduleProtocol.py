@@ -18,6 +18,7 @@ def start_protocol():
     """ Basic Transfer Supported """
     """ Other Shortcuts is currently WIP """
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
+    manual_connect()    
     home_robot()
 
 
@@ -35,12 +36,54 @@ def start_protocol():
     for row in c:
         print(row)
 
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")
+
 
     #Load Containers in loaded in workspace
-    sqlite_select_query = """SELECT * FROM custom_workspace"""
-    c.execute(sqlite_select_query) 
-    for row in c:
-        print(row)
+    # sqlite_select_query = """SELECT * FROM custom_workspace"""
+    # c.execute(sqlite_select_query) 
+    # for row in c:
+    #     print(row)
 
 
     #Load protocol in loaded in workspace
@@ -76,7 +119,6 @@ def start_protocol():
 
             plateB = containers.load(planteBType, plateBName)
 
-
             pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
 
@@ -96,8 +138,6 @@ def start_protocol():
 
             plateB = containers.load(planteBType, plateBName)
 
-
-
             pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
 
@@ -109,7 +149,8 @@ def test_save_data():
     """ Debugging Temp Data"""
 
     #1 Setup Pipette Default
-
+    insert = ('a', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
+    save_data("custom_pipette", insert) 
 
     #2 Setup Bare Minimal Workspace
     name = "C1"
@@ -125,6 +166,7 @@ def test_save_data():
 
     insert = (name, container, location)
     save_data("custom_workspace", insert)
+
 
     #2 Step Demo (Simple Transfer)
     name = "Step 1"

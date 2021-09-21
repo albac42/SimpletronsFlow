@@ -771,7 +771,7 @@ def action_save_pip():
     #Send Command to module load pipette [loadpipette] and save to database [save_data]
     loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
     insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
-    save_data("custom_protocol", insert) 
+    save_data("custom_pipette", insert) 
     print(loaded_pipette_list)
 ###########################################################################################################
 
@@ -1386,7 +1386,7 @@ head_speed_a = DoubleVar()
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
-dropdown_varpip_c = ttk.Combobox(tab3,  state="readonly" ,textvariable = varpip, postcommand = update_dropdown_pip_c)
+dropdown_varpip_c = ttk.Combobox(tab3,  state="readonly" , textvariable = varpip, postcommand = update_dropdown_pip_c)
 dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection

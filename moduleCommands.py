@@ -245,7 +245,7 @@ def deleteTable(variable):
             sql_delete_query = """DELETE FROM custom_protocol;"""
 
         if variable == "custom_pipette":
-            sql_delete_query = """DELETE FROM custom_protocol;"""
+            sql_delete_query = """DELETE FROM custom_pipette;"""
         c.execute(sql_delete_query)
         conn.commit()
         print("Record deleted successfully ")
@@ -265,7 +265,7 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?,?,?) '''
 
     if table == "custom_container":
-        sql_insert_template = ''' INSERT INTO custom_container(name, grid_c, grid_r, spacing_c, diameter, depth)
+        sql_insert_template = ''' INSERT INTO custom_container(name, grid_c, gri`d_r, spacing_c, diameter, depth)
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
