@@ -49,6 +49,13 @@ root.title('Simpletrons - OT')
 root.geometry("740x400")
 root.pack_propagate(0)
 
+
+windowWidth = root.winfo_reqwidth()
+windowHeight = root.winfo_reqheight()
+positionRight = int(root.winfo_screenwidth()/4 - windowWidth/4)
+positionDown = int(root.winfo_screenheight()/4 - windowHeight/4)
+root.geometry("+{}+{}".format(positionRight, positionDown))
+
 ###########################################################################################################
 
 ###########################################################################################################
@@ -80,11 +87,20 @@ count_C = 0
 def confirmation_box(variable):
 
     global version
+    global root
+
 
     newWindow = Toplevel(root)
 
     newWindow.title("Simpletrons - OT")
     newWindow.geometry("200x60")
+
+    #Set Window Location
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    newWindow.geometry("+{}+{}".format(positionRight, positionDown))
 
     def close_popup():
         newWindow.destroy()
