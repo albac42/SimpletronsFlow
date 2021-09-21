@@ -412,6 +412,8 @@ def load_pre_pip(): #For Testing
 #Pipette Control
 #
 def save_pip_action():
+    ''' Save Calibration  Pipette'''
+    ''' Grab Value from combo box and send to save calibration'''
     pip = varpip.get()
     pos = pippos.get()
 
@@ -1384,7 +1386,7 @@ head_speed_a = DoubleVar()
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
-dropdown_varpip_c = ttk.Combobox(tab3, textvariable = varpip, postcommand = update_dropdown_pip_c)
+dropdown_varpip_c = ttk.Combobox(tab3,  state="readonly" ,textvariable = varpip, postcommand = update_dropdown_pip_c)
 dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection
@@ -1393,7 +1395,7 @@ c_varcon = StringVar(root, value='')
 #Selection 1 - Containers
 label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
-dropdown_varcon_c = ttk.Combobox(tab3, textvariable = c_varcon, postcommand = update_dropdown_con_c)
+dropdown_varcon_c = ttk.Combobox(tab3,  state="readonly", textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
 
 #Section 2 - Pipette Movement 
@@ -1611,14 +1613,14 @@ label.grid(column = 2, row = 9)
 #Selection 5 - Select a Tip Rack
 label = ttk.Label(tab1, text='Select a Tip Rack:', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
-dropdown_tip_rack = ttk.Combobox(tab1, textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
+dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
 
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin:', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
-dropdown_trash = ttk.Combobox(tab1, textvariable = s_trash, postcommand = update_dropdown_trash)
+dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_trash.grid(column = 6, row = 3)
 
@@ -1681,7 +1683,7 @@ def callback_p(eventObject):
 #Selection 1 - Pipette
 label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
-dropdown_cpip = ttk.Combobox(tab2, textvariable = varpip, postcommand = update_dropdown_pip)
+dropdown_cpip = ttk.Combobox(tab2,  state="readonly", textvariable = varpip, postcommand = update_dropdown_pip)
 dropdown_cpip.grid(column = 1, row = 2, padx = 1)
 
 #Drop Down Default Selection
@@ -1689,7 +1691,7 @@ pippos = StringVar(root, value=' ')
 #Selection 2 - Which Selection
 label = ttk.Label(tab2, text='Select a Position:', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
-dropdown_cpos = ttk.Combobox(tab2, textvariable = pippos)
+dropdown_cpos = ttk.Combobox(tab2,  state="readonly", textvariable = pippos)
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
 dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
