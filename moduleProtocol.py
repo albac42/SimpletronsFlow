@@ -17,6 +17,10 @@ def start_protocol():
     """ Any database shortcut please refer to moduleCommands"""
     """ Basic Transfer Supported """
     """ Other Shortcuts is currently WIP """
+    #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
+    home_robot()
+
+
     step_count = read_row('custom_protocol')
     print(step_count)
 
@@ -55,18 +59,46 @@ def start_protocol():
         wellB = row[8]
 
         pipette = row[3]
-        #Send Action to Robot
+        #Send Action to Robot [ Simple Transfer ]
+        if pipette == "pipette_a":
+
+            plateAName = plateA[0:2]
+            planteAType = plateA[3:]
+            #print(plateAName)
+            #print(planteAType)
+
+            plateA = containers.load(planteAType, plateAName)
+
+            plateBName = plateB[0:2]
+            planteBType = plateB[3:]
+            #print(plateBName)
+            #print(planteBType)
+
+            plateB = containers.load(planteBType, plateBName)
+
+
+            pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+
+
         if pipette == "pipette_b":
 
-            plateA = plateA[0:2]
-            plateB = plateB[0:2]
+            plateAName = plateA[0:2]
+            planteAType = plateA[3:]
+            #print(plateAName)
+            #print(planteAType)
 
-            #pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+            plateA = containers.load(planteAType, plateAName)
+
+            plateBName = plateB[0:2]
+            planteBType = plateB[3:]
+            #print(plateBName)
+            #print(planteBType)
+
+            plateB = containers.load(planteBType, plateBName)
 
 
-        if pipette == "pipette_a":
-            #pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
-            pass
+
+            pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
 
     #Exit Database 
