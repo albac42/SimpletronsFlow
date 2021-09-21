@@ -735,7 +735,10 @@ def action_save_pip():
     # print(tiprack)
     # print(trash)
 
+    #Send Command to module load pipette [loadpipette] and save to database [save_data]
     loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+    insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
+    save_data("custom_protocol", insert) 
     print(loaded_pipette_list)
 ###########################################################################################################
 

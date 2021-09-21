@@ -132,8 +132,14 @@ setup_table("custom_workspace")
 test_save_data() #Load Test data in database
 start_protocol() #Start Protocol
 deleteTable("custom_protocol")
+deleteTable("custom_pipette")
+deleteTable("custom_workspace")
 
-# Old Cross Linking Paltform
+# Old Cross Linking Platform Code
+# If you wish to work on this section, you require custom library from original raspberry pi with
+# library "robot2" , standalone library does not include robot2 from opentrons pip library.
+#
+
 #transportposition = getTransportposition()
 
 # intensity range

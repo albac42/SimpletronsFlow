@@ -20,11 +20,15 @@ print('Loaded Require Libaries')
 print('Loading UI')
 
 setup_table("custom_protocol")
+setup_table("custom_pipette")
+setup_table("custom_workspace")
 
 from moduleUI import *
 print('UI Closing')
 # Delete Temporary Record 
 deleteTable("custom_protocol")
+deleteTable("custom_pipette")
+deleteTable("custom_workspace")
 
 
 

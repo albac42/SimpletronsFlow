@@ -232,7 +232,7 @@ def deleteTable(variable):
     try:
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
-        print("Connected to SQLite")
+        #print("Connected to SQLite")
 
         # Deleting Whole Table Values
         if variable == "custom_container":
@@ -244,6 +244,8 @@ def deleteTable(variable):
         if variable == "custom_protocol":
             sql_delete_query = """DELETE FROM custom_protocol;"""
 
+        if variable == "custom_pipette":
+            sql_delete_query = """DELETE FROM custom_protocol;"""
         c.execute(sql_delete_query)
         conn.commit()
         print("Record deleted successfully ")
@@ -258,16 +260,20 @@ def save_data(table, insert):
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
+    if table == "custom_pipette":
+        sql_insert_template = ''' INSERT INTO custom_pipette(axis, max_volume, min_volume, channels, aspirate_speed, dispense_speed, tip_racks, trash_container)
+            VALUES(?,?,?,?,?,?,?,?) '''
+
     if table == "custom_container":
-        sql_insert_template = ''' INSERT INTO custom_container(name,grid_c,grid_r,spacing_c,diameter,depth)
+        sql_insert_template = ''' INSERT INTO custom_container(name, grid_c, grid_r, spacing_c, diameter, depth)
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name,grid_c,container,location)
-            VALUES(?,?,?,?) '''        
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location)
+            VALUES(?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name,shortcuts,pipette,volume,value1,value2,value3,value4,notes)
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, notes)
             VALUES(?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
