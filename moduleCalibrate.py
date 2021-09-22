@@ -453,6 +453,55 @@ def moveDefaultLocation_p(pipette, plungerTarget):
 
 def saveCalibrationPip(pipette, plungerPos):
     """ Save Pip Calibration """
+    #Load Pipette
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")    
+    
+    
     if pipette == "pipette_b":
         pipette_b.calibrate(plungerPos)
         print('Successfully Save Pipette Calibration:', pipette)

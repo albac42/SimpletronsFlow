@@ -6,6 +6,14 @@ from moduleContainers import *
 from modulePipetting import *
 from time import sleep
 
+from opentrons.util import environment
+environment.refresh()
+print(environment.get_path('CALIBRATIONS_FILE'))
+
+import os
+#del os.environ["/calibrations/calibrations.json"]
+environment.refresh()
+
 # This Module require modules such as modulePipetting and moduleContainer
 # and moduleCommand to function. SQL function are majority built in function
 # below but some are reference using moduleCommands
@@ -103,7 +111,7 @@ def start_protocol():
 
         pipette = row[3]
         #Send Action to Robot [ Simple Transfer ]
-        if pipette == "pipette_a":
+        if pipette == "pipette_b":
 
             plateAName = plateA[0:2]
             planteAType = plateA[3:]
@@ -119,7 +127,7 @@ def start_protocol():
 
             plateB = containers.load(planteBType, plateBName)
 
-            pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+            pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
 
         if pipette == "pipette_b":
@@ -149,7 +157,7 @@ def test_save_data():
     """ Debugging Temp Data"""
 
     #1 Setup Pipette Default
-    insert = ('a', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
+    insert = ('b', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
     save_data("custom_pipette", insert) 
 
     #2 Setup Bare Minimal Workspace
@@ -171,7 +179,7 @@ def test_save_data():
     #2 Step Demo (Simple Transfer)
     name = "Step 1"
     shortcuts = "Simple_Transfer"
-    sel_pipette = "pipette_a"
+    sel_pipette = "pipette_b"
     volume = 20
     value1 = "C1_24-well-plate"
     value2 = "C2"

@@ -265,15 +265,15 @@ def update_position_display_x():
     pip = varpip.get()
     plungerTarget = pippos.get()
 
-    if pip == "pipette_b":
-        plungerPos = pipette_b._get_plunger_position(plungerTarget)
+    #if pip == "pipette_b":
+    #    plungerPos = pipette_b._get_plunger_position(plungerTarget)
 
-    if pip == "pipette_a":
-         plungerPos = pipette_a._get_plunger_position(plungerTarget)
+    #if pip == "pipette_a":
+    #     plungerPos = pipette_a._get_plunger_position(plungerTarget)
 
-    plungerPos = pipette.get_plunger_position(plungerTarget)
+    #plungerPos = pipette.get_plunger_position(plungerTarget)
 
-    position_display_xx = ("X:", plungerPos)
+    #position_display_xx = ("X:", plungerPos)
 
 
 
