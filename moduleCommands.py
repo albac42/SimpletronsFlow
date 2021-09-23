@@ -179,6 +179,7 @@ def reset_all():
 ##################################################################
 # Test Connection
 db_file = 'database/data.db'
+
 def create_connection():
     """create a test database connection to a SQLite database"""
     conn = None

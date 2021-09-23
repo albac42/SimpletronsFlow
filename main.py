@@ -19,35 +19,16 @@ from moduleCommands import *
 print('Loaded Require Libaries')
 print('Loading UI')
 
+db_file = 'database/data.db' 
 setup_table("custom_protocol")
 setup_table("custom_pipette")
 setup_table("custom_workspace")
 
 from moduleUI import *
 print('UI Closing')
-# Delete Temporary Record 
-deleteTable("custom_protocol")
-deleteTable("custom_pipette")
-deleteTable("custom_workspace")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Manual Python Method 
-
-
+# Manual Python Method [Old Code - Ignore]
 ######################################################################
 
 #Startup Scripts [Do NOT EDIT]
@@ -158,7 +139,10 @@ deleteTable("custom_workspace")
 
 
 
-
+# Delete Temporary Record 
+deleteTable("custom_protocol")
+deleteTable("custom_pipette")
+deleteTable("custom_workspace")
 
 
 

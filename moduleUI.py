@@ -345,6 +345,8 @@ def update_dropdown_con_c():
     print('Updating Drop-down List: containers containers calibrate')
     calibration_mode_toggle(1)
 
+def update_dropdown_pos():
+    calibration_mode_toggle(1)
 
 
 ###########################################################################################################
@@ -1273,80 +1275,80 @@ my_canvas = ttk.Label(tab1b, image = background_image)
 my_canvas.grid(column = 0, row = 0, rowspan = 3, columnspan = 5)
 
 #Col A
-dropdown = ttk.Combobox(tab1b, textvariable = A1_W)
+dropdown = ttk.Combobox(tab1b, textvariable = A1_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 0, row = 2, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = A2_W)
+dropdown = ttk.Combobox(tab1b, textvariable = A2_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 0, row = 1, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = A3_W)
+dropdown = ttk.Combobox(tab1b, textvariable = A3_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 0, row = 0, padx = 1)
 dropdown.lift()
 
 #Col B
-dropdown = ttk.Combobox(tab1b, textvariable = B1_W)
+dropdown = ttk.Combobox(tab1b, textvariable = B1_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 1, row = 2, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = B2_W)
+dropdown = ttk.Combobox(tab1b, textvariable = B2_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 1, row = 1, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = B3_W)
+dropdown = ttk.Combobox(tab1b, textvariable = B3_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 1, row = 0, padx = 1)
 dropdown.lift()
 
 #Col C
-dropdown = ttk.Combobox(tab1b, textvariable = C1_W)
+dropdown = ttk.Combobox(tab1b, textvariable = C1_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 2, row = 2, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = C2_W)
+dropdown = ttk.Combobox(tab1b, textvariable = C2_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 2, row = 1, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = C3_W)
+dropdown = ttk.Combobox(tab1b, textvariable = C3_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 2, row = 0, padx = 1)
 dropdown.lift()
 
 #Col D
-dropdown = ttk.Combobox(tab1b, textvariable = D1_W)
+dropdown = ttk.Combobox(tab1b, textvariable = D1_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 3, row = 2, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = D2_W)
+dropdown = ttk.Combobox(tab1b, textvariable = D2_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 3, row = 1, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = D3_W)
+dropdown = ttk.Combobox(tab1b, textvariable = D3_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 3, row = 0, padx = 1)
 dropdown.lift()
 #Col E
-dropdown = ttk.Combobox(tab1b, textvariable = E1_W)
+dropdown = ttk.Combobox(tab1b, textvariable = E1_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 4, row = 2, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = E2_W)
+dropdown = ttk.Combobox(tab1b, textvariable = E2_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 4, row = 1, padx = 1)
 dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = E3_W)
+dropdown = ttk.Combobox(tab1b, textvariable = E3_W, width = 19)
 dropdown['values'] = container_list 
 dropdown.grid(column = 4, row = 0, padx = 1)
 dropdown.lift()
@@ -1691,7 +1693,7 @@ pippos = StringVar(root, value=' ')
 #Selection 2 - Which Selection
 label = ttk.Label(tab2, text='Select a Position:', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
-dropdown_cpos = ttk.Combobox(tab2,  state="readonly", textvariable = pippos)
+dropdown_cpos = ttk.Combobox(tab2,  state="readonly", textvariable = pippos, postcommand = update_dropdown_pos)
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
 dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)

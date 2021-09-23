@@ -33,7 +33,7 @@ def loadpipette (axis_s, max_v_s, min_v_s, asp_s, dis_a, tiprack, trash):
     if axis_s == 'b':
         pipette_b = instruments.Pipette(
         axis='b',
-        #name='pd1000',
+        name='pipette_b',
         max_volume=max_v_s,
         min_volume=min_v_s,
         channels = 1,
@@ -47,7 +47,7 @@ def loadpipette (axis_s, max_v_s, min_v_s, asp_s, dis_a, tiprack, trash):
     if axis_s == 'a':
         pipette_a = instruments.Pipette(
         axis='a',
-        #name='pd100',
+        name='pipette_a',
         max_volume=asp_s,
         min_volume=dis_a,
         channels = 1,
