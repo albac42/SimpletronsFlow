@@ -11,7 +11,7 @@ environment.refresh()
 print(environment.get_path('CALIBRATIONS_FILE'))
 
 import os
-#del os.environ["/calibrations/calibrations.json"]
+del os.environ["calibrations/calibrations.json"]
 environment.refresh()
 
 # This Module require modules such as modulePipetting and moduleContainer
@@ -25,6 +25,8 @@ def start_protocol():
     """ Any database shortcut please refer to moduleCommands"""
     """ Basic Transfer Supported """
     """ Other Shortcuts is currently WIP """
+    """ This API will grab all steps and send command to OT-1"""
+    """ """
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
     manual_connect()    
     home_robot()
@@ -103,6 +105,7 @@ def start_protocol():
     for row in c:
         print(row)
 
+        #Load Variable from database row
         volume = row[4]
 
         plateA = row[5]
@@ -112,6 +115,11 @@ def start_protocol():
         wellB = row[8]
 
         pipette = row[3]
+
+        option = row[9]
+
+        #Note: https://docs.opentrons.com/ot1/transfer.html 
+        #Use above resource for opentrons API shortcut
         #Send Action to Robot [ Simple Transfer ]
         if pipette == "pipette_b":
 
@@ -129,10 +137,15 @@ def start_protocol():
 
             plateB = containers.load(planteBType, plateBName)
 
-            pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
+            # Never Get a New Tip each steps
+            if option == True:
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
-        if pipette == "pipette_b":
+            if option == False:
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+
+        if pipette == "pipette_a":
 
             plateAName = plateA[0:2]
             planteAType = plateA[3:]
@@ -148,13 +161,16 @@ def start_protocol():
 
             plateB = containers.load(planteBType, plateBName)
 
-            pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+            if option == True:
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
+            if option == False:
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
     #Exit Database 
     conn.close() 
 
-
+# Test Data [Use this to test Protocol API]
 def test_save_data():
     """ Debugging Temp Data"""
 

@@ -65,8 +65,8 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 ##########################################################################################################
 #
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', 'point', ]
+container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
+                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate', ]
 loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
@@ -895,10 +895,12 @@ def graphicalUIprotocol():
     ###########################################################################################################
     # Draw Graphics
     ########################################################################################################### 
-    #container_list = [ '', 'trash-box','tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-    #               '96-PCR-flat', '96-PCR-tall',  '96-deep-well', ]
-    #Draw Graphics - First Container
+
     def callback_a(eventObject):
+        ''' Draw Container 1 / a'''
+        ''' Use the below template to add more labware photo reference'''
+        ''' For instance change re.search to a labware name and PhotoImage'''
+        ''' to path of the resource'''
 
         global background_image2
         global background2
@@ -965,6 +967,10 @@ def graphicalUIprotocol():
 
     #Draw Graphics - Second Container
     def callback_b(eventObject):
+        ''' Draw Container 2 / b'''
+        ''' Use the below template to add more labware photo reference'''
+        ''' For instance change re.search to a labware name and PhotoImage'''
+        ''' to path of the resource'''
 
         global background_image3
         global background3
@@ -1029,7 +1035,7 @@ def graphicalUIprotocol():
         background3.grid(column = 0, row = 12, columnspan = 5)
 
     def run_step():
-
+        ''' Run Current Step'''
 
         pass
 
@@ -1044,6 +1050,8 @@ def graphicalUIprotocol():
         # shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
         print(shortcuts.get())
         if shortcuts.get() == "Simple_Transfer":
+            ''' '''
+
             #Check if Friendly Name is available if not set a default based of step
             if len(f_name.get()) == 0:
                 name = "step" + str(step)
@@ -1472,9 +1480,9 @@ label.grid(column = 2, row = 6)
 label = ttk.Label(tab3, text='Robot Position:', font = ('Arial', 10))
 label.grid(column = 1, row = 7)
 #Display Coordinate
-label = ttk.Label(tab3, textvariable=position_display_x)
+label = ttk.Label(tab3, textvariable=position_display_xx)
 label.grid(column = 0, row = 8)
-position_display_x.set("X: 0") #Set Default Label
+position_display_xx.set("x: 0") #Set Default Label
 
 label = ttk.Label(tab3, textvariable=position_display_y)
 label.grid(column = 1, row = 8)
@@ -1676,10 +1684,10 @@ def callback_p(eventObject):
         vpc1.set("Drop Tip: Forces any attached tip to fall off ")
 
     background_img_pc = ttk.Label(tab2, image = background_image_pc)
-    background_img_pc.grid(column = 6, row = 0, rowspan = 7)
+    background_img_pc.grid(column = 6, row = 2, rowspan = 7)
 
     label = ttk.Label(tab2, textvariable=vpc1)
-    label.grid(column = 6, row = 0)
+    label.grid(column = 6, row = 1)
 
 
 #Selection 1 - Pipette
@@ -1737,16 +1745,9 @@ label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
 label.grid(column = 1, row = 7)
 #Display Coordinate
 label = ttk.Label(tab2, textvariable=position_display_x)
-label.grid(column = 0, row = 8)
-position_display_x.set("X: 0") #Set Default Label
-
-label = ttk.Label(tab2, textvariable=position_display_y)
 label.grid(column = 1, row = 8)
-position_display_y.set("X: 0") #Set Default Label
+position_display_x.set("x: 0") #Set Default Label
 
-label = ttk.Label(tab2, textvariable=position_display_z)
-label.grid(column = 2, row = 8)
-position_display_z.set("X: 0") #Set Default Label
 
 #Keyboard Input
 # root.bind("<Prior>", move_pip_action_up) #Page UP

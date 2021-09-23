@@ -1,3 +1,5 @@
+Main Documentation
+
 # Setup Raspberry Pi
 
 Download Raspberry Pi Os Installer ([Raspberry Pi OS – Raspberry Pi)](https://www.raspberrypi.org/software/)
@@ -28,24 +30,6 @@ Once Raspberry Pi is boot up, please update and install require software. A Inte
 
 # Configure Simpletrons on Window Based Bash
 
-# How to use Calibration Application
-
-All OT-1 is require to be calibrate to ensure accuracy of the pipeting robot. This process is REQUIRED to be complete for each new container in the program. You are require to use builtin calibration application to ensure calibration are correctly configured for you custom or pre-defined containers.
-
-Additional Documentations
-
-[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
-
-[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
-
-|     |     |     |     |     |
-| --- | --- | --- | --- | --- |
-| 11  | 12  | 13  | 14  | 14  |
-| 6   | 7   | 8   | 9   | 10  |
-| 1   | 2   | 3   | 4   | 5   |
-
-<img src=":/e17a72de9ca94c739ea3faaf78acb5a6" alt="DeckMapEmpty.png" width="509" height="454" class="jop-noMdConv">
-
 # Headless Setup
 
 If you wish to setup opentrons headless (without a monitor), please follow below instructions.
@@ -69,7 +53,7 @@ network={
 
 File name “ssh” without any extension as shown in below Figure.
 
-<img src=":/a16c2a3c9345407ea3bb369447e41763" alt="c7c493d8d8e672eef6a16bcef17c3ea0.png" width="687" height="537">
+<img src="resources/a16c2a3c9345407ea3bb369447e41763.png" alt="c7c493d8d8e672eef6a16bcef17c3ea0.png" width="687" height="537" class="jop-noMdConv">
 
 4.  Now you can unplug sd card from the computer and insert into raspberry pi.
 5.  Plug the power into raspberry pi and give it a few minutes to boot up.
@@ -83,11 +67,30 @@ File name “ssh” without any extension as shown in below Figure.
 4.  Run `python3 tools/toolScanner.py`
 5.  Copy/write down serial information.
 6.  Open txt named usbserial.txt and paste/enter serial information into it.
-7. Run `python3 calibrate.py` to check if everything is setup correctly, a graphical interface will load if serial has been setup correctly. 
+7.  Run `python3 calibrate.py` to check if everything is setup correctly, a graphical interface will load if serial has been setup correctly.
 
+# How to use Calibration Application
+
+All OT-1 is require to be calibrate to ensure accuracy of the pipeting robot. This process is REQUIRED to be complete for each new container in the program. You are require to use builtin calibration application to ensure calibration are correctly configured for you custom or pre-defined containers.
+
+Additional Documentations
+
+[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
+
+[OT-One: Calibrating the Deck | Opentrons Help Center](https://support.opentrons.com/en/articles/689977-ot-one-calibrating-the-deck)
+
+Workspace Reference:
+
+<img src="resources/e17a72de9ca94c739ea3faaf78acb5a6.png" alt="DeckMapEmpty.png" width="509" height="454" class="jop-noMdConv">
 
 # How to Calibrate pipetting positions
-1. Run `python3 calibrate.py` 
-2. Create and load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres)
-3. Customised pipetting profile such as max/min volume and desire tip rack. 
-4. 
+
+1.  Run `python3 calibrate.py`
+2.  Create and load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres)
+3.  Customised pipetting profile such as max/min volume and desire tip rack.
+
+# Default Pipette Setup
+
+Default Workspace Location
+
+![4dd550f8c7a7860652934b8d8ceee5a1.png](resources/a740321c2d714001babb7a80ce50dc70.png)
