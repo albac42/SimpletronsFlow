@@ -2,35 +2,40 @@
 # Please Do NOT Modify Unless You Know What you're doing #
 
 ######################################################################
-import opentrons
-# Opentrons 2.5.2 (pip install opentrons==2.5.2)
-from opentrons import robot, containers, instruments
 
-from modulePipetting import *
-from moduleCalibrate import *
-#from moduleTransportation import getTransportposition
-from time import sleep
+
+#from time import sleep
 
 import sqlite3
 from sqlite3 import Error
 
-import warnings
-import serial
-import serial.tools.list_ports
+#import json
 import re
 
-import json
+#import warnings
+import serial
+import serial.tools.list_ports
+
+#import opentrons
+# Opentrons 2.5.2 (pip install opentrons==2.5.2)
+from opentrons import robot
+#from opentrons import robot, containers, instruments
+
+#from moduleTransportation import getTransportposition
+#from modulePipetting import *
+#from moduleCalibrate import *
 ######################################################################
 
-# Self Find Serial Port #
+
 def find_robot(serial_number):
+    """ # Self Find Serial Port # """
     for pinfo in serial.tools.list_ports.comports():
         if pinfo.serial_number == serial_number:
             return serial.Serial(pinfo.device)
     raise IOError("[#A1] Could not find an Robot - is it plugged in or is serial number setup correct?")
 
-# Read text file
 def check_file():
+    """" Read text file """
     try:
         with open('usbSerial.txt') as f:
             lines = f.readlines() #Read UsbSerial file
@@ -44,6 +49,7 @@ def check_file():
     
 # Default Load QUT OT-1 Robot
 def find_ot():
+    """Load Serial Number from File"""
     try:
         # Run 'python3 tools/toolScanner.py' to obtain serial number for your printer
         serial = check_file()
@@ -53,7 +59,7 @@ def find_ot():
         robotUSB = str(robotUSB) #Array to Convert to string
         robotUSB = re.findall(r"port='(.*?)'", robotUSB)
         robotUSB = str(robotUSB) #Array to Convert to string
-        robotUSB = str(robotUSB).strip('['']') #Remove Brackets 
+        robotUSB = str(robotUSB).strip('['']') #Remove Brackets
         robotUSB = eval(robotUSB) #Remove Quotation
     except:
         print('[#A2] Error Phrasing serial number, please submit issue on github')
@@ -65,10 +71,11 @@ def find_ot():
 #######################################################################
 
 def connect():
+    """Connect to Robot"""
     print('Connecting to Robots')
     try:
-        find_ot()
-        robot.connect(robotUSB)
+        #find_ot()
+        robot.connect('Virtual Smoothie')
         versions = robot.versions()
         print('Opentrons Robot Connected, Robot Firmware Version:', versions)
         #robot2.connect()
@@ -78,8 +85,22 @@ def connect():
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
 
-#Home Both Robot [Home Main Opentron Robot First - Then Storage]
+def manual_connect():
+    """ Connect to Robot """
+    print('Manual - Connecting to Robots')
+    try:
+        robot.connect("/dev/ttyACM0")
+        versions = robot.versions()
+        print('Opentrons Robot Connected, Robot Firmware Version:', versions)
+        #robot2.connect()
+        #robot2.connect(robot2USB)
+        #print('Opentrons Robot Connected')
+    except:
+        print('Opentrons Robot Not Connected')
+        print('[#A3] Running Debugging Mode')
+
 def home_all():
+    """Home Both Robot [Home Main Opentron Robot First - Then Storage]"""
     try:
         print('Homing Opentrons Robot in progress')
         robot.home()
@@ -99,8 +120,9 @@ def home_all():
         print('[#A5] Running Debugging Mode')
         pass
 
-#Homes OT-1 Axis For Opentrons Robot
+
 def home_robot():
+    """Homes OT-1 Axis For Opentrons Robot"""
     try:
         print('Homing Opentrons Robot in progress')
         robot.home()
@@ -110,8 +132,8 @@ def home_robot():
         print('[#H1] Unable to Home Robot')
         pass
 
-#Homes Storage Robot Axis For Transport Robot
 def home_robot2():
+    """Homes Storage Robot Axis For Transport Robot"""
     try:
         print('Homing Transport Robot in progress')
         robot2._driver.send_command('G28.2 Y Z')
@@ -127,6 +149,7 @@ def home_robot2():
 
 #Reset Connection [OT-1 First - Then Storage Robot]
 def reset_all():
+    """Reset Connection"""
     try:
         #Reset Robot Opentron Robot
         print('Reseting Opentrons Robot')
@@ -146,8 +169,9 @@ def reset_all():
         print('[#H2] Unable to Home Robot2')
         pass
     
-def load_calibration():
-    print('Loaded Pre-Configured Robot Calibration')
+# def load_calibration():
+#     """create a table from the create_table_sql statement"""
+#     print('Loaded Pre-Configured Robot Calibration')
 
 
 ##################################################################
@@ -155,8 +179,9 @@ def load_calibration():
 ##################################################################
 # Test Connection
 db_file = 'database/data.db'
+
 def create_connection():
-    """ create a test database connection to a SQLite database """
+    """create a test database connection to a SQLite database"""
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -165,12 +190,10 @@ def create_connection():
     except Error as e:
         print(e)
         print('[#A7] Error Loading Database')
-    finally:
-        if conn:
-            conn.close()
+
 
 def create_table(conn, create_table_sql):
-    # create a table from the create_table_sql statement
+    """create a table from the create_table_sql statement"""
     try:
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
@@ -178,12 +201,10 @@ def create_table(conn, create_table_sql):
         conn.commit()
     except Error as e:
         print(e)
-    finally:
-        if conn:
-            conn.close()
 
 #Delete A Single Record
 def deleteRecord(variable, id):
+    """Delete Single Record Table"""
     try:
         c = conn.cursor()
         print("Connected to SQLite")
@@ -205,16 +226,14 @@ def deleteRecord(variable, id):
 
     except sqlite3.Error as error:
         print("Failed to delete record from sqlite table", error)
-    finally:
-        if conn:
-            conn.close()
-            print("the sqlite connection is closed")
 
 #Delete Whole Table
 def deleteTable(variable):
+    """Delete Table"""
     try:
+        conn = sqlite3.connect(db_file)
         c = conn.cursor()
-        print("Connected to SQLite")
+        #print("Connected to SQLite")
 
         # Deleting Whole Table Values
         if variable == "custom_container":
@@ -226,6 +245,8 @@ def deleteTable(variable):
         if variable == "custom_protocol":
             sql_delete_query = """DELETE FROM custom_protocol;"""
 
+        if variable == "custom_pipette":
+            sql_delete_query = """DELETE FROM custom_pipette;"""
         c.execute(sql_delete_query)
         conn.commit()
         print("Record deleted successfully ")
@@ -233,28 +254,27 @@ def deleteTable(variable):
 
     except sqlite3.Error as error:
         print("Failed to delete whole table from sqlite", error)
-    finally:
-        if conn:
-            conn.close()
-            print("the sqlite connection is closed")
-
 
 #Save Data to specific database
 def save_data(table, insert):
-
+    """Insert/Save Data into table"""
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
+    if table == "custom_pipette":
+        sql_insert_template = ''' INSERT INTO custom_pipette(axis, max_volume, min_volume, channels, aspirate_speed, dispense_speed, tip_racks, trash_container)
+            VALUES(?,?,?,?,?,?,?,?) '''
+
     if table == "custom_container":
-        sql_insert_template = ''' INSERT INTO custom_container(name,grid_c,grid_r,spacing_c,diameter,depth)
+        sql_insert_template = ''' INSERT INTO custom_container(name, grid_c, gri`d_r, spacing_c, diameter, depth)
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name,grid_c,container,location,)
-            VALUES(?,?,?,?) '''        
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location)
+            VALUES(?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name,shortcuts,pipette,volume,value1,value2,value3,value4,notes)
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, notes)
             VALUES(?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
@@ -263,23 +283,13 @@ def save_data(table, insert):
     print("Record Added successfully to", table)
     conn.close()  # Close database
 
-# def test_save_data():
-#     name = "Step 1"
-#     shortcuts = "Simple_Transfer"
-#     sel_pipette = "pipette_a"
-#     volume = 20
-#     value1 = "C1_24-well-plate"
-#     value2 = "C2"
-#     value3 = "C2_24-well-plate"
-#     value4 = "A2"
-#     notes = "test notes"
 
-#     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
-#     save_data("custom_protocol", insert)
 
-# test_save_data()
+# Row Count
+
 # #Read Data
-def read_data(table):
+def read_row(table):
+    """Read Number of Rows from Database"""
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
@@ -292,24 +302,28 @@ def read_data(table):
         sqlite_select_query = """SELECT * FROM custom_protocol"""
 
     c.execute(sqlite_select_query)        
-
     x = c.fetchall()
+
+    result = c.fetchall()
+    
+
+    # while row is not None:
+    #     print(row)
+    #     row = c.fetchone()
+    
     print("Total rows are:  ", len(x))
-    print(x)
 
-    #for x
-
+    for row in result:
+        print(row)
 
     #Close Database Connection
     conn.close()  
-    return list
+    return len(x)
 
-#read_data('custom_protocol')
+#read_row('custom_protocol')
 
-#Setup New Table if none exist in DB File
 def setup_table(variable):
-
-    #Custom container Database Creation
+    """Custom container Database Creation"""
     if variable == "custom_container":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_container (
                                             id integer PRIMARY KEY,
@@ -321,6 +335,20 @@ def setup_table(variable):
                                             depth REAL
                                         ); """
 
+    """Custom Pipette Database Creation"""
+    if variable == "custom_pipette":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_pipette (
+                                            id integer PRIMARY KEY,
+                                            axis text NOT NULL,
+                                            max_volume REAL,
+                                            min_volume REAL,
+                                            channels int,
+                                            aspirate_speed REAL,
+                                            dispense_speed REAL,
+                                            tip_racks text,
+                                            trash_container text
+                                        ); """
+
     #Custom workspace Database Creation
     if variable == "custom_workspace":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_workspace (
@@ -330,8 +358,24 @@ def setup_table(variable):
                                             location text
                                         ); """
 
-    #Custom protocol Database Creation
+    #Custom protocol Database Creation - Temp
     if variable == "custom_protocol":
+        sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
+                                            id integer PRIMARY KEY,
+                                            name text NOT NULL,
+                                            shortcuts text NOT NULL,
+                                            pipette text NOT NULL,
+                                            volume REAL NOT NULL,
+                                            value1 text,
+                                            value2 text,
+                                            value3 text,
+                                            value4 text,
+                                            option text,
+                                            notes text
+                                        ); """
+
+    # Persist Storage 
+    if variable == "persist_protocol":
         sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS custom_protocol (
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
@@ -349,7 +393,7 @@ def setup_table(variable):
     #Data Base Connection                                    
     conn = sqlite3.connect(db_file)
 
-    #Check if connection is made sucessfully before writing data
+    #Check if connection is made successfully before writing data
     if conn is not None:
         # create projects table
         create_table(conn, sql_create_projects_table)
@@ -366,11 +410,11 @@ def setup_table(variable):
 #
 ###########################################################################################################
 #WIP - Require JSON file to be updated to have proper separation of each container
-def load_default_containers():
-    with open("database/default-containers.json") as file:
-        default_containers = json.load(file)
+# def load_default_containers():
+#     with open("database/default-containers.json") as file:
+#         default_containers = json.load(file)
 
-    temp = default_containers['containers'][0]
-    print(temp)
+#     temp = default_containers['containers'][0]
+#     print(temp)
 
 #load_default_containers()

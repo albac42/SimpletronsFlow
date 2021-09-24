@@ -1,43 +1,34 @@
 ######################################################################
 #Import Require Library [Do NOT EDIT]
 import opentrons
-#import openworkstation
+
 from opentrons import robot, containers, instruments
+
+
+#from modulePipetting import *
+from moduleCommands import *
+#from moduleContainers import *
+
+#from time import sleep
+#import openworkstation
 #from openworkstation import
-from time import sleep
-#from commands import *
-from modulePipetting import *
 #from moduleCrosslinker import *
 #from moduleStorage import *
 #from moduleTransportation import getTransportposition
-from moduleCommands import *
-from moduleContainers import *
+
 print('Loaded Require Libaries')
 print('Loading UI')
 
+db_file = 'database/data.db' 
 setup_table("custom_protocol")
+setup_table("custom_pipette")
+setup_table("custom_workspace")
 
 from moduleUI import *
 print('UI Closing')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Manual Python Method 
-
-
+# Manual Python Method [Old Code - Ignore]
 ######################################################################
 
 #Startup Scripts [Do NOT EDIT]
@@ -148,7 +139,10 @@ print('UI Closing')
 
 
 
-
+# Delete Temporary Record 
+deleteTable("custom_protocol")
+deleteTable("custom_pipette")
+deleteTable("custom_workspace")
 
 
 

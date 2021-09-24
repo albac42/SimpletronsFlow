@@ -23,9 +23,10 @@ from tkinter import ttk
 set_calibration_mode = 0
 
 
-
-
 def calibration_mode_toggle(option):
+    """ Set Calibration """
+    global set_calibration_mode
+    
     if option == 1: #Enable
         set_calibration_mode = 1
         print('Enable Calibration Mode')
@@ -36,6 +37,7 @@ def calibration_mode_toggle(option):
 
 
 def changeDirectionSpeed(speed):
+    """ Change Movement Speed Amount"""
     global movementAmount
     if speed > 80:
         print('Warning: Speed Exceed Max Speed Allowed, Please change to lower value <80')
@@ -43,17 +45,28 @@ def changeDirectionSpeed(speed):
     if speed < 0.1:
         print('Warning: Speed Exceed Min Speed Allowed, Please change to higher value <0.1')
         movementAmount = 0.1
-    else:    
-        movementAmount = speed
-        return print('Speed Set', movementAmount)
 
-def calibrationControl(direction, speed):
+    movementAmount = speed    
+    #print('Speed Set', movementAmount)
+
+position = None
+
+def calibrationControlHome():
+    """ Home Robot """
+    """ Tested Working """
+    global position
+    
+    if set_calibration_mode == 1:
+        robot.home()
+        position=list(robot._driver.get_head_position()["current"])
+    
+
+def calibrationControl(direction):
+    """ Container Calibration Control """
+    """ Tested Working """
     global position
     global movementAmount
-
-    #Change Movenment Speed 
-    changeDirectionSpeed(speed)
-
+    global robot
 
     if ((direction == "z_up") and (set_calibration_mode == 1)):
         position[2]=position[2]+movementAmount
@@ -65,7 +78,7 @@ def calibrationControl(direction, speed):
         position[0]=position[0]-movementAmount
 
     if ((direction == "x_right") and (set_calibration_mode == 1)):
-        direction[0]=position[0]+movementAmount
+        position[0]=position[0]+movementAmount
 
     if ((direction == "y_up") and (set_calibration_mode == 1)):
         position[1]=position[1]+movementAmount
@@ -77,313 +90,635 @@ def calibrationControl(direction, speed):
     robot.move_head(x=position[0],y=position[1],z=position[2])
     position=list(robot._driver.get_head_position()["current"])
 
-    #Home Command 
-    if ((direction == "home") and (set_calibration_mode == 1)):
-        robot.home()
-        position=list(robot._driver.get_head_position()["current"])
-
-    else:
-        print('Warning: Calibration Keyboard Is Pressed, Please check your in calibration mode')
-        #position=list(robot._driver.get_head_position()["current"])
-
-def moveDefaultLocation_C(pipette, container):
+def moveDefaultLocation_C(pipette, container, container_type):
+    """ Move to Default Location for selected container"""
+    """ Tested Working """
     global position
-    well = container
-    pos = well.from_center(x=0, y=0, z=-1, reference=pipette)
-    location = (pipette, pos)
-    pipette.move_to(location)
+    global pipette_a
+    global pipette_b
+    
+    pos = None
+    
+    #print(pipette)
+    #print(container)
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")
+
+    if pipette == "pipette_b":
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1', 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_b.move_to(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2', 'B2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_b.move_to(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3', 'B3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_b.move_to(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1', 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_b.move_to(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2', 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_b.move_to(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3', 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_b.move_to(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1', 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_b.move_to(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2', 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_b.move_to(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3', 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_b.move_to(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1', 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_b.move_to(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2', 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_b.move_to(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3', 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_b.move_to(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1', 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_b.move_to(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2', 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_b.move_to(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3', 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_b.move_to(location)
+
+    if pipette == "pipette_a":
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1', 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_a.move_to(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2', 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_a.move_to(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3', 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_a.move_to(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1', 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_a.move_to(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2', 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_a.move_to(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3', 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_a.move_to(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1', 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_a.move_to(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2', 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_a.move_to(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3', 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_a.move_to(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1', 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_a.move_to(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2', 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_a.move_to(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3', 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_a.move_to(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1', 'e1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_a.move_to(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2', 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_a.move_to(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3', 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_a.move_to(location)
+
     position=list(robot._driver.get_head_position()["current"])
 
+    print("Successfully Moved to Default Location")
 
-def moveDefaultLocation_p(pipette, plungerTarget):
-    pipette.motor.move(pipette._get_plunger_position(plungerTarget))
-    plungerPos=pipette._get_plunger_position(plungerTarget)
 
-def saveCalibration(rack, pipette):
-    #pip = pipette
-    well = rack[0]
-    pos = well.from_center(x=0, y=0, z=-1, reference=rack)
-    location = (pipette, pos)
-    pipette.calibrate_position(location)
+def saveCalibration(rack, pipette, container_type):
+    """ Save Container Calibration"""
+    global pipette_a
+    global pipette_b
+
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")
+
+    if pipette == "pipette_b":
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1', 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2', 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3', 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1', 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2', 'B2')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3', 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1', 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2', 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3', 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1', 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2', 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3', 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1', 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E2', 'E2')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_b.calibrate_position(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3', 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_b.calibrate_position(location)
+
+    if pipette == "pipette_a":
+        if container == 'A1':
+            A1 = containers.load(container_type, 'A1', 'A1')
+            pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
+            location = (A1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'A2':
+            A2 = containers.load(container_type, 'A2', 'A2')
+            pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
+            location = (A2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'A3':
+            A3 = containers.load(container_type, 'A3', 'A3')
+            pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
+            location = (A3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B1':
+            B1 = containers.load(container_type, 'B1', 'B1')
+            pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B2':
+            B2 = containers.load(container_type, 'B2', 'A1')
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            location = (B2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'B3':
+            B3 = containers.load(container_type, 'B3', 'B3')
+            pos = B3[0].from_center(x=0, y=0, z=-1, reference=B3)
+            location = (B3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C1':
+            C1 = containers.load(container_type, 'C1', 'C1')
+            pos = C1[0].from_center(x=0, y=0, z=-1, reference=C1)
+            location = (C1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C2':
+            C2 = containers.load(container_type, 'C2', 'C2')
+            pos = C2[0].from_center(x=0, y=0, z=-1, reference=C2)
+            location = (C2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'C3':
+            C3 = containers.load(container_type, 'C3', 'C3')
+            pos = C3[0].from_center(x=0, y=0, z=-1, reference=C3)
+            location = (C3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D1':
+            D1 = containers.load(container_type, 'D1', 'D1')
+            pos = D1[0].from_center(x=0, y=0, z=-1, reference=D1)
+            location = (D1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D2':
+            D2 = containers.load(container_type, 'D2', 'D2')
+            pos = D2[0].from_center(x=0, y=0, z=-1, reference=D2)
+            location = (D2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'D3':
+            D3 = containers.load(container_type, 'D3', 'D3')
+            pos = D3[0].from_center(x=0, y=0, z=-1, reference=D3)
+            location = (D3, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E1':
+            E1 = containers.load(container_type, 'E1', 'E1')
+            pos = E1[0].from_center(x=0, y=0, z=-1, reference=E1)
+            location = (E1, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E2':
+            E2 = containers.load(container_type, 'E3', 'E3')
+            pos = E2[0].from_center(x=0, y=0, z=-1, reference=E2)
+            location = (E2, pos)
+            pipette_a.calibrate_position(location)
+        if container == 'E3':
+            E3 = containers.load(container_type, 'E3', 'E3')
+            pos = E3[0].from_center(x=0, y=0, z=-1, reference=E3)
+            location = (E3, pos)
+            pipette_a.calibrate_position(location)
+
     calibration_mode_toggle(0)
     print('Calibration Saved')
 
 
-def saveCalibrationPip(pipette, plungerPos):
-    pipette.calibrate(plungerPos)
+###########################################################################################################
+#
+# Pipetting Calibration
+#
+###########################################################################################################
 
-def calibrationControlPlugger(pipette, key, speed):
+plungerPos = None
+
+def moveDefaultLocation_p(pipette, plungerTarget):
+    """ Moved to Default Pipette Location """
+    """ Tested Working """
+    global pipette_a
+    global pipette_b
+
+    #print(pipette)
+    #print(plungerTarget)
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")
+
+
+    if pipette == "pipette_b":
+        pipette_b.motor.move(pipette_b._get_plunger_position(plungerTarget))
+        plungerPos=pipette_b._get_plunger_position(plungerTarget)
+        print('Successfully Move To Pipette B Calibration Locations:', pipette)
+
+    if pipette == "pipette_a":
+        pipette_a.motor.move(pipette_a._get_plunger_position(plungerTarget))
+        plungerPos=pipette_a._get_plunger_position(plungerTarget)
+        print('Successfully Move To Pipette A Calibration Locations:', pipette)    
+
+def saveCalibrationPip(pipette, plungerPos):
+    """ Save Pip Calibration """
+    global pipette_a
+    global pipette_b
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")    
+    
+    
+    if pipette == "pipette_b":
+        pipette_b.calibrate(plungerPos)
+        print('Successfully Save Pipette Calibration:', pipette)
+
+    if pipette == "pipette_a":
+        pipette_a.calibrate(plungerPos)
+        print('Successfully Save Pipette Calibration:', pipette)
+
+    calibration_mode_toggle(0)
+
+def ControlPlugger(pipette, key, speed):
+    """ Save Calibration For Pipette"""
+    """ Tested Working """
     global movementAmount
+    global plungerPos
+    global pipette_a
+    global pipette_b
+    global set_calibration_mode
 
     changeDirectionSpeed(speed)
+    print(set_calibration_mode)
+    #print(pipette)
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
-    elif ((key == "z_down") and (set_calibration_mode == 1)):
+        print("Calcuate Pos:", plungerPos)
+
+    if ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
+        print("Calcuate Pos:", plungerPos)
 
-    pipette.motor.move(plungerPos)
+    if ((pipette == "pipette_b") and (set_calibration_mode == 1)):
+        pipette_b.motor.move(plungerPos)
+        print('Successfully Moved Pipette', pipette)
+    if ((pipette == "pipette_a") and (set_calibration_mode == 1)):
+        pipette_a.motor.move(plungerPos)
+        print('Successfully Moved Pipette', pipette)    
 
-def move_pip_action_home(pipette):
-    print(pip)
-    pipette.home()
-    print('Homing Pipette')
-    plungerPos=0
+def pip_action_home(pipette):
+    """ Move Pipe To Home Position """
+    """ Tested Working """
 
-
-def save_protocol():
-    pass
-
-
-
-#OLD Curse Calibration Code - NOT FUNCTIONAL WITH CURRENT LIBRARY - REMOVE CODE WHEN Calibration is fully integrated with UI
-#PLEASE USE toolCalibrate.py to use old Calibration CURSE MODE [ Limited to default equipment] - Below Is just a reference
-
-#equipment=getEquipment()
-#Load Default Containers 
-
-#Self Debugging 
-#robot.connect('/dev/ttyACM0')
-
-#robot.connect()
-
-#input("Robot will now home, press enter to continue.")
-#robot.home()
-
-#load_dd_container()
-
-# #Create Blank Array [ Global Variable ]
-# placeables = []
-# pipettes = [0, 1] #Limit to 2 Pipetting
-# count_P = 0
-# count_C = 0 
-
-
-# #Generate Pipettes List
-# for axis, pipette in robot.get_instruments():
-
-#     pipettes[count_P]= pipette.name
-#     count_P = count_P+1
-#     #print(pipette.name)
-
-# #Generate Containers List
-# for name, container in robot.get_containers():
-#     placeables.append(count_C)
-#     placeables[count_C]= name
-#     count_C = count_C+1
-#     #print(name)
-
-# #Reset Counter
-# count_P = 0
-# count_C = 0 
-
-# #Global Variables for calibration
-# placeableNames=sorted(placeables)
-# pipetteNames=sorted(pipettes)
-
-# currentlyCalibrating=placeableNames[0]
-# currentPipette=pipetteNames[0]
-# movementAmount=1
-
-# #Initial Robotic Position
-# position=list(robot._driver.get_head_position()["current"])
-# position[0]=0
-
-
-#print(placeableNames)
-#print(pipetteNames)
-
-#position=list(robot._driver.get_head_position()["current"])
-#print(position)
-
-
-
-
-
-# movementamounts= {1:0.1, 2:0.5, 3:1, 4:5, 5:10,6:20,7:40,8:80}
-
-# def main(stdscr):
-#     currentlyCalibrating=placeableNames[0]
-#     currentPipette=pipetteNames[0]
-#     movementAmount=1
-#     position=list(robot._driver.get_head_position()["current"])
-#     position[0]=0
-#     def chooseWhatToCalibrate():
-#            nonlocal currentlyCalibrating
-#            stdscr.clear()
-#            stdscr.addstr("What should we calibrate?\n")
-#            for i,value in enumerate(placeableNames):
-#                stdscr.addstr(str(i+1)+" - " + value+"\n")
-#            curses.echo()            # Enable echoing of characters
-#            s = stdscr.getstr(20,0, 15)
-#            stdscr.addstr(s)
-#            currentlyCalibrating=placeableNames[int(s)-1]
-#            curses.noecho()
-#     def chooseWhatPipetteToCalibrate():
-#            nonlocal currentPipette
-#            stdscr.clear()
-#            stdscr.addstr("What pipette should we calibrate?\n")
-#            for i,value in enumerate(pipetteNames):
-#                stdscr.addstr(str(i+1)+" - " + value+"\n")
-#            curses.echo()            # Enable echoing of characters
-#            s = stdscr.getstr(10,0, 15)
-#            stdscr.addstr(s)
-#            currentPipette=pipetteNames[int(s)-1]
-#            curses.noecho()
-
-#     def calibratePlunger():
-#            plungerPos=0
-#            plungerTarget="top"
-#            plungerInc=1
-#            while 1:
-
-
-#                 stdscr.clear()
-#                 stdscr.addstr("CALIBRATION - PLUNGER MODE\n\n")
-#                 stdscr.addstr("Keyboard shortcuts:\n\n")
-#                 stdscr.addstr("T - start calibrating the 'top' position\n")
-#                 stdscr.addstr("B - start calibrating the 'bottom' position\n")
-#                 stdscr.addstr("O - start calibrating the 'get-new-tip' position\n")
-#                 stdscr.addstr("E - start calibrating the 'drop_tip' (eject) position\n\n")
-#                 stdscr.addstr("Numbers 1-8 - choose how far to move\n")
-#                 stdscr.addstr("Arrow keys - move plunger up/down\n")
-#                 stdscr.addstr("S - save this position\n")
-#                 stdscr.addstr("M - move to this position\n")
-#                 stdscr.addstr("\n\n")
-#                 stdscr.addstr("V - switch back to container mode\n\n")
-#                 stdscr.addstr("Currently calibrating plunger position: ")
-#                 stdscr.addstr( str(plungerTarget)+"\n",curses.A_STANDOUT)
-#                 stdscr.addstr("with pipette: ")
-#                 stdscr.addstr(str(currentPipette)+"\n",curses.A_STANDOUT)
-#                 stdscr.addstr("Movement increment: ")
-#                 stdscr.addstr(str(plungerInc)+" mm\n",curses.A_STANDOUT)
-#                 stdscr.addstr("Current position -  X: ")
-#                 stdscr.addstr(str(plungerPos),curses.A_STANDOUT)
-
-#                 key=stdscr.getkey()
-#                 curses.flushinp()
-#                 if key=="t":
-#                     plungerTarget="top"
-#                 if key=="b":
-#                     plungerTarget="bottom"
-#                 if key=="o":
-#                     plungerTarget="blow_out"
-#                 if key=="e":
-#                     plungerTarget="drop_tip"
-#                 if key=="s":
-#                     equipment[currentPipette].calibrate(plungerTarget)
-
-#                     stdscr.clear()
-#                     stdscr.addstr("plunger position saved")
-#                     stdscr.refresh()
-#                     time.sleep(1)
-
-
-#                 if key=="m":
-#                     equipment[currentPipette].motor.move(equipment[currentPipette]._get_plunger_position(plungerTarget))
-#                     plungerPos=equipment[currentPipette]._get_plunger_position(plungerTarget)
-#                 if key=="h":
-#                     equipment[currentPipette].home()
-#                     plungerPos=0
-#                 if key=="v":
-#                     return()
-#                 try:
-#                  if int(key) in movementamounts:
-#                     plungerInc=  movementamounts[int(key)]
-#                 except ValueError:
-#                     pass
-
-#                 if key == "KEY_UP":
-#                         plungerPos=plungerPos-plungerInc
-#                 if key == "KEY_DOWN":
-#                         plungerPos=plungerPos+plungerInc
-#                 #stdscr.addstr("Key"+key)
-
-#                 equipment[currentPipette].motor.move(plungerPos)
-#                 stdscr.refresh()
+    global plungerPos
+    global pipette_a
+    global pipette_b
     
+    #robot = Robot()
+    print(pipette)
+    
+    print('Homing Pipette')
+    """ Pick up Tip"""
+    if pipette == "pipette_b":
+        pipette_b.home()
+        print('Successfully Home Pipette', pipette)
+    if pipette == "pipette_a":
+        pipette_a.home()
+        print('Successfully Home Pipette', pipette)
 
-
-#     while 1:
-#         stdscr.clear()
-#         stdscr.addstr("CALIBRATION MODE\n\n")
-#         stdscr.addstr("Keyboard shortcuts:\n")
-#         stdscr.addstr("P - choose what pipette to calibrate with\n")
-
-#         stdscr.addstr("C - choose what container to calibrate\n")
-#         stdscr.addstr("S - save this position\n")
-#         stdscr.addstr("H - home\n")
-#         stdscr.addstr("M - move to the currently saved position\n\n")
-#         stdscr.addstr("Numbers 1-8 - choose how far to move\n")
-#         stdscr.addstr("Arrow keys - move forwards/back/left/right\n")
-#         stdscr.addstr("Control + arrow keys - move up/down\n\n")
-#         stdscr.addstr("V - switch to calibrate this pipette's plunger/volume\n\n")
-#         stdscr.addstr("Currently pipette: ")
-
-#         stdscr.addstr(str(currentPipette)+"\n",curses.A_STANDOUT)
-#         stdscr.addstr("going to: ")
-#         stdscr.addstr(str(currentlyCalibrating)+"\n",curses.A_STANDOUT)
-
-#         stdscr.addstr("Movement increment: ")
-#         stdscr.addstr( str(movementAmount)+" mm\n",curses.A_STANDOUT)
-#         stdscr.addstr("Current position - ")
-#         stdscr.addstr("X:"+ str(position[0])+",Y:"+ str(position[1])+",Z:"+ str(position[2]),curses.A_STANDOUT)
-
-#         key=stdscr.getkey()
-#         curses.flushinp()
-#         if key=="c":
-#             chooseWhatToCalibrate()
-#         if key=="v":
-#             calibratePlunger()
-#         if key=="p":
-#             chooseWhatPipetteToCalibrate()
-#         if key=="s":
-
-#             well = equipment[currentlyCalibrating][0]
-#             pos = well.from_center(x=0, y=0, z=-1, reference=equipment[currentlyCalibrating])
-#             location = (equipment[currentlyCalibrating], pos)
-#             equipment[currentPipette].calibrate_position(location)
-#             stdscr.clear()
-#             stdscr.addstr("position saved")
-#             stdscr.refresh()
-#             time.sleep(1)
-
-
-#         if key=="m":
-#             well = equipment[currentlyCalibrating][0]
-#             pos = well.from_center(x=0, y=0, z=-1, reference=equipment[currentlyCalibrating])
-#             location = (equipment[currentlyCalibrating], pos)
-#             equipment[currentPipette].move_to(location)
-#             position=list(robot._driver.get_head_position()["current"])
-
-#         if key=="h":
-#             robot.home()
-#             position=list(robot._driver.get_head_position()["current"])
-#         try:
-#          if int(key) in movementamounts:
-#             movementAmount=  movementamounts[int(key)]
-#         except ValueError:
-#             pass
-
-#         if key == "q":
-#                 position[2]=position[2]+movementAmount
-#         if key == "a":
-#                 position[2]=position[2]-movementAmount
-#         if key == "KEY_LEFT":
-#                 position[0]=position[0]-movementAmount
-#         if key == "KEY_RIGHT":
-#                 position[0]=position[0]+movementAmount
-#         if key == "KEY_UP":
-#                 position[1]=position[1]+movementAmount
-#         if key == "KEY_DOWN":
-#                 position[1]=position[1]-movementAmount
-#         if key == "x":
-#         	return # Exit Script
-
-#         #stdscr.addstr("Key"+key)
-
-#         robot.move_head(x=position[0],y=position[1],z=position[2])
-#         stdscr.refresh()
-
-
-# #wrapper(main)
+    plungerPos=0

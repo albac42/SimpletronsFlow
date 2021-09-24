@@ -6,10 +6,10 @@ echo "============="
 #Detect Ubuntu or Window Version or Max OS
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt update && upgrade -y
-		sudo apt install python git -y
-		sudo python3 pip install opentrons==2.5.2
-		sudo python3 pip install curse
-		sudo python3 pip install mysql-connector-python 
+	sudo apt install python git -y
+	sudo pip3 install opentrons==2.5.2
+	sudo pip3 install curse
+	sudo pip3 install mysql-connector-python 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
         pip install opentrons==2.5.2
         pip install cursed
@@ -29,7 +29,7 @@ elif [[ "$OSTYPE" == "win32" ]]; then
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
         pkg apt update && upgrade -y
         pkg install python3.7 git -y
-		python3 pip install opentrons==2.5.2
-		python3 pip install curse
-		python3 pip install mysql-connector-python 
-else
+	python3 pip install opentrons==2.5.2
+	python3 pip install curse
+	python3 pip install mysql-connector-python 
+fi
