@@ -26,7 +26,7 @@ For Windows Based
 7.  Enter `cd simpletrons`
 8.  Enter `./install.sh`
 
-For Max Based
+For Mac Based
 
 1.  Open terminal and install git using homebrew 
 2.  Enter `brew install git` 
@@ -75,7 +75,14 @@ In the terminal run `python3 main.py` or `python main.py`
 # Installation
 
 ## -bash: git: command not found
+This is common fix, this error occurred when you don't have git package installed on your system, please install git.
 
-This is common fix, this error occurred when you don’t have git package installed on your system, please install git.
+If you are running unix based (Ubuntu/Debian)
+Please run `sudo apt update && sudo apt install git` in the terminal window. After that is complete you can retry install step in [readme](https://github.com/skydivercactus/simpletrons/blob/master/README.md). 
 
-If you are running unix based (Ubuntu/Debian) Please run `sudo apt update && sudo apt install git` in the terminal window. After that is complete you can retry install step in [readme](https://github.com/skydivercactus/simpletrons/blob/master/README.md).
+If you running Windows, please install below application: https://gitforwindows.org/
+
+[Install Git Bash] and once that installed you can try setup again on [readme](https://github.com/skydivercactus/simpletrons/blob/master/README.md). 
+
+## Window python3 main.py - GUI not starting
+If this occurs try running `python main.py`

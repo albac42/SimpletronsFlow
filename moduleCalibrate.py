@@ -1,10 +1,9 @@
+###########################################################################################################
+# Import Require Libraries
 from opentrons import robot, containers, instruments
 import opentrons
 import curses
 import time
-
-
-from curses import wrapper
 
 from moduleCommands import *
 from modulePipetting import *
@@ -18,13 +17,28 @@ from sqlite3 import Error
 from tkinter.ttk import Combobox
 import tkinter as tk    
 from tkinter import ttk
-
-
+###########################################################################################################
+#
+#   This module containers all the associated code to calibrate and manual control the OT-1
+#   robot. Module is split into 2 sections (Container Calibration and Pipette Calibration)
+#   
+#   Note: 
+#
+#
+#
+###########################################################################################################
+# Calibration Mode Int
 set_calibration_mode = 0
+###########################################################################################################
 
+###########################################################################################################
+#
+# Global Calibration Functions
+#
+###########################################################################################################
 
 def calibration_mode_toggle(option):
-    """ Set Calibration """
+    """ Set Calibration Mode"""
     global set_calibration_mode
     
     if option == 1: #Enable
@@ -33,7 +47,6 @@ def calibration_mode_toggle(option):
     if option == 0: #Disable
         set_calibration_mode = 0
         print('Disable Calibration Mode')
-
 
 
 def changeDirectionSpeed(speed):
@@ -50,6 +63,12 @@ def changeDirectionSpeed(speed):
     #print('Speed Set', movementAmount)
 
 position = None
+
+###########################################################################################################
+#
+# Containers Calibration
+#
+###########################################################################################################
 
 def calibrationControlHome():
     """ Home Robot """
