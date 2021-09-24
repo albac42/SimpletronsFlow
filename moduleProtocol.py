@@ -6,27 +6,30 @@ from moduleContainers import *
 from modulePipetting import *
 from time import sleep
 
-from opentrons.util import environment
-environment.refresh()
-print(environment.get_path('CALIBRATIONS_FILE'))
+# from opentrons.util import environment
+# environment.refresh()
+# print(environment.get_path('CALIBRATIONS_FILE'))
 
-import os
-del os.environ["calibrations/calibrations.json"]
-environment.refresh()
+# import os
+# del os.environ['calibrations/calibrations.json']
+# environment.refresh()
 
+"""
 # This Module require modules such as modulePipetting and moduleContainer
 # and moduleCommand to function. SQL function are majority built in function
 # below but some are reference using moduleCommands
 # Please edit below test_save_data if you play around wish to use
 # code to write your protocol. Please refer to documentation for more info 
+"""
 
 def start_protocol():
-    """Start Protocol based on information in database"""
-    """ Any database shortcut please refer to moduleCommands"""
-    """ Basic Transfer Supported """
-    """ Other Shortcuts is currently WIP """
-    """ This API will grab all steps and send command to OT-1"""
-    """ """
+    """
+    Start Protocol based on information in database
+    Any database shortcut please refer to moduleCommands
+    Basic Transfer Supported 
+    Other Shortcuts is currently WIP [Additional columns may be required for database more options]
+    This API will grab all steps and send command to OT-1
+    """
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
     manual_connect()    
     home_robot()
@@ -41,6 +44,14 @@ def start_protocol():
 
 
     #Load Pipette
+    # Load Blank Default Pipette
+    pipette_a = instruments.Pipette(
+        axis='b',
+        max_volume=200)
+    pipette_b = instruments.Pipette(
+        axis='a',
+        max_volume=200)
+
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
     for row in c:
@@ -88,16 +99,6 @@ def start_protocol():
             )
             print ("Loaded A Axis Pipette")
 
-
-    # Load Calibration 
-
-    #Load Containers in loaded in workspace
-    # sqlite_select_query = """SELECT * FROM custom_workspace"""
-    # c.execute(sqlite_select_query) 
-    # for row in c:
-    #     print(row)
-
-
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
@@ -106,6 +107,8 @@ def start_protocol():
         print(row)
 
         #Load Variable from database row
+        shortcut = row[2]
+
         volume = row[4]
 
         plateA = row[5]
@@ -120,52 +123,109 @@ def start_protocol():
 
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons API shortcut
-        #Send Action to Robot [ Simple Transfer ]
-        if pipette == "pipette_b":
+        #Send Action to Robot 
+        if shortcut == "Simple_Transfer"
+            ''' [ Simple Transfer ] '''
+            if pipette == "pipette_b":
 
-            plateAName = plateA[0:2]
-            planteAType = plateA[3:]
-            #print(plateAName)
-            #print(planteAType)
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
 
-            plateA = containers.load(planteAType, plateAName)
+                plateA = containers.load(planteAType, plateAName)
 
-            plateBName = plateB[0:2]
-            planteBType = plateB[3:]
-            #print(plateBName)
-            #print(planteBType)
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
 
-            plateB = containers.load(planteBType, plateBName)
+                plateB = containers.load(planteBType, plateBName)
 
 
-            # Never Get a New Tip each steps
-            if option == True:
-                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                # Never Get a New Tip each steps
+                if option == True:
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
-            if option == False:
-                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+                if option == False or option == None:
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
 
-        if pipette == "pipette_a":
+            if pipette == "pipette_a":
 
-            plateAName = plateA[0:2]
-            planteAType = plateA[3:]
-            #print(plateAName)
-            #print(planteAType)
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
 
-            plateA = containers.load(planteAType, plateAName)
+                plateA = containers.load(planteAType, plateAName)
 
-            plateBName = plateB[0:2]
-            planteBType = plateB[3:]
-            #print(plateBName)
-            #print(planteBType)
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
 
-            plateB = containers.load(planteBType, plateBName)
+                plateB = containers.load(planteBType, plateBName)
 
-            if option == True:
-                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                if option == True:
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
-            if option == False:
-                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+                if option == False or option == None:
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+
+        if shortcut == "One_to_Many"
+            ''' One_to_Many
+            [ You can transfer from a single source to multiple destinations, and the other way around 
+            (many sources to one destination).  ] 
+            '''
+            if pipette == "pipette_b":
+
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
+
+                plateA = containers.load(planteAType, plateAName)
+
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
+
+                plateB = containers.load(planteBType, plateBName)
+
+
+                # Never Get a New Tip each steps
+                if option == True:
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+
+                if option == False or option == None:
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB))
+
+            if pipette == "pipette_a":
+
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
+
+                plateA = containers.load(planteAType, plateAName)
+
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
+
+                plateB = containers.load(planteBType, plateBName)
+
+                if option == True:
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+
+                if option == False or option == None:
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB))
+
+
+
+
 
     #Exit Database 
     conn.close() 
