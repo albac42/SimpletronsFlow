@@ -95,6 +95,7 @@ Workspace Reference:
 5.  Press Save Workspace
 6.  Customised pipetting profile such as max/min volume and desire tip rack and saving. \[Note: If you are using two pipette you need to setup second axis \[Left and Right\] ![d6aeb338d1a822816a622cafa42508f2.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/b53ba53889db42f1bb53c4408a39a620.png)
 7.  Now confirm the software have connected to robot, press the home button after selecting a pipette and position button.
+
 ![914658f2e82bc97eccc2ed89ba9809c7.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/dca0a90214af4571a00c417a702c2f3b.png)
 
 8.  Use up/down buttons and movement slider to move the piston to desire position.
