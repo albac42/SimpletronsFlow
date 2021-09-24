@@ -53,7 +53,7 @@ network={
 
 File name “ssh” without any extension as shown in below Figure.
 
-<img src="resources/a16c2a3c9345407ea3bb369447e41763.png" alt="c7c493d8d8e672eef6a16bcef17c3ea0.png" width="687" height="537" class="jop-noMdConv">
+<img src="https://github.com/skydivercactus/simpletrons/blob/master/docs/images/a16c2a3c9345407ea3bb369447e41763.png" alt="c7c493d8d8e672eef6a16bcef17c3ea0.png" width="687" height="537" class="jop-noMdConv">
 
 4.  Now you can unplug sd card from the computer and insert into raspberry pi.
 5.  Plug the power into raspberry pi and give it a few minutes to boot up.
@@ -83,14 +83,18 @@ Workspace Reference:
 
 <img src="resources/e17a72de9ca94c739ea3faaf78acb5a6.png" alt="DeckMapEmpty.png" width="509" height="454" class="jop-noMdConv">
 
-# How to Calibrate pipetting positions
+# How to Calibrate Pipette and Container
 
-1.  Run `python3 calibrate.py`
-2.  Create and load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres)
-3.  Customised pipetting profile such as max/min volume and desire tip rack.
+1.  Run `python3 main.py`
+2.  Select “File - Connections Options”
+3.  Select Connect and Home \[Note: You should see the robot home it axis to top right back corner, if not please try manual connection method\] If you still have issues please follow FAQ section regarding USB connectivity.                           ![321ff8a9a4164a852aad40e046727c97.png](resources/d93b50c6150d48ccb0880b7308796afa.png)
+4.  Select  load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres). ![6cde9d01d1313d2c169a742df48725d2.png](resources/ca5b8a97cbaa4ccc8685adcdde9b4c55.png)
+5.  Press Save Workspace
+6.  Customised pipetting profile such as max/min volume and desire tip rack and saving. \[Note: If you are using two pipette you need to setup second axis \[Left and Right\] ![d6aeb338d1a822816a622cafa42508f2.png](resources/b53ba53889db42f1bb53c4408a39a620.png)
+7.  Now confirm the software have connected to robot, press the home button after selecting a pipette and position button.![914658f2e82bc97eccc2ed89ba9809c7.png](resources/dca0a90214af4571a00c417a702c2f3b.png)
+8.  Use up/down buttons and movement slider to move the piston to desire position.
+9.  To confirm position, press the save button and select the next position to calibrate until all 4 position has been calibrate. \[top, button, blow\_out, drop\_tip\]
+10. Continue to next step to calibrate each container. 
+11. Select pipette and container to calibrate, use the quick access button to go selected container. ![e5c13c2e5fea45cab20b678b4d06b5b5.png](resources/fd1fddc741604ef3bc18a07a2f068376.png) 
 
-# Default Pipette Setup
-
-Default Workspace Location
-
-![4dd550f8c7a7860652934b8d8ceee5a1.png](resources/a740321c2d714001babb7a80ce50dc70.png)
+12 Once all the calibration is calibrated you can go ahead and program protocol
