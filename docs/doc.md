@@ -87,7 +87,10 @@ Workspace Reference:
 
 1.  Run `python3 main.py`
 2.  Select “File - Connections Options”
-3.  Select Connect and Home \[Note: You should see the robot home it axis to top right back corner, if not please try manual connection method\] If you still have issues please follow FAQ section regarding USB connectivity.                           ![321ff8a9a4164a852aad40e046727c97.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/d93b50c6150d48ccb0880b7308796afa.png)
+3.  Select Connect and Home \[Note: You should see the robot home it axis to top right back corner, if not please try manual connection method\] If you still have issues please follow FAQ section regarding USB connectivity.
+
+![321ff8a9a4164a852aad40e046727c97.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/d93b50c6150d48ccb0880b7308796afa.png)
+
 4.  Select  load all require containers on the workspace, follow the prompts on graphical interfaces. Please enter a value in each box, all measurement are in MM (millimetres). ![6cde9d01d1313d2c169a742df48725d2.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/ca5b8a97cbaa4ccc8685adcdde9b4c55.png)
 5.  Press Save Workspace
 6.  Customised pipetting profile such as max/min volume and desire tip rack and saving. \[Note: If you are using two pipette you need to setup second axis \[Left and Right\] ![d6aeb338d1a822816a622cafa42508f2.png](https://github.com/skydivercactus/simpletrons/blob/master/docs/images/b53ba53889db42f1bb53c4408a39a620.png)
