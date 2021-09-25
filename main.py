@@ -4,7 +4,7 @@ import opentrons
 
 from opentrons import robot, containers, instruments
 
-
+db_file = 'database/data.db' 
 #from modulePipetting import *
 from moduleCommands import *
 #from moduleContainers import *
@@ -19,7 +19,6 @@ from moduleCommands import *
 print('Loaded Require Libaries')
 print('Loading UI')
 
-db_file = 'database/data.db' 
 setup_table("custom_protocol")
 setup_table("custom_pipette")
 setup_table("custom_workspace")

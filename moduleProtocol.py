@@ -124,7 +124,7 @@ def start_protocol():
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons API shortcut
         #Send Action to Robot 
-        if shortcut == "Simple_Transfer"
+        if shortcut == "Simple_Transfer":
             ''' [ Simple Transfer ] '''
             if pipette == "pipette_b":
 
@@ -145,10 +145,10 @@ def start_protocol():
 
                 # Never Get a New Tip each steps
                 if option == True:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
 
-                if option == False or option == None:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
+                if option == False:
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
             if pipette == "pipette_a":
 
@@ -167,12 +167,12 @@ def start_protocol():
                 plateB = containers.load(planteBType, plateBName)
 
                 if option == True:
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
+
+                if option == False:
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
 
-                if option == False or option == None:
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB))
-
-        if shortcut == "One_to_Many"
+        if shortcut == "One_to_Many":
             ''' One_to_Many
             [ You can transfer from a single source to multiple destinations, and the other way around 
             (many sources to one destination).  ] 
@@ -263,9 +263,10 @@ def test_save_data():
     value2 = "C2"
     value3 = "C2_24-well-plate"
     value4 = "A2"
+    option = True
     notes = "test notes"
 
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, notes)
     save_data("custom_protocol", insert)
 
     name = "Step 2"
@@ -276,9 +277,10 @@ def test_save_data():
     value2 = "D2"
     value3 = "C2_24-well-plate"
     value4 = "D2"
+    option = True
     notes = "test notes"
 
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, notes)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, notes)
     save_data("custom_protocol", insert)    
 
 

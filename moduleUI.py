@@ -1088,6 +1088,12 @@ def graphicalUIprotocol():
             else:
                 notes = f_note.get()
 
+
+            if tipchange == True:
+                option = True
+            else:
+                option = False
+
             # print(name)
             # print(notes)
             # print(sel_pipette)
@@ -1106,7 +1112,7 @@ def graphicalUIprotocol():
         if shortcuts.get() == "Few_to_Many":
             pass
 
-        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, notes)
+        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, notes)
         save_data("custom_protocol", insert)
         step = step + 1
 
@@ -1149,6 +1155,15 @@ def graphicalUIprotocol():
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
 
+    tipchange = None
+
+    #Change Tip Tick Box
+    label = ttk.Label(proroot, text="Change Tip?")
+    label.grid(column = 2, row = 3)
+    textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
+    textboxI.grid(column = 2, row = 4)    
+    textboxI.select()
+
     # Friendly Name Input
     label = ttk.Label(proroot, text="Friendly Name:")
     label.grid(column = 1, row = 1)
@@ -1167,7 +1182,7 @@ def graphicalUIprotocol():
     textboxA = Entry(proroot, width=12, textvariable=volume_well)
     textboxA.grid(column = 1, row = 4)
 
-    #Frist Container
+    #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
     label.grid(column = 0, row = 5)
     dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
@@ -1373,7 +1388,7 @@ save_w.grid(column = 2, row = 3)
 label = ttk.Label(tab1b, text='Load Workspace:', font = ('Arial', 12))
 label.grid(column = 3, row = 3)
 
-pree_home_image = PhotoImage(file="graphic/content-save-settings.png")
+pree_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
 save_w.grid(column = 4, row = 3)
 
@@ -1452,7 +1467,7 @@ home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
 home_b.grid(column = 4, row = 4)
 
 #Move to preconfigured 
-pre_home_image = PhotoImage(file="graphic/content-save-settings.png")
+pre_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
 pre_home_b.grid(column = 5, row = 4)
 

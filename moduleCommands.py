@@ -25,7 +25,7 @@ from opentrons import robot
 #from modulePipetting import *
 #from moduleCalibrate import *
 ######################################################################
-
+db_file = 'database/data.db' 
 
 def find_robot(serial_number):
     """ # Self Find Serial Port # """
@@ -178,7 +178,7 @@ def reset_all():
 # Database
 ##################################################################
 # Test Connection
-db_file = 'database/data.db'
+
 
 def create_connection():
     """create a test database connection to a SQLite database"""
@@ -274,8 +274,8 @@ def save_data(table, insert):
             VALUES(?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, notes)
-            VALUES(?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -386,7 +386,7 @@ def setup_table(variable):
                                             value2 text,
                                             value3 text,
                                             value4 text,
-                                            option text,
+                                            option boolean,
                                             notes text
                                         ); """
 
