@@ -80,7 +80,7 @@ count_C = 0
 
 ###########################################################################################################
 #
-# Popup Window
+# Popup Window [If You need create popup windows use below template]
 #
 ###########################################################################################################
 
@@ -105,6 +105,13 @@ def confirmation_box(variable):
     def close_popup():
         newWindow.destroy()
         newWindow.update()
+
+    def close_popup_protocol_1():
+        #Delete Row
+
+        count = read_row(custom_protocol)
+        deleteRecord(custom_protocol, count)
+
 
     if variable == 1:
         newWindow.geometry("200x60")
@@ -159,6 +166,14 @@ def confirmation_box(variable):
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 7:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Protocol', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup_protocol_1)
         save_w.grid(column = 0, row = 1)
 
     else:
@@ -1046,16 +1061,15 @@ def graphicalUIprotocol():
         """ Save Step to Database """
         global step
         notes = 'null'
+        step_count = False
         # Reference
         # shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
         print(shortcuts.get())
         if shortcuts.get() == "Simple_Transfer":
-            ''' '''
-
+            ''' Simple Transfer '''
             #Check if Friendly Name is available if not set a default based of step
             if len(f_name.get()) == 0:
                 name = "step" + str(step)
-
             else:
                 name = f_name.get()
 
@@ -1070,6 +1084,8 @@ def graphicalUIprotocol():
             value1 = aspirate_con.get()
             #Value 2 (First Container Syntax)
             container_lookup = aspirate_con.get()
+
+            #Check if Point Container (Single Well Items)
             if re.search('point', container_lookup):
                 value2 = "A1"
             else:
@@ -1078,6 +1094,7 @@ def graphicalUIprotocol():
             value3 = dispense_con.get()
             #Value 4 (Second Container Syntax)
             container_lookup = dispense_con.get()
+
             if re.search('point', container_lookup):
                 value4 = "A1"
             else:
@@ -1094,17 +1111,60 @@ def graphicalUIprotocol():
             else:
                 option = False
 
-            # print(name)
-            # print(notes)
-            # print(sel_pipette)
-            # print(volume)
-            # print(value1)
-            # print(value2)
-            # print(value3)
-            # print(value4)
-
         if shortcuts.get() == "Multiple_Wells_Transfer":
-            pass
+            #Check if Friendly Name is available if not set a default based of step
+            if len(f_name.get()) == 0:
+                name = "step" + str(step)
+            else:
+                name = f_name.get()
+            #Shortcut
+            shortcuts_v = shortcuts.get()
+
+            #Volume
+            volume = volume_well.get()
+            #Value 1 (Pipette)
+            sel_pipette = p_varpip.get()
+            #Value 2 (First Container)
+            value1 = aspirate_con.get()
+            #Value 2 (First Container Syntax)
+            container_lookup = aspirate_con.get()
+
+            #Check if Point Container (Single Well Items)
+            if re.search('point', container_lookup):
+                value2 = "A1"
+            else:
+                step_count = True
+                confirmation_box(7)
+
+
+
+            value3 = dispense_con.get()
+
+            # Code To Find if row or column ()
+            # If you need higher rows count adjust pattern2
+            pattern1 = re.compile("[A-Za-z]+")
+            pattern2 = re.compile("[0-12]+")
+            container_lookup = dispense_con.get()
+
+            if pattern1.fullmatch(container_lookup) is not None:
+                value4 = dispense_con.get()
+                option2 = "cols"
+            if pattern1.fullmatch(container_lookup) is not None:
+                value4 = dispense_con.get()
+                option2 = "rows"
+            else:
+                step_count = True
+                confirmation_box(7)
+
+            if len(f_note.get()) == 0:
+                notes = "NULL"
+            else:
+                notes = f_note.get()
+
+            if tipchange == True:
+                option = True
+            else:
+                option = False
 
         if shortcuts.get() == "One_to_Many":
             pass
@@ -1112,9 +1172,16 @@ def graphicalUIprotocol():
         if shortcuts.get() == "Few_to_Many":
             pass
 
-        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, notes)
+        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
         save_data("custom_protocol", insert)
+
         step = step + 1
+
+        #Reset Count if error occurs in step creation 
+        if step_count == True
+            step = step - 1
+            step_count = False
+
 
     ###########################################################################################################
 
@@ -1130,6 +1197,7 @@ def graphicalUIprotocol():
     file_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Exit", command = close_popup )
+    start_protocol_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     ####
 
     ###########################################################################################################

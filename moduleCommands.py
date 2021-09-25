@@ -274,8 +274,8 @@ def save_data(table, insert):
             VALUES(?,?,?) '''        
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, notes)
-            VALUES(?,?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -387,6 +387,7 @@ def setup_table(variable):
                                             value3 text,
                                             value4 text,
                                             option boolean,
+                                            option2 text,
                                             notes text
                                         ); """
 

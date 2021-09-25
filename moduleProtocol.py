@@ -121,6 +121,8 @@ def start_protocol():
 
         option = row[9]
 
+        option2 = row[10]
+
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons API shortcut
         #Send Action to Robot 
@@ -194,12 +196,20 @@ def start_protocol():
                 plateB = containers.load(planteBType, plateBName)
 
 
-                # Never Get a New Tip each steps
-                if option == True:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+                if option2 == "rows"
+                    # Never Get a New Tip each steps
+                    if option == True:
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                if option == False or option == None:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB))
+                    if option == False or option == None:
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+
+                if option2 == "cols"
+                    if option == True:
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
+
+                    if option == False or option == None:
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')                    
 
             if pipette == "pipette_a":
 
@@ -217,12 +227,20 @@ def start_protocol():
 
                 plateB = containers.load(planteBType, plateBName)
 
-                if option == True:
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+                if option2 == "rows"
+                    # Never Get a New Tip each steps
+                    if option == True:
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                if option == False or option == None:
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB))
+                    if option == False or option == None:
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
+                if option2 == "cols"
+                    if option == True:
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
+
+                    if option == False or option == None:
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
 
 
 

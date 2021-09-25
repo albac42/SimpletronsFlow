@@ -4,7 +4,6 @@ import opentrons
 
 from opentrons import robot, containers, instruments
 
-db_file = 'database/data.db' 
 #from modulePipetting import *
 from moduleCommands import *
 #from moduleContainers import *
