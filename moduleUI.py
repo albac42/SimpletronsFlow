@@ -903,7 +903,7 @@ def graphicalUIprotocol():
     # Start Pre Configured Software 
     ##########################################################################################################
     #Start Protocol
-    def start_protocol():
+    def start_protocol_ui():
 
         pass
 
@@ -1149,7 +1149,7 @@ def graphicalUIprotocol():
             if pattern1.fullmatch(container_lookup) is not None:
                 value4 = dispense_con.get()
                 option2 = "cols"
-            if pattern1.fullmatch(container_lookup) is not None:
+            if pattern2.fullmatch(container_lookup) is not None:
                 value4 = dispense_con.get()
                 option2 = "rows"
             else:
@@ -1178,7 +1178,7 @@ def graphicalUIprotocol():
         step = step + 1
 
         #Reset Count if error occurs in step creation 
-        if step_count == True
+        if step_count == True:
             step = step - 1
             step_count = False
 
@@ -1195,6 +1195,7 @@ def graphicalUIprotocol():
 
     #Title
     file_menu = Menu(s_menu)
+    start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Exit", command = close_popup )
     start_protocol_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
