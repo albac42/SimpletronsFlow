@@ -29,7 +29,7 @@ from modulePipetting import *
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 0.1 Dev'
+version = 'Version: Private Alpha 1 Dev'
 
 ###########################################################################################################
 #
@@ -49,8 +49,8 @@ root.title('Simpletrons - OT')
 root.geometry("740x400")
 root.pack_propagate(0)
 
-
-windowWidth = root.winfo_reqwidth()
+#Setup Windows Location (Center Top Left Corner)
+windowWidth = root.winfo_reqwidth() 
 windowHeight = root.winfo_reqheight()
 positionRight = int(root.winfo_screenwidth()/4 - windowWidth/4)
 positionDown = int(root.winfo_screenheight()/4 - windowHeight/4)
@@ -60,10 +60,11 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 
 ###########################################################################################################
 #
-# Global Variable
+# Global Variable 
 #
 ##########################################################################################################
-#
+# Remember to verify the custom container exist before adding into this container list to reduce errors
+
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
                     '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate', ]
@@ -85,7 +86,9 @@ count_C = 0
 ###########################################################################################################
 
 def confirmation_box(variable):
-
+    """
+    Pop Up Windows Creation
+    """
     global version
     global root
 
@@ -107,8 +110,7 @@ def confirmation_box(variable):
         newWindow.update()
 
     def close_popup_protocol_1():
-        #Delete Row
-
+        """Delete Row"""
         count = read_row(custom_protocol)
         deleteRecord(custom_protocol, count)
 
@@ -176,9 +178,33 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup_protocol_1)
         save_w.grid(column = 0, row = 1)
 
+    elif variable == 8:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Pipette \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 9:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Workspace \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 10:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Loaded Custom Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
     else:
         newWindow.geometry("180x60")
-        label = Label(newWindow, text='Error: Please Check Terminal Windows', font = ('Arial', 9))
+        label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
@@ -193,17 +219,9 @@ def confirmation_box(variable):
 #
 ###########################################################################################################
 
-def connect_robot():
-    connect()
-    pass
-
-def reset_robot():
-    reset_all()
-    pass
-
-
 def connecton_graphical():
     """ Connection UI"""
+    """ """
     conroot = Toplevel(root)
 
     conroot.title("Simpletrons - OT: Protocol - Connection")
@@ -227,10 +245,10 @@ def connecton_graphical():
     label = ttk.Label(conroot, text = 'Robot Connection Options:')
     label.grid(column = 0, row = 1)
 
-    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect_robot)
+    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect)
     save_step.grid(column = 0, row = 2)
 
-    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_robot)
+    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_all)
     save_step.grid(column = 0, row = 3)
 
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
@@ -532,8 +550,10 @@ def move_z_pos():
 def home_axis():
     calibrationControlHome()
 
-#Save Container Calibration
 def save_containers_calibration():
+    """
+    Save Container Calibration
+    """
     pip = varpip.get()
     con = c_varcon.get()
 
@@ -561,7 +581,7 @@ def load_axis():
 
 # Setup Workspace
 def setup_workspace():
-    """ Setup Workspace"""
+    """ Setup Workspace Function Link"""
 
     #Reset Counter
     global count_C
@@ -739,17 +759,21 @@ def setup_workspace():
         save_data("custom_workspace", insert)
 
     #Update Loaded in Workspace Container List
-    update_containers_list_type()
-    print(loaded_containers)
-    temp = robot.containers()
-    print("Robot Loaded Container List:", temp)
+    try:
+        update_containers_list_type()
+        print(loaded_containers)
+        temp = robot.containers()
+        print("Robot Loaded Container List:", temp)
 
-    confirmation_box(2)
+        confirmation_box(2)
+    except:
+        confirmation_box(9)
 
-#
-#Save Custom Pipette
-#
 def action_save_pip():
+    """
+    Save Custom Pipette
+    Note: The Load Pipette Function is placeholder, it just error checking argument is acceptable
+    """
     if var_p_a.get() == 0:
         axis = 'b'
         print(axis)
@@ -786,10 +810,16 @@ def action_save_pip():
     # print(trash)
 
     #Send Command to module load pipette [loadpipette] and save to database [save_data]
-    loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
-    insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
-    save_data("custom_pipette", insert) 
-    print(loaded_pipette_list)
+    try:
+        loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+        insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
+        save_data("custom_pipette", insert) 
+        print(loaded_pipette_list)
+
+        confirmation_box(10)
+    except:
+        confirmation_box(8)
+
 ###########################################################################################################
 
 
@@ -800,6 +830,11 @@ def action_save_pip():
 #
 ###########################################################################################################
 def opencontainer(location):
+    """
+    Start Protocol from pre-configured/save protocol from database
+    [ WORKING IN PROGRESS ]
+    """
+
     pass
 
 
@@ -811,17 +846,23 @@ def opencontainer(location):
 #
 ###########################################################################################################
 def containersCreationUi():
-    rootCustom = Tk()
-    rootCustom.title('Simpletrons - OT - Container Creation')
+    """ 
+    Graphical UI for Custom Container Creation 
+    [ WORKING IN PROGRESS ]
+
+    """
+
+    rootCustomContainer = Tk()
+    rootCustomContainer.title('Simpletrons - OT - Container Creation')
 
 
     #Create Containers
     var_container_name = StringVar()
 
-    label = ttk.Label(rootCustom, text='Set a Name:', font = ('Arial', 12))
+    label = ttk.Label(rootCustomContainer, text='Set a Name:', font = ('Arial', 12))
     label.grid(column = 0, row = 1) 
     
-    e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
+    e_container_name = Entry(rootCustomContainer, bd =5, justify = CENTER, textvariable = var_container_name)
     e_container_name.grid(column = 0, row = 2)  
 
 
@@ -838,16 +879,25 @@ dropdown_ppip = StringVar()
 
 #Update Protocol Dropdown
 def update_dropdown_source_pip():
+    """
+    Update source pipette Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_pipette_list
     dropdown_ppip['values'] = list
     print('Updating Dropdown List: Pipette Protocol')
 
 def update_aspirate_source_rack():
+    """
+    Update Aspirate Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_containers
     dropdown_aspirate_c['values'] = list
     print('Updating Dropdown List: Containers Protocol')
 
 def update_dispense_source_rack():
+    """
+    Update Dispense Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_containers
     dropdown_dispense_c['values'] = list
     print('Updating Dropdown List: Containers Protocol')
@@ -860,6 +910,10 @@ v4 = StringVar()
 step = 1
 
 def graphicalUIprotocol():
+    """ 
+    Code for Graphical Protocol Creation 
+    Note: Remember to include global variable for any PhotoImage
+    """ 
 
     global v1
     global v2
@@ -908,7 +962,7 @@ def graphicalUIprotocol():
         pass
 
     ###########################################################################################################
-    # Draw Graphics
+    # Draw Graphics (Containers)
     ########################################################################################################### 
 
     def callback_a(eventObject):
@@ -1048,11 +1102,6 @@ def graphicalUIprotocol():
         label.grid(column = 0, row = 11)
         background3 = ttk.Label(proroot, image = background_image3)
         background3.grid(column = 0, row = 12, columnspan = 5)
-
-    def run_step():
-        ''' Run Current Step'''
-
-        pass
 
     ###########################################################################################################
     # Save Steps to Database
