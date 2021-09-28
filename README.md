@@ -85,4 +85,4 @@ If you running Windows, please install below application: https://gitforwindows.
 [Install Git Bash] and once that installed you can try setup again on [readme](https://github.com/skydivercactus/simpletrons/blob/master/README.md). 
 
 ## Window python3 main.py - GUI not starting
-If this occurs try running `python main.py`
+If this occurs use `python main.py`
