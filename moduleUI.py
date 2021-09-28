@@ -25,7 +25,8 @@ from modulePipetting import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
-# Note: Functions cannot be moved
+# Note: This Is Only UI Section (If you want to expand or start from scratch use other python script such as
+# moduleProtocol, moduleCommands, moduleCalibrate)
 
 ###########################################################################################################
 

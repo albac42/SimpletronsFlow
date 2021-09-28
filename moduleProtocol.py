@@ -6,6 +6,8 @@ from moduleContainers import *
 from modulePipetting import *
 from time import sleep
 
+
+# For Jupiter Environment  
 # from opentrons.util import environment
 # environment.refresh()
 # print(environment.get_path('CALIBRATIONS_FILE'))
@@ -15,11 +17,11 @@ from time import sleep
 # environment.refresh()
 
 """
-# This Module require modules such as modulePipetting and moduleContainer
-# and moduleCommand to function. SQL function are majority built in function
-# below but some are reference using moduleCommands
-# Please edit below test_save_data if you play around wish to use
-# code to write your protocol. Please refer to documentation for more info 
+ This Module require modules  modulePipetting and moduleContainer
+ and moduleCommand to function. SQL read function are majority built in function
+ below but some are reference using moduleCommands
+ Please edit below test_save_data if you play around wish to use
+ code to write your protocol. Please refer to documentation for more info 
 """
 
 def start_protocol():
@@ -201,14 +203,14 @@ def start_protocol():
                     if option == True:
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == False or option == None:
+                    if option == False:
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
                 if option2 == "cols"
                     if option == True:
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == False or option == None:
+                    if option == False:
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')                    
 
             if pipette == "pipette_a":
@@ -232,14 +234,14 @@ def start_protocol():
                     if option == True:
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == False or option == None:
+                    if option == False:
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
                 if option2 == "cols"
                     if option == True:
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == False or option == None:
+                    if option == False:
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
 
 
@@ -272,7 +274,7 @@ def test_save_data():
     save_data("custom_workspace", insert)
 
 
-    #2 Step Demo (Simple Transfer)
+    #3 Step Demo (Simple Transfer)
     name = "Step 1"
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_b"
