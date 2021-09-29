@@ -109,7 +109,6 @@ def start_protocol():
     It will read each row and send command for each step.
     Uncomment out print(row) if you wish to see output.
 
-
     """
     for row in c:
         print(row)

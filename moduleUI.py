@@ -401,20 +401,36 @@ def load_pre_workspace(): #For Testing
     global count_preload_c
 
     if count_preload_c == 0:
-        load_container('A1', 'A1', 'trash-box')
-        load_container('B1', 'B1', 'tiprack-1000ul')
-        load_container('B2', 'B2', 'tiprack-1000ul')
-        load_container('C1', 'C1', '24-well-plate')
-        load_container('C2', 'C2', '24-well-plate')
-        load_container('B3', 'B3', 'point')
-        load_container('A3', 'A3', 'point')
+        #load_container('A3', 'A3', 'trash-box')
+        insert = ('A3', 'trash-box', 'A3')
+        save_data("custom_workspace", insert)
 
-        update_containers_list('A1_trash-box')
-        update_containers_list('B1_tiprack-1000ul')
-        update_containers_list('B2_tiprack-1000ul')
-        update_containers_list('C1_24-well-plate')
-        update_containers_list('C2_24-well-plate')
-        update_containers_list('B3_point')
+        #load_container('A2', 'A2', 'tiprack-1000ul')
+        insert = ('A3', 'trash-box', 'A3')
+        save_data("custom_workspace", insert)
+
+        #load_container('B2', 'B2', 'tiprack-100ul')
+        insert = ('B2', 'tiprack-1000ul', 'B2')
+        save_data("custom_workspace", insert)
+
+        #load_container('A1', 'A1', '24-well-plate')
+        insert = ('A1', 'tiprack-1000ul', 'A1')
+        save_data("custom_workspace", insert)
+
+        #load_container('B1', 'B1', '24-well-plate')
+        insert = ('B1', 'tiprack-1000ul', 'B1')
+        save_data("custom_workspace", insert)
+
+        #load_container('A3', 'A3', 'point')
+        insert = ('A3', 'tiprack-1000ul', 'A3')
+        save_data("custom_workspace", insert)
+
+
+        update_containers_list('A3_trash-box')
+        update_containers_list('A2_tiprack-1000ul')
+        update_containers_list('B2_tiprack-100ul')
+        update_containers_list('A1_24-well-plate')
+        update_containers_list('B1_48-well-plate')
         update_containers_list('A3_point')
 
 
@@ -431,11 +447,11 @@ def load_pre_pip(): #For Testing
 
     if count_preload_p == 0:
         #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
-        insert = ('a', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
+        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-100ul', 'A3_point')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_a', 1)
         #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
-        insert = ('b', '1000', '100', '1', 800, 1200, 'A2_tiprack-1000ul', 'A2_point')
+        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'A3_point')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)
