@@ -398,6 +398,8 @@ def saveCalibration(pipette, container, container_type):
             pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
             location = (A1, pos)
             print(location)
+            position=list(robot._driver.get_head_position()["current"])
+            print(position)
             pipette_b.calibrate_position((A1, pos))
         if container == 'A2':
             A2 = containers.load(container_type, 'A2', 'A2')
@@ -413,6 +415,8 @@ def saveCalibration(pipette, container, container_type):
             B1 = containers.load(container_type, 'B1', 'B1')
             pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
             location = (B1, pos)
+            position=list(robot._driver.get_head_position()["current"])
+            print(position)
             print(location)
             pipette_b.calibrate_position((B1, pos))
         if container == 'B2':

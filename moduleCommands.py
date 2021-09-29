@@ -289,24 +289,27 @@ def save_data(table, insert):
 def find_data(table, name):
     if table == "custom_workspace":
         if name == "A1":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A1%'"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A1%'"""
         if name == "A2":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A2%'"""        
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A2%'"""        
         if name == "A3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A3%'"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A3%'"""
         if name == "B1":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B1%'"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B1%'"""
         if name == "B2":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B2%'"""        
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B2%'"""        
         if name == "B3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B3%'"""    
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""    
     conn = sqlite3.connect(db_file)
     c = conn.cursor()           
-    
+
     c.execute(sqlite_select_query)        
-    ans = c.fetchall()
-    
-    return(ans)
+    for row in c:
+        print(row)
+        row = row[4]
+        print(row)
+        
+    return(row)
 # #Read Data
 def read_row(table):
     """Read Number of Rows from Database"""

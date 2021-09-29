@@ -151,9 +151,11 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
-                print(calibarate_data)
-                location = (plateA, calibarate_data)
-                pipette_b.calibrate_position(location)
+                #calibarate_data = calibarate_data[4]
+                #pipette_b.move_to(calibarate_data)
+                #print(calibarate_data)
+                #location = (plateA, calibarate_data)
+                #pipette_b.calibrate_position(location)
 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
@@ -282,7 +284,7 @@ def test_save_data():
     name = "A1"
     container = "24-well-plate"
     location = "A1"
-    calibration = "(x=13.67, y=15.00, z=0.00)"
+    calibration = "(13.67, 15.00, 0.00)"
 
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
@@ -290,7 +292,7 @@ def test_save_data():
     name = "B1"
     container = "48-well-plate"
     location = "B1"
-    calibration = "(x=10.08, y=18.16, z=0.00)"
+    calibration = "(10.08, 18.16, 0.00)"
 
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
@@ -301,9 +303,9 @@ def test_save_data():
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_b"
     volume = 20
-    value1 = "B1_24-well-plate"
+    value1 = "B1_48-well-plate" 
     value2 = "B1"
-    value3 = "B1_24-well-plate"
+    value3 = "B1_48-well-plate"
     value4 = "B2"
     option = True
     option2 = "blank"
