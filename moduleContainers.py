@@ -8,7 +8,12 @@ from moduleCommands import *
 ##################################################################################
 
 def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth):
-    """ Creating Container """
+    """ Creating Container
+
+    It best to save to data base and use this API Call to recall container and load
+
+    """
+
     print('Creating "', name, '" Container') 
     containers.create(
         name,                    # name of you container

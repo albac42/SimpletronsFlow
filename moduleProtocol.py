@@ -104,11 +104,19 @@ def start_protocol():
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
-    # Basic Tranfer
+    """ Basic Transfer
+    Load Temp Custom Protocol 
+    It will read each row and send command for each step.
+    Uncomment out print(row) if you wish to see output.
+
+
+    """
     for row in c:
         print(row)
 
         #Load Variable from database row
+        id_count = row[0]
+
         shortcut = row[2]
 
         volume = row[4]
@@ -146,13 +154,15 @@ def start_protocol():
 
                 plateB = containers.load(planteBType, plateBName)
 
-
-                # Never Get a New Tip each steps
-                if option == True:
+                print(option)
+                # Check Tip Check Condition
+                if option == '1':
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
+                    print("Complete: Step", id_count, ": Option: Never Change")
 
-                if option == False:
+                else:
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                    print("Complete: Step", id_count, ": Option: Always")
 
             if pipette == "pipette_a":
 
@@ -170,11 +180,13 @@ def start_protocol():
 
                 plateB = containers.load(planteBType, plateBName)
 
-                if option == True:
+                if option == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
+                    print("Complete: Step", id_count, ": Option: Never Change")
 
-                if option == False:
+                else:
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                    print("Complete: Step", id_count, ": Option: Always")
 
         if shortcut == "One_to_Many":
             ''' One_to_Many
@@ -198,19 +210,19 @@ def start_protocol():
                 plateB = containers.load(planteBType, plateBName)
 
 
-                if option2 == "rows"
+                if option2 == "rows":
                     # Never Get a New Tip each steps
-                    if option == True:
+                    if option == '1':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == False:
+                    if option == '0':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
-                if option2 == "cols"
-                    if option == True:
+                if option2 == "cols":
+                    if option == '1':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == False:
+                    if option == '0':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')                    
 
             if pipette == "pipette_a":
@@ -229,19 +241,19 @@ def start_protocol():
 
                 plateB = containers.load(planteBType, plateBName)
 
-                if option2 == "rows"
+                if option2 == "rows":
                     # Never Get a New Tip each steps
-                    if option == True:
+                    if option == '1':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == False:
+                    if option == '0':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
-                if option2 == "cols"
-                    if option == True:
+                if option2 == "cols":
+                    if option == '1':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == False:
+                    if option == '0':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
 
 
@@ -284,9 +296,10 @@ def test_save_data():
     value3 = "C2_24-well-plate"
     value4 = "A2"
     option = True
+    option2 = "blank"
     notes = "test notes"
 
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, notes)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)
 
     name = "Step 2"
@@ -298,9 +311,10 @@ def test_save_data():
     value3 = "C2_24-well-plate"
     value4 = "D2"
     option = True
+    option2 = "blank"
     notes = "test notes"
 
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, notes)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)    
 
 
@@ -317,7 +331,7 @@ deleteTable("custom_protocol")
 deleteTable("custom_pipette")
 deleteTable("custom_workspace")
 
-# Old Cross Linking Platform Code
+# Cross Linking Platform Code
 # If you wish to work on this section, you require custom library from original raspberry pi with
 # library "robot2" , standalone library does not include robot2 from opentrons pip library.
 #
@@ -330,8 +344,8 @@ deleteTable("custom_workspace")
 # example: intensity = 2.5
 # PWM = (2.5-(-0.1251))/0.0161 = 163
 
-#lightON = 'M106'
-#lightOFF = 'M107'
+# lightON = 'M106'
+# lightOFF = 'M107'
 
 # def crosslinking():
 #     # absolute movement

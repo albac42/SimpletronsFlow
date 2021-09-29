@@ -371,6 +371,7 @@ def setup_table(variable):
                                             value3 text,
                                             value4 text,
                                             option text,
+                                            option2 text,
                                             notes text
                                         ); """
 
