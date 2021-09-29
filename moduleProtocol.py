@@ -101,6 +101,9 @@ def start_protocol():
             )
             print ("Loaded A Axis Pipette")
 
+
+
+
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
@@ -145,6 +148,9 @@ def start_protocol():
                 #print(planteAType)
 
                 plateA = containers.load(planteAType, plateAName)
+                
+                #Load Calibration Data
+                
 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
@@ -289,10 +295,10 @@ def test_save_data():
     name = "Step 1"
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_b"
-    volume = 50
-    value1 = "C1_24-well-plate"
-    value2 = "C2"
-    value3 = "C1_24-well-plate"
+    volume = 20
+    value1 = "B1_24-well-plate"
+    value2 = "B1"
+    value3 = "B1_24-well-plate"
     value4 = "B2"
     option = True
     option2 = "blank"

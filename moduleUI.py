@@ -47,8 +47,8 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
-root.geometry("740x400")
-root.pack_propagate(0)
+#root.geometry("740x400")
+#root.pack_propagate(0)
 
 #Setup Windows Location (Center Top Left Corner)
 windowWidth = root.winfo_reqwidth() 
@@ -406,7 +406,7 @@ def load_pre_workspace(): #For Testing
         save_data("custom_workspace", insert)
 
         #load_container('A2', 'A2', 'tiprack-1000ul')
-        insert = ('A3', 'trash-box', 'A3')
+        insert = ('A3', 'tiprack-1000ul', 'A3')
         save_data("custom_workspace", insert)
 
         #load_container('B2', 'B2', 'tiprack-100ul')
@@ -414,21 +414,21 @@ def load_pre_workspace(): #For Testing
         save_data("custom_workspace", insert)
 
         #load_container('A1', 'A1', '24-well-plate')
-        insert = ('A1', 'tiprack-1000ul', 'A1')
+        insert = ('A1', '24-well-plate', 'A1')
         save_data("custom_workspace", insert)
 
-        #load_container('B1', 'B1', '24-well-plate')
-        insert = ('B1', 'tiprack-1000ul', 'B1')
+        #load_container('B1', 'B1', '48-well-plate')
+        insert = ('B1', '48-well-plate', 'B1')
         save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
-        insert = ('A3', 'tiprack-1000ul', 'A3')
+        insert = ('A3', 'point', 'A3')
         save_data("custom_workspace", insert)
 
 
         update_containers_list('A3_trash-box')
         update_containers_list('A2_tiprack-1000ul')
-        update_containers_list('B2_tiprack-100ul')
+        update_containers_list('B2_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
         update_containers_list('A3_point')
@@ -447,7 +447,7 @@ def load_pre_pip(): #For Testing
 
     if count_preload_p == 0:
         #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
-        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-100ul', 'A3_point')
+        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'A3_point')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_a', 1)
         #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
@@ -579,10 +579,12 @@ def save_containers_calibration():
     """
     pip = varpip.get()
     con = c_varcon.get()
-
+    
+    contype = con[3:]
     con = con[0:2]
+    
 
-    saveCalibration(con, pip)
+    saveCalibration(pip, con, contype)
 
     confirmation_box(5)
 
