@@ -289,17 +289,17 @@ def save_data(table, insert):
 def find_data(table, name):
     if table == "custom_workspace":
         if name == "A1":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=A1"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A1%'"""
         if name == "A2":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=A2"""        
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A2%'"""        
         if name == "A3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=A3"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%A3%'"""
         if name == "B1":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=B1"""
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B1%'"""
         if name == "B2":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=B2"""        
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B2%'"""        
         if name == "B3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name=B3"""    
+            sqlite_select_query = """SELECT * FROM custom_workspace where name='%B3%'"""    
     conn = sqlite3.connect(db_file)
     c = conn.cursor()           
     

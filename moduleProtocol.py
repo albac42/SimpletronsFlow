@@ -151,7 +151,8 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
-                location (plateA, calibarate_data)
+                print(calibarate_data)
+                location = (plateA, calibarate_data)
                 pipette_b.calibrate_position(location)
 
                 plateBName = plateB[0:2]
