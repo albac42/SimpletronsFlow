@@ -6,7 +6,7 @@ from opentrons import robot, containers, instruments
 
 #from modulePipetting import *
 from moduleCommands import *
-#from moduleContainers import *
+from moduleContainers import *
 
 #from time import sleep
 #import openworkstation
@@ -22,7 +22,14 @@ setup_table("custom_protocol")
 setup_table("custom_pipette")
 setup_table("custom_workspace")
 
+
+#Custom Conatiner
+create_container('custom', 3, 3, 10, 10, 15, 5)
+
+
 from moduleUI import *
+
+
 print('UI Closing')
 
 
@@ -51,8 +58,8 @@ print('UI Closing')
 #Note: Please Create and load All Custom Containers Here
 #Note: Name Should not contain any spaces
 
-#create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, 
-#	depth, deck)
+# create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, 
+# depth, deck)
 
 #Refer to Desk Documentation
 

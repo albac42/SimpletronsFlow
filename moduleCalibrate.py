@@ -557,11 +557,11 @@ plungerPos = None
 def moveDefaultLocation_p(pipette, plungerTarget):
     """ Moved to Default Pipette Location """
     """ Tested Working """
-    global pipette_a
-    global pipette_b
+#     global pipette_a
+#     global pipette_b
 
-    #print(pipette)
-    #print(plungerTarget)
+    print(pipette)
+    print(plungerTarget)
 
     #Load Pipette
     conn = sqlite3.connect(db_file)
@@ -697,13 +697,64 @@ def ControlPlugger(pipette, key, speed):
     """ Tested Working """
     global movementAmount
     global plungerPos
-    global pipette_a
-    global pipette_b
+#     global pipette_a
+#     global pipette_b
     global set_calibration_mode
 
     changeDirectionSpeed(speed)
     print(set_calibration_mode)
     #print(pipette)
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+    
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")    
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
@@ -725,9 +776,60 @@ def pip_action_home(pipette):
     """ Tested Working """
 
     global plungerPos
-    global pipette_a
-    global pipette_b
+#     global pipette_a
+#     global pipette_b
+
+    #Load Pipette
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
     
+    sqlite_select_query = """SELECT * FROM custom_pipette"""
+    c.execute(sqlite_select_query) 
+    for row in c:
+        print(row)
+
+        rawTip = row[7]
+        rawTrash = row[8]
+
+        tipName = rawTip[0:2]
+        tipType = rawTip[3:]
+
+        trashName = rawTrash[0:2]
+        trashType = rawTrash[3:]
+
+        tiprack = containers.load(trashType, tipName)
+        trash =containers.load(tipType, trashName)
+
+        axis_s = row[1]
+
+        if axis_s == 'b':
+            pipette_b = instruments.Pipette(
+            axis='b',
+            name='pipette_b',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded B Axis Pipette")
+
+        if axis_s == 'a':
+            pipette_a = instruments.Pipette(
+            axis='a',
+            name='pipette_a',
+            max_volume=row[2],
+            min_volume=row[3],
+            channels = row[4],
+            aspirate_speed=row[5],
+            dispense_speed=row[6],
+            tip_racks=tiprack,
+            trash_container=trash
+            )
+            print ("Loaded A Axis Pipette")
+            
     #robot = Robot()
     print(pipette)
     
@@ -736,6 +838,7 @@ def pip_action_home(pipette):
     if pipette == "pipette_b":
         pipette_b.home()
         print('Successfully Home Pipette', pipette)
+        
     if pipette == "pipette_a":
         pipette_a.home()
         print('Successfully Home Pipette', pipette)

@@ -68,7 +68,9 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate', ]
+                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
+                   'custom'
+                   ]
 loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
@@ -428,9 +430,13 @@ def load_pre_pip(): #For Testing
     global count_preload_p
 
     if count_preload_p == 0:
-        loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
+        #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
+        insert = ('a', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
+        save_data("custom_pipette", insert) 
         update_pipette('pipette_a', 1)
-        loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
+        #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
+        insert = ('b', '1000', '100', '1', 800, 1200, 'A2_tiprack-1000ul', 'A2_point')
+        save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)
         count_preload_p = count_preload_p + 1
@@ -578,8 +584,6 @@ def load_axis():
     moveDefaultLocation_C(pip, con, contype)
 
 
-
-
 # Setup Workspace
 def setup_workspace():
     """ Setup Workspace Function Link"""
@@ -655,7 +659,7 @@ def setup_workspace():
         BB = B3_W.get()
         #print(AA)
 
-        update_containers_list(AA)
+        update_containecontypers_list(AA)
         load_container('B3', 'B3', BB)
         insert = ('B3', BB, 'B3')
         save_data("custom_workspace", insert)

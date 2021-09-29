@@ -290,22 +290,24 @@ def test_save_data():
     name = "Step 1"
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_b"
-    volume = 20
+    volume = 50
     value1 = "C1_24-well-plate"
     value2 = "C2"
-    value3 = "C2_24-well-plate"
-    value4 = "A2"
+    value3 = "C1_24-well-plate"
+    value4 = "B2"
     option = True
     option2 = "blank"
     notes = "test notes"
 
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)
-
+    
+    
+    
     name = "Step 2"
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_a"
-    volume = 20
+    volume = 30
     value1 = "C1_24-well-plate"
     value2 = "D2"
     value3 = "C2_24-well-plate"
@@ -325,8 +327,11 @@ def test_save_data():
 setup_table("custom_protocol")
 setup_table("custom_pipette")
 setup_table("custom_workspace")
+
+
 test_save_data() #Load Test data in database
 start_protocol() #Start Protocol
+
 deleteTable("custom_protocol")
 deleteTable("custom_pipette")
 deleteTable("custom_workspace")
