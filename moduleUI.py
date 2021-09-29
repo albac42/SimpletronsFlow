@@ -403,27 +403,27 @@ def load_pre_workspace(): #For Testing
     if count_preload_c == 0:
         #load_container('A3', 'A3', 'trash-box')
         insert = ('A3', 'trash-box', 'A3')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
         #load_container('A2', 'A2', 'tiprack-1000ul')
         insert = ('A3', 'tiprack-1000ul', 'A3')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
         #load_container('B2', 'B2', 'tiprack-100ul')
         insert = ('B2', 'tiprack-1000ul', 'B2')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
         #load_container('A1', 'A1', '24-well-plate')
         insert = ('A1', '24-well-plate', 'A1')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
         #load_container('B1', 'B1', '48-well-plate')
         insert = ('B1', '48-well-plate', 'B1')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
         insert = ('A3', 'point', 'A3')
-        save_data("custom_workspace", insert)
+        #save_data("custom_workspace", insert)
 
 
         update_containers_list('A3_trash-box')
@@ -624,8 +624,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A1', 'A1', BB)
-        insert = ('A1', BB, 'A1')
-        save_data("custom_workspace", insert)
+        #insert = ('A1', BB, 'A1')
+        #save_data("custom_workspace", insert)
 
     if A2_W.get() != '':
         print('Entry Found in A2')
@@ -635,8 +635,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A2', 'A2', BB)
-        insert = ('A2', BB, 'A2')
-        save_data("custom_workspace", insert)
+        #insert = ('A2', BB, 'A2')
+        #save_data("custom_workspace", insert)
 
     if A3_W.get() != '':
         print('Entry Found in A3')
@@ -646,8 +646,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A3', 'A3', BB)
-        insert = ('A3', BB, 'A3')
-        save_data("custom_workspace", insert)
+        #insert = ('A3', BB, 'A3')
+        #save_data("custom_workspace", insert)
 
     if B1_W.get() != '':
         print('Entry Found in B1')
@@ -657,8 +657,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('B1', 'B1', BB)
-        insert = ('B1', BB, 'B1')
-        save_data("custom_workspace", insert)
+        #insert = ('B1', BB, 'B1')
+        #save_data("custom_workspace", insert)
 
     if B2_W.get() != '':
         print('Entry Found in B2')
@@ -668,8 +668,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('B2', 'B2', BB)
-        insert = ('B2', BB, 'B2')
-        save_data("custom_workspace", insert)
+        #insert = ('B2', BB, 'B2')
+        #save_data("custom_workspace", insert)
 
     if B3_W.get() != '':
         print('Entry Found in B3')
@@ -679,8 +679,8 @@ def setup_workspace():
 
         update_containecontypers_list(AA)
         load_container('B3', 'B3', BB)
-        insert = ('B3', BB, 'B3')
-        save_data("custom_workspace", insert)
+        #insert = ('B3', BB, 'B3')
+        #save_data("custom_workspace", insert)
 
     if C1_W.get() != '':
         print('Entry Found in C1')
@@ -690,8 +690,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C1', 'C1', BB)
-        insert = ('C1', BB, 'C1')
-        save_data("custom_workspace", insert)
+        #insert = ('C1', BB, 'C1')
+        #save_data("custom_workspace", insert)
 
     if C2_W.get() != '':
         print('Entry Found in C2')
@@ -701,8 +701,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C2', 'C2', BB)
-        insert = ('C2', BB, 'C2')
-        save_data("custom_workspace", insert)
+        #insert = ('C2', BB, 'C2')
+        #save_data("custom_workspace", insert)
 
     if C3_W.get() != '':
         print('Entry Found in C3')
@@ -712,8 +712,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C3', 'C3', BB)
-        insert = ('C3', BB, 'C3')
-        save_data("custom_workspace", insert)
+        #insert = ('C3', BB, 'C3')
+        #save_data("custom_workspace", insert)
 
     if D1_W.get() != '':
         print('Entry Found in D1')
@@ -723,8 +723,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D1', 'D1', BB)
-        insert = ('D1', BB, 'D1')
-        save_data("custom_workspace", insert)
+        #insert = ('D1', BB, 'D1')
+        #save_data("custom_workspace", insert)
 
     if D2_W.get() != '':
         print('Entry Found in D2')
@@ -734,8 +734,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D2', 'D2', BB)
-        insert = ('D2', BB, 'D2')
-        save_data("custom_workspace", insert)
+        #insert = ('D2', BB, 'D2')
+        #save_data("custom_workspace", insert)
 
     if D3_W.get() != '':
         print('Entry Found in D3')
@@ -745,8 +745,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D3', 'D3', BB)
-        insert = ('D3', BB, 'D3')
-        save_data("custom_workspace", insert)
+        #insert = ('D3', BB, 'D3')
+        #save_data("custom_workspace", insert)
 
     if E1_W.get() != '':
         print('Entry Found in E1')
@@ -756,8 +756,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E1', 'E1', BB)
-        insert = ('E1', BB, 'E1')
-        save_data("custom_workspace", insert)
+        #insert = ('E1', BB, 'E1')
+        #save_data("custom_workspace", insert)
 
     if E2_W.get() != '':
         print('Entry Found in E2')
@@ -767,8 +767,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E2', 'E2', BB)
-        insert = ('E2', BB, 'E2')
-        save_data("custom_workspace", insert)
+        #insert = ('E2', BB, 'E2')
+        #save_data("custom_workspace", insert)
 
     if E3_W.get() != '':
         print('Entry Found in E3')
@@ -778,8 +778,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E3', 'E3', BB)
-        insert = ('E3', BB, 'E3')
-        save_data("custom_workspace", insert)
+        #insert = ('E3', BB, 'E3')
+        #save_data("custom_workspace", insert)
 
     #Update Loaded in Workspace Container List
     try:

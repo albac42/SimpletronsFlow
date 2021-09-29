@@ -270,8 +270,8 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location)
-            VALUES(?,?,?) '''        
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, calibration)
+            VALUES(?,?,?,?) '''
 
     if table == "custom_protocol":
         sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
@@ -285,8 +285,28 @@ def save_data(table, insert):
 
 
 
-# Row Count
-
+# Find Data
+def find_data(table, name):
+    if table == "custom_workspace":
+        if name == "A1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=A1"""
+        if name == "A2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=A2"""        
+        if name == "A3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=A3"""
+        if name == "B1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=B1"""
+        if name == "B2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=B2"""        
+        if name == "B3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name=B3"""    
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()           
+    
+    c.execute(sqlite_select_query)        
+    ans = c.fetchall()
+    
+    return(ans)
 # #Read Data
 def read_row(table):
     """Read Number of Rows from Database"""
@@ -355,7 +375,8 @@ def setup_table(variable):
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
                                             container text,
-                                            location text
+                                            location text,
+                                            calibration text
                                         ); """
 
     #Custom protocol Database Creation - Temp

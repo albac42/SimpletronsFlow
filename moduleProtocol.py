@@ -144,13 +144,15 @@ def start_protocol():
 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
-                #print(plateAName)
+                print(plateAName)
                 #print(planteAType)
 
                 plateA = containers.load(planteAType, plateAName)
                 
                 #Load Calibration Data
-                
+                calibarate_data = find_data("custom_workspace", plateAName)
+                location (plateA, calibarate_data)
+                pipette_b.calibrate_position(location)
 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
@@ -276,18 +278,20 @@ def test_save_data():
     save_data("custom_pipette", insert) 
 
     #2 Setup Bare Minimal Workspace
-    name = "C1"
+    name = "A1"
     container = "24-well-plate"
-    location = "C1"
+    location = "A1"
+    calibration = "(x=13.67, y=15.00, z=0.00)"
 
-    insert = (name, container, location)
+    insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
 
-    name = "C2"
-    container = "24-well-plate"
-    location = "C2"
+    name = "B1"
+    container = "48-well-plate"
+    location = "B1"
+    calibration = "(x=10.08, y=18.16, z=0.00)"
 
-    insert = (name, container, location)
+    insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
 
 
