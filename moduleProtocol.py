@@ -153,7 +153,9 @@ def start_protocol():
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
                 #pipette_b.move_to(calibarate_data)
-                
+                robot.move_head(x=calibarate_data[0],y=calibarate_data[1],z=60)
+                robot.move_head(z=calibarate_data[2])
+
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
 
@@ -300,36 +302,39 @@ def test_save_data():
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
 
+    #3 Step Demo
 
-    #3 Step Demo (Simple Transfer)
+
+    #4 Step Demo (Simple Transfer)
     name = "Step 1" # Step Name 
     shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
     sel_pipette = "pipette_b" # Pipette Name (pipette_b or pipette_a)
-    volume = 20 # Volume (Double Variable)
+    volume = 30 # Volume (Double Variable)
     value1 = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
     value2 = "B1" #Well Cell for first plate
     value3 = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
     value4 = "B2" #Well Cell for second plate
     option = True #Never Change Tip Enable (False for always change tip)
     option2 = None #Additional Parameters 
-    notes = "test notes"
+    notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)
     
     
-    
+    #5 Step Demo (one to many)
     name = "Step 2" 
     shortcuts = "One_to_Many"
     sel_pipette = "pipette_a"
     volume = 30
-    value1 = "C1_24-well-plate"
-    value2 = "D2"
-    value3 = "C2_24-well-plate"
-    value4 = "D2"
+    value1 = "A1_24-well-plate"
+    value2 = "A2"
+    value3 = "B1_48-well-plate"
+    value4 = "2"
     option = True
-    option2 = 'rows'
+    option2 = 'rows' # For one to Many you can set to transfer to whole rows or cols by changing this. 
+                    # DO not value need to just a number (rows) or a letter (cols)
     notes = "test notes"
 
     #Insert To Database Function
@@ -349,14 +354,25 @@ setup_table("custom_workspace")
 test_save_data() #Load Test data in database
 start_protocol() #Start Protocol
 
-deleteTable("custom_protocol")
+"""
+You would need to delete table upon exiting database 
+
+If you getting data base lock, you need to delete database/data.db and 
+recreate the file. 
+
+You can start cleardatabase.py to reset the database to default
+[This is only require if the code crash during protocol]
+
+"""
+deleteTable("custom_protocol") 
 deleteTable("custom_pipette")
 deleteTable("custom_workspace")
 
 # Cross Linking Platform Code
 # If you wish to work on this section, you require custom library from original raspberry pi with
 # library "robot2" , standalone library does not include robot2 from opentrons pip library.
-#
+# 
+# Another method is to copy original robot api from original source 
 
 #transportposition = getTransportposition()
 

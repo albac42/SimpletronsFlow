@@ -1219,7 +1219,7 @@ def graphicalUIprotocol():
             if pattern1.fullmatch(container_lookup) is not None:
                 value4 = value_c.get()
                 option2 = "cols"
-            
+
             if pattern2.fullmatch(container_lookup) is not None:
                 value4 = value_c.get()
                 option2 = "rows"
@@ -1262,15 +1262,15 @@ def graphicalUIprotocol():
     ###########################################################################################################
 
     ###
-    s_menu = Menu(root)
+    s_menu = Menu(proroot)
     proroot.config(menu = s_menu)
 
     #Title
     file_menu = Menu(s_menu)
     start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
+    file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     file_menu.add_command(label = "Exit", command = close_popup )
-    start_protocol_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     ####
 
     ###########################################################################################################
