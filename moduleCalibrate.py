@@ -121,7 +121,7 @@ def moveDefaultLocation_C(pipette, container, container_type):
     #print(pipette)
     #print(container)
 
-    #Load Pipette
+    #Load Pipette from database
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 

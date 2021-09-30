@@ -272,7 +272,7 @@ def start_protocol():
     #Exit Database 
     conn.close() 
 
-# Test Data [Use this to test Protocol API]
+# Test Data [Use this to test Protocol API without front-end]
 def test_save_data():
     """ Debugging Temp Data"""
 
@@ -299,7 +299,7 @@ def test_save_data():
 
 
     #3 Step Demo (Simple Transfer)
-    name = "Step 1"
+    name = "Step 1" # Step Name 
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_b"
     volume = 20
@@ -308,7 +308,7 @@ def test_save_data():
     value3 = "B1_48-well-plate"
     value4 = "B2"
     option = True
-    option2 = "blank"
+    option2 = None
     notes = "test notes"
 
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
@@ -316,7 +316,7 @@ def test_save_data():
     
     
     
-    name = "Step 2"
+    name = "Step 2" 
     shortcuts = "Simple_Transfer"
     sel_pipette = "pipette_a"
     volume = 30
@@ -325,7 +325,7 @@ def test_save_data():
     value3 = "C2_24-well-plate"
     value4 = "D2"
     option = True
-    option2 = "blank"
+    option2 = None
     notes = "test notes"
 
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)

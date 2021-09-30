@@ -10,7 +10,12 @@ from moduleCommands import *
 def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth):
     """ Creating Container
 
-    It best to save to data base and use this API Call to recall container and load
+    Due to nature of opentrons API, ensure you load this custom container each time you start 
+    your protocol. 
+
+    create_container( [name of you container], [specify amount of columns], [specify amount of rows], 
+                     [distances (mm) between each column], [distances (mm) between each row], 
+                     [diameter (mm) of each well on the plate], [depth (mm) of each well on the plate])
 
     """
 
@@ -22,14 +27,13 @@ def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth
         diameter=diameter,                     # diameter (mm) of each well on the plate
         depth=depth                     # depth (mm) of each well on the plate
     )
-    #print('Custom Container Created "', name '"')
-
-    #Load Container 
-    #var = container.load(name, location, deck)
 
 
 def load_container(name, location, container):
-    """ Load Container """
+    """ 
+    Load Container [Deprecated]
+
+    """
 
     global A1
     global A2
@@ -65,9 +69,12 @@ def load_container(name, location, container):
     #    print(well)
 
 
-#Load some useful default containers 
+#Load some useful default containers []
 def load_dd_container():
-    """ Load Default Container"""
+    """ 
+    Load Default Container [Deprecated]
+
+    """
     print ('Loading Default Preset Containers')
     #trashA = containers.load('trash-box', 'A1') 
     #P_A = containers.load('tiprack-1000ul-chem', 'A2')
