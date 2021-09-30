@@ -283,16 +283,16 @@ def test_save_data():
     #2 Setup Bare Minimal Workspace
     name = "A1"
     container = "24-well-plate"
-    location = "A1"
-    calibration = "(13.67, 15.00, 0.00)"
+    location = "A1" # Location Position on workspace
+    calibration = "(13.67, 15.00, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
 
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
 
     name = "B1"
     container = "48-well-plate"
-    location = "B1"
-    calibration = "(10.08, 18.16, 0.00)"
+    location = "B1" # Location Position on workspace
+    calibration = "(10.08, 18.16, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
 
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
@@ -300,17 +300,18 @@ def test_save_data():
 
     #3 Step Demo (Simple Transfer)
     name = "Step 1" # Step Name 
-    shortcuts = "Simple_Transfer"
-    sel_pipette = "pipette_b"
-    volume = 20
-    value1 = "B1_48-well-plate" 
-    value2 = "B1"
-    value3 = "B1_48-well-plate"
-    value4 = "B2"
-    option = True
-    option2 = None
+    shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
+    sel_pipette = "pipette_b" # Pipette Name (pipette_b or pipette_a)
+    volume = 20 # Volume (Double Variable)
+    value1 = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
+    value2 = "B1" #Well Cell for first plate
+    value3 = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
+    value4 = "B2" #Well Cell for second plate
+    option = True #Never Change Tip Enable (False for always change tip)
+    option2 = None #Additional Parameters 
     notes = "test notes"
 
+    #Insert To Database Function
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)
     
@@ -328,6 +329,7 @@ def test_save_data():
     option2 = None
     notes = "test notes"
 
+    #Insert To Database Function
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
     save_data("custom_protocol", insert)    
 

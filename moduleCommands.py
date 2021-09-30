@@ -310,6 +310,7 @@ def find_data(table, name):
         print(row)
         
     return(row)
+
 # #Read Data
 def read_row(table):
     """Read Number of Rows from Database"""

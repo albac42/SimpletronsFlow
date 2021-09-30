@@ -566,10 +566,12 @@ def saveCalibration(pipette, container, container_type):
 plungerPos = None
 
 def moveDefaultLocation_p(pipette, plungerTarget):
-    """ Moved to Default Pipette Location """
+    """ 
+    Moved to Default Pipette Location 
+
+    """
     """ Tested Working """
-#     global pipette_a
-#     global pipette_b
+
 
     print(pipette)
     print(plungerTarget)
@@ -706,10 +708,9 @@ def saveCalibrationPip(pipette, plungerPos):
 def ControlPlugger(pipette, key, speed):
     """ Save Calibration For Pipette"""
     """ Tested Working """
+
     global movementAmount
     global plungerPos
-#     global pipette_a
-#     global pipette_b
     global set_calibration_mode
 
     changeDirectionSpeed(speed)
@@ -787,8 +788,6 @@ def pip_action_home(pipette):
     """ Tested Working """
 
     global plungerPos
-#     global pipette_a
-#     global pipette_b
 
     #Load Pipette
     conn = sqlite3.connect(db_file)
@@ -841,7 +840,6 @@ def pip_action_home(pipette):
             )
             print ("Loaded A Axis Pipette")
             
-    #robot = Robot()
     print(pipette)
     
     print('Homing Pipette')
