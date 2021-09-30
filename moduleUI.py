@@ -1170,7 +1170,7 @@ def graphicalUIprotocol():
             if re.search('point', container_lookup):
                 value4 = "A1"
             else:
-                value4 = value_b.get()
+                value4 = value_c.get()
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1183,7 +1183,7 @@ def graphicalUIprotocol():
             else:
                 option = False
 
-        if shortcuts.get() == "Multiple_Wells_Transfer":
+        if shortcuts.get() == "One_to_Many":
             #Check if Friendly Name is available if not set a default based of step
             if len(f_name.get()) == 0:
                 name = "step" + str(step)
@@ -1208,21 +1208,20 @@ def graphicalUIprotocol():
                 step_count = True
                 confirmation_box(7)
 
-
-
             value3 = dispense_con.get()
 
             # Code To Find if row or column ()
             # If you need higher rows count adjust pattern2
             pattern1 = re.compile("[A-Za-z]+")
             pattern2 = re.compile("[0-12]+")
-            container_lookup = dispense_con.get()
+            container_lookup = value_c.get()
 
             if pattern1.fullmatch(container_lookup) is not None:
-                value4 = dispense_con.get()
+                value4 = value_c.get()
                 option2 = "cols"
+            
             if pattern2.fullmatch(container_lookup) is not None:
-                value4 = dispense_con.get()
+                value4 = value_c.get()
                 option2 = "rows"
             else:
                 step_count = True
@@ -1238,11 +1237,12 @@ def graphicalUIprotocol():
             else:
                 option = False
 
-        if shortcuts.get() == "One_to_Many":
-            pass
+        # if shortcuts.get() == "Multiple_Wells_Transfer":
+        #     pass
+            
 
-        if shortcuts.get() == "Few_to_Many":
-            pass
+        # if shortcuts.get() == "Few_to_Many":
+        #     pass
 
         insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
         save_data("custom_protocol", insert)
