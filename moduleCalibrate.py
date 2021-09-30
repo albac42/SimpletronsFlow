@@ -404,7 +404,7 @@ def saveCalibration(pipette, container, container_type):
     if pipette == "pipette_a":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
-        
+
         calibration = position
 
         insert = (container, container_type, container, calibration)
@@ -430,10 +430,6 @@ def saveCalibration(pipette, container, container_type):
         if container == 'B1':
             B1 = containers.load(container_type, 'B1', 'B1')
             pos = B1[0].from_center(x=0, y=0, z=-1, reference=B1)
-            location = (B1, pos)
-            position=list(robot._driver.get_head_position()["current"])
-            print(position)
-            print(location)
             pipette_b.calibrate_position((B1, pos))
         if container == 'B2':
             B2 = containers.load(container_type, 'B2', 'B2')

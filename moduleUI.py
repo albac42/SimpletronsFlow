@@ -1581,7 +1581,7 @@ right_b.grid(column = 5, row = 2)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Postive ]
+yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Positive ]
 down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_pos)
 down_b.grid(column = 4, row = 1)
 

@@ -142,6 +142,7 @@ def start_protocol():
             ''' [ Simple Transfer ] '''
             if pipette == "pipette_b":
 
+                #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
                 print(plateAName)
@@ -151,12 +152,13 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
-                #calibarate_data = calibarate_data[4]
                 #pipette_b.move_to(calibarate_data)
-                #print(calibarate_data)
-                #location = (plateA, calibarate_data)
-                #pipette_b.calibrate_position(location)
+                
+                pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
+                pipette_b.calibrate_position((plateA, pos))
 
+
+                #Second Plate Initialisation 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
                 #print(plateBName)
