@@ -388,9 +388,27 @@ def saveCalibration(pipette, container, container_type):
             )
             print ("Loaded A Axis Pipette")
     
-    print(pipette)
-    print(container)
-    print(container_type)
+    #print(pipette)
+    #print(container)
+    #print(container_type)
+
+    if pipette == "pipette_b":
+        position=list(robot._driver.get_head_position()["current"])
+        print(position)
+
+        calibration = position
+
+        insert = (container, container_type, container, calibration)
+        save_data("custom_workspace", insert)
+
+    if pipette == "pipette_a":
+        position=list(robot._driver.get_head_position()["current"])
+        print(position)
+        
+        calibration = position
+
+        insert = (container, container_type, container, calibration)
+        save_data("custom_workspace", insert)
     
     if pipette == "pipette_b":
         if container == 'A1':
@@ -398,8 +416,6 @@ def saveCalibration(pipette, container, container_type):
             pos = A1[0].from_center(x=0, y=0, z=-1, reference=A1)
             location = (A1, pos)
             print(location)
-            position=list(robot._driver.get_head_position()["current"])
-            print(position)
             pipette_b.calibrate_position((A1, pos))
         if container == 'A2':
             A2 = containers.load(container_type, 'A2', 'A2')
@@ -571,10 +587,8 @@ def moveDefaultLocation_p(pipette, plungerTarget):
 
     """
     """ Tested Working """
-
-
-    print(pipette)
-    print(plungerTarget)
+    #print(pipette)
+    #print(plungerTarget)
 
     #Load Pipette
     conn = sqlite3.connect(db_file)

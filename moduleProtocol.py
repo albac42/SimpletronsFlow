@@ -277,20 +277,21 @@ def test_save_data():
     """ Debugging Temp Data"""
 
     #1 Setup Pipette Default
+    # Axis , max volume , min volume, channel (1 or 8), aspirate speed, dispense speed, tip rack, bin
     insert = ('b', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
     save_data("custom_pipette", insert) 
 
     #2 Setup Bare Minimal Workspace
-    name = "A1"
-    container = "24-well-plate"
+    name = "A1" # Container Name
+    container = "24-well-plate" # Container Type 
     location = "A1" # Location Position on workspace
     calibration = "(13.67, 15.00, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
 
     insert = (name, container, location, calibration)
     save_data("custom_workspace", insert)
 
-    name = "B1"
-    container = "48-well-plate"
+    name = "B1" # Container Name
+    container = "48-well-plate" # Container Type 
     location = "B1" # Location Position on workspace
     calibration = "(10.08, 18.16, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
 
@@ -318,7 +319,7 @@ def test_save_data():
     
     
     name = "Step 2" 
-    shortcuts = "Simple_Transfer"
+    shortcuts = "One_to_Many"
     sel_pipette = "pipette_a"
     volume = 30
     value1 = "C1_24-well-plate"
@@ -326,7 +327,7 @@ def test_save_data():
     value3 = "C2_24-well-plate"
     value4 = "D2"
     option = True
-    option2 = None
+    option2 = 'rows'
     notes = "test notes"
 
     #Insert To Database Function

@@ -85,7 +85,7 @@ Workspace Reference:
 
 # How to Calibrate Pipette and Container
 
-1.  Run `python3 main.py`
+1.  Run `python3 main.py` in root directory of Simpletron via a terminal window (Perform `cd simpletrons` for standard install)
 2.  Select “File - Connections Options”
 3.  Select Connect and Home \[Note: You should see the robot home it axis to top right back corner, if not please try manual connection method\] If you still have issues please follow FAQ section regarding USB connectivity.
 

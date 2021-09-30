@@ -1624,6 +1624,7 @@ label.grid(column = 1, row = 5)
 #Scale Bar
 scale_a = Scale(tab3, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_a)
 scale_a.grid(column = 1, row = 6)
+scale_a.set(2)
 #Sync Entry Box
 text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
@@ -1714,7 +1715,7 @@ var_max_volume = IntVar()
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
-scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
+scale_2 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_max_volume)
@@ -1730,7 +1731,7 @@ var_min_volume = IntVar()
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
-scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
+scale_3 = Scale(tab1, from_=100, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_min_volume)
@@ -1746,7 +1747,7 @@ var_aspirate_speed = IntVar()
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
-scale_4 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
@@ -1766,7 +1767,7 @@ var_dispense_speed = IntVar()
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
 #Scale Bar
-scale_5 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_dispense_speed)
@@ -1889,6 +1890,7 @@ label.grid(column = 1, row = 5)
 #Scale Bar
 scale_b = Scale(tab2, from_=0.1, to=10, resolution = 0.1, orient="horizontal", variable = head_speed_p)
 scale_b.grid(column = 1, row = 6)
+scale_b.set(1)
 #Sync Entry Box
 text = Entry(tab2, width=4, textvariable=head_speed_p)
 text.grid(column = 0, row = 6, padx=5)
