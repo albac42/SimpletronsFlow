@@ -195,7 +195,7 @@ def moveDefaultLocation_C(pipette, container, container_type):
             pipette_b.move_to(location)
         if container == 'B2':
             B2 = containers.load(container_type, 'B2', 'B2')
-            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B2)
             location = (B2, pos)
             pipette_b.move_to(location)
         if container == 'B3':
@@ -395,19 +395,23 @@ def saveCalibration(pipette, container, container_type):
     if pipette == "pipette_b":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
+        
+        x= position[0]
+        y= position[1]
+        z= position[2]
 
-        calibration = position
-
-        insert = (container, container_type, container, calibration)
+        insert = (container, container_type, container, x, y, z)
         save_data("custom_workspace", insert)
 
     if pipette == "pipette_a":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
 
-        calibration = position
+        x= position[0]
+        y= position[1]
+        z= position[2]
 
-        insert = (container, container_type, container, calibration)
+        insert = (container, container_type, container, x, y, z)
         save_data("custom_workspace", insert)
     
     if pipette == "pipette_b":
@@ -433,7 +437,7 @@ def saveCalibration(pipette, container, container_type):
             pipette_b.calibrate_position((B1, pos))
         if container == 'B2':
             B2 = containers.load(container_type, 'B2', 'B2')
-            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B1)
+            pos = B2[0].from_center(x=0, y=0, z=-1, reference=B2)
             location = (B2, pos)
             pipette_b.calibrate_position((B2, pos))
         if container == 'B3':

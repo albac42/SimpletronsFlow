@@ -148,13 +148,13 @@ def start_protocol():
                 print(plateAName)
                 #print(planteAType)
 
-                plateA = containers.load(planteAType, plateAName)
+                plateA = containers.load(planteAType, plateAName, 'plateA')
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
                 #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[0],y=calibarate_data[1],z=60)
-                robot.move_head(z=calibarate_data[2])
+                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+                robot.move_head(z=calibarate_data[6], strategy='direct')
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
@@ -166,9 +166,18 @@ def start_protocol():
                 #print(plateBName)
                 #print(planteBType)
 
-                plateB = containers.load(planteBType, plateBName)
+                plateB = containers.load(planteBType, plateBName, 'plateB')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #pipette_b.move_to(calibarate_data)
+                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+                robot.move_head(z=calibarate_data[6], strategy='direct')
 
-                print(option)
+                pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
+                pipette_b.calibrate_position((plateB, pos))
+
+                #print(option)
                 # Check Tip Check Condition
                 if option == '1':
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
@@ -185,14 +194,32 @@ def start_protocol():
                 #print(plateAName)
                 #print(planteAType)
 
-                plateA = containers.load(planteAType, plateAName)
+                plateA = containers.load(planteAType, plateAName, 'plateA')
+
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #pipette_b.move_to(calibarate_data)
+                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
+                robot.move_head(z=calibarate_data[9], strategy='direct')
+
+                pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
+                pipette_a.calibrate_position((plateA, pos))
 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
                 #print(plateBName)
                 #print(planteBType)
 
-                plateB = containers.load(planteBType, plateBName)
+                plateB = containers.load(planteBType, plateBName, 'plateB')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #pipette_b.move_to(calibarate_data)
+                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
+                robot.move_head(z=calibarate_data[9], strategy='direct')
+
+                pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
+                pipette_a.calibrate_position((plateB, pos))
 
                 if option == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
@@ -289,17 +316,21 @@ def test_save_data():
     name = "A1" # Container Name
     container = "24-well-plate" # Container Type 
     location = "A1" # Location Position on workspace
-    calibration = "(13.67, 15.00, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    x = "44.068" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = "14.4053"
+    z = "-65.9"
 
-    insert = (name, container, location, calibration)
+    insert = (name, container, location, x, y, z)
     save_data("custom_workspace", insert)
 
     name = "B1" # Container Name
     container = "48-well-plate" # Container Type 
     location = "B1" # Location Position on workspace
-    calibration = "(10.08, 18.16, 0.00)" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    x = "131.0789" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = "15.46"
+    z = "-67.8"
 
-    insert = (name, container, location, calibration)
+    insert = (name, container, location, x, y, z)
     save_data("custom_workspace", insert)
 
     #3 Step Demo
@@ -338,8 +369,8 @@ def test_save_data():
     notes = "test notes"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)    
+    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    #save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]

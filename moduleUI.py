@@ -426,12 +426,12 @@ def load_pre_workspace(): #For Testing
         #save_data("custom_workspace", insert)
 
 
-        update_containers_list('A3_trash-box')
+        update_containers_list('C1_trash-box')
         update_containers_list('A2_tiprack-1000ul')
         update_containers_list('B2_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
-        update_containers_list('A3_point')
+        update_containers_list('B2_point')
 
 
         temp = robot.containers()
@@ -447,11 +447,11 @@ def load_pre_pip(): #For Testing
 
     if count_preload_p == 0:
         #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
-        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'A3_point')
+        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'B2_point')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_a', 1)
         #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
-        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'A3_point')
+        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_point')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)

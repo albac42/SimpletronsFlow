@@ -270,8 +270,8 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, calibration)
-            VALUES(?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z)
+            VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_protocol":
         sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
@@ -305,8 +305,6 @@ def find_data(table, name):
 
     c.execute(sqlite_select_query)        
     for row in c:
-        print(row)
-        row = row[4]
         print(row)
         
     return(row)
@@ -380,7 +378,9 @@ def setup_table(variable):
                                             name text NOT NULL,
                                             container text,
                                             location text,
-                                            calibration text
+                                            x REAL,
+                                            y REAL,
+                                            z REAL
                                         ); """
 
     #Custom protocol Database Creation - Temp
