@@ -1549,6 +1549,31 @@ save_w.grid(column = 4, row = 3)
 varpip = StringVar(root, value='')
 head_speed_a = DoubleVar()
 
+
+def callback_con(eventObject):
+    global vpc1
+
+    global background_cal
+    global background_image_cc
+
+    container_lookup = eventObject.widget.get()
+
+
+    if re.search('tiprack', container_lookup):
+        background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_tip.png')
+        vpc1.set("Tip Rack: pressed down just a tiny bit")
+
+    if re.search('well', container_lookup):
+        background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_con.png')
+        vpc1.set("Well Plate: Ensure a Tip is installed and location is touching the base ")
+
+    background_image_cc = ttk.Label(tab3, image = background_cal)
+    background_image_cc.grid(column = 6, row = 2, rowspan = 7)
+
+    label = ttk.Label(tab3, textvariable=vpc1)
+    label.grid(column = 6, row = 1)
+
+
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
@@ -1563,6 +1588,7 @@ label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
 dropdown_varcon_c = ttk.Combobox(tab3,  state="readonly", textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
+dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
 
 #Section 2 - Pipette Movement 
 
