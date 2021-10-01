@@ -813,13 +813,13 @@ def action_save_pip():
 
 
     temp = s_tip_rack.get()
-    temp = temp[0:2]
+    #temp = temp[0:2]
 
     tiprack = temp
     print(temp)
 
     temp = s_trash.get()
-    temp = temp[0:2]
+    #temp = temp[0:2]
 
     trash = temp
     print(temp)

@@ -676,7 +676,7 @@ def saveCalibrationPip(pipette, plungerPos):
         trashType = rawTrash[3:]
 
         tiprack = containers.load(trashType, tipName)
-        trash =containers.load(tipType, trashName)
+        trash = containers.load(tipType, trashName)
 
         axis_s = row[1]
 
@@ -822,7 +822,7 @@ def pip_action_home(pipette):
         trashType = rawTrash[3:]
 
         tiprack = containers.load(trashType, tipName)
-        trash =containers.load(tipType, trashName)
+        trash = containers.load(tipType, trashName)
 
         axis_s = row[1]
 

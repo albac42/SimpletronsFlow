@@ -397,9 +397,9 @@ def test_save_data():
     name = "A2" # Container Name
     container = "A2_tiprack-1000ul" # Container Type 
     location = "A2" # Location Position on workspace
-    x = "" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
-    y = ""
-    z = ""
+    x = "0" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = "0"
+    z = "0"
 
     insert = (name, container, location, x, y, z)
     save_data("custom_workspace", insert)
@@ -421,8 +421,8 @@ def test_save_data():
     notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)
+    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    #save_data("custom_protocol", insert)
     
     
     #5 Step Demo (one to many)
@@ -433,15 +433,15 @@ def test_save_data():
     value1 = "A1_24-well-plate"
     value2 = "A2"
     value3 = "B1_48-well-plate"
-    value4 = "2"
+    value4 = "1"
     option = True
     option2 = 'rows' # For one to Many you can set to transfer to whole rows or cols by changing this. 
                     # DO not value need to just a number (rows) or a letter (cols)
     notes = "test notes"
 
     #Insert To Database Function
-    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    #save_data("custom_protocol", insert)    
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
