@@ -401,18 +401,18 @@ def saveCalibration(pipette, container, container_type):
         z= position[2]
 
         insert = (container, container_type, container, x, y, z)
-        save_data("custom_workspace", insert)
+        save_data("custom_workspace_b", insert)
 
     if pipette == "pipette_a":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
 
-        x= position[0]
-        y= position[1]
-        z= position[2]
+        xx= position[0]
+        yy= position[1]
+        zz= position[2]
 
         insert = (container, container_type, container, x, y, z)
-        save_data("custom_workspace", insert)
+        save_data("custom_workspace_a", insert)
     
     if pipette == "pipette_b":
         if container == 'A1':

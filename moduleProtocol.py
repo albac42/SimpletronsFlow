@@ -370,18 +370,24 @@ def test_save_data():
     x = "44.068" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
     y = "14.4053"
     z = "-65.9"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
 
     name = "B1" # Container Name
     container = "48-well-plate" # Container Type 
     location = "B1" # Location Position on workspace
     x = "131.0789" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
-    y = "15.46"
+    y = "15.46" # Pipette B
     z = "-67.8"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
     
     name = "B2" # Container Name
@@ -390,8 +396,11 @@ def test_save_data():
     x = "159.0074" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
     y = "190.4798"
     z = "-46.0"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
     
     name = "A2" # Container Name
@@ -400,8 +409,11 @@ def test_save_data():
     x = "0" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
     y = "0"
     z = "0"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
 
     #3 Step Demo
@@ -411,7 +423,7 @@ def test_save_data():
     name = "Step 1" # Step Name 
     shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
     sel_pipette = "pipette_b" # Pipette Name (pipette_b or pipette_a)
-    volume = 30 # Volume (Double Variable)
+    volume = 100 # Volume (Double Variable)
     value1 = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
     value2 = "B1" #Well Cell for first plate
     value3 = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
@@ -429,7 +441,7 @@ def test_save_data():
     name = "Step 2" 
     shortcuts = "One_to_Many"
     sel_pipette = "pipette_b"
-    volume = 30
+    volume = 200
     value1 = "A1_24-well-plate"
     value2 = "A2"
     value3 = "B1_48-well-plate"

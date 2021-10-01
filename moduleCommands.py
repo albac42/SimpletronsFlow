@@ -270,8 +270,17 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z, xx, yy, zz)
+            VALUES(?,?,?,?,?,?,?,?,?) '''
+
+    if table == "custom_workspace_a":
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, xx, yy, zz)
+            VALUES(?,?,?,?,?,?) '''
+
+    if table == "custom_workspace_b":
         sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z)
             VALUES(?,?,?,?,?,?) '''
+
 
     if table == "custom_protocol":
         sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
@@ -378,9 +387,12 @@ def setup_table(variable):
                                             name text NOT NULL,
                                             container text,
                                             location text,
-                                            x REAL,
+                                            x REAL, 
                                             y REAL,
-                                            z REAL
+                                            z REAL,
+                                            xx REAL, 
+                                            yy REAL,
+                                            zz REAL
                                         ); """
 
     #Custom protocol Database Creation - Temp
