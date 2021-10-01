@@ -25,7 +25,7 @@ from opentrons import robot
 #from modulePipetting import *
 #from moduleCalibrate import *
 ######################################################################
-
+db_file = 'database/data.db' 
 
 def find_robot(serial_number):
     """ # Self Find Serial Port # """
@@ -178,7 +178,7 @@ def reset_all():
 # Database
 ##################################################################
 # Test Connection
-db_file = 'database/data.db'
+
 
 def create_connection():
     """create a test database connection to a SQLite database"""
@@ -270,12 +270,12 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
-        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location)
-            VALUES(?,?,?) '''        
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z)
+            VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, notes)
-            VALUES(?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -285,7 +285,29 @@ def save_data(table, insert):
 
 
 
-# Row Count
+# Find Data
+def find_data(table, name):
+    if table == "custom_workspace":
+        if name == "A1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A1%'"""
+        if name == "A2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A2%'"""        
+        if name == "A3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%A3%'"""
+        if name == "B1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B1%'"""
+        if name == "B2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B2%'"""        
+        if name == "B3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""    
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()           
+
+    c.execute(sqlite_select_query)        
+    for row in c:
+        print(row)
+        
+    return(row)
 
 # #Read Data
 def read_row(table):
@@ -355,7 +377,10 @@ def setup_table(variable):
                                             id integer PRIMARY KEY,
                                             name text NOT NULL,
                                             container text,
-                                            location text
+                                            location text,
+                                            x REAL,
+                                            y REAL,
+                                            z REAL
                                         ); """
 
     #Custom protocol Database Creation - Temp
@@ -371,6 +396,7 @@ def setup_table(variable):
                                             value3 text,
                                             value4 text,
                                             option text,
+                                            option2 text,
                                             notes text
                                         ); """
 
@@ -386,7 +412,8 @@ def setup_table(variable):
                                             value2 text,
                                             value3 text,
                                             value4 text,
-                                            option text,
+                                            option boolean,
+                                            option2 text,
                                             notes text
                                         ); """
 

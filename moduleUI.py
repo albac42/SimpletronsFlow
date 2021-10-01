@@ -25,11 +25,12 @@ from modulePipetting import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
-# Note: Functions cannot be moved
+# Note: This Is Only UI Section (If you want to expand or start from scratch use other python script such as
+# moduleProtocol, moduleCommands, moduleCalibrate)
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 0.1 Dev'
+version = 'Version: Private Alpha 1 Dev'
 
 ###########################################################################################################
 #
@@ -46,11 +47,11 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
-root.geometry("740x400")
-root.pack_propagate(0)
+#root.geometry("740x400")
+#root.pack_propagate(0)
 
-
-windowWidth = root.winfo_reqwidth()
+#Setup Windows Location (Center Top Left Corner)
+windowWidth = root.winfo_reqwidth() 
 windowHeight = root.winfo_reqheight()
 positionRight = int(root.winfo_screenwidth()/4 - windowWidth/4)
 positionDown = int(root.winfo_screenheight()/4 - windowHeight/4)
@@ -60,13 +61,16 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 
 ###########################################################################################################
 #
-# Global Variable
+# Global Variable 
 #
 ##########################################################################################################
-#
+# Remember to verify the custom container exist before adding into this container list to reduce errors
+
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
 container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
-                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate', ]
+                    '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
+                   'custom'
+                   ]
 loaded_pipette_list = ['','']
 loaded_container_type = []
 loaded_containers = []
@@ -80,12 +84,14 @@ count_C = 0
 
 ###########################################################################################################
 #
-# Popup Window
+# Popup Window [If You need create popup windows use below template]
 #
 ###########################################################################################################
 
 def confirmation_box(variable):
-
+    """
+    Pop Up Windows Creation
+    """
     global version
     global root
 
@@ -105,6 +111,12 @@ def confirmation_box(variable):
     def close_popup():
         newWindow.destroy()
         newWindow.update()
+
+    def close_popup_protocol_1():
+        """Delete Row"""
+        count = read_row(custom_protocol)
+        deleteRecord(custom_protocol, count)
+
 
     if variable == 1:
         newWindow.geometry("200x60")
@@ -161,9 +173,41 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
 
+    elif variable == 7:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Protocol', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup_protocol_1)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 8:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Pipette \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 9:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Workspace \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 10:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Loaded Custom Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
     else:
         newWindow.geometry("180x60")
-        label = Label(newWindow, text='Error: Please Check Terminal Windows', font = ('Arial', 9))
+        label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
@@ -178,17 +222,9 @@ def confirmation_box(variable):
 #
 ###########################################################################################################
 
-def connect_robot():
-    connect()
-    pass
-
-def reset_robot():
-    reset_all()
-    pass
-
-
 def connecton_graphical():
     """ Connection UI"""
+    """ """
     conroot = Toplevel(root)
 
     conroot.title("Simpletrons - OT: Protocol - Connection")
@@ -212,10 +248,10 @@ def connecton_graphical():
     label = ttk.Label(conroot, text = 'Robot Connection Options:')
     label.grid(column = 0, row = 1)
 
-    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect_robot)
+    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect)
     save_step.grid(column = 0, row = 2)
 
-    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_robot)
+    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_all)
     save_step.grid(column = 0, row = 3)
 
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
@@ -365,21 +401,37 @@ def load_pre_workspace(): #For Testing
     global count_preload_c
 
     if count_preload_c == 0:
-        load_container('A1', 'A1', 'trash-box')
-        load_container('B1', 'B1', 'tiprack-1000ul')
-        load_container('B2', 'B2', 'tiprack-1000ul')
-        load_container('C1', 'C1', '24-well-plate')
-        load_container('C2', 'C2', '24-well-plate')
-        load_container('B3', 'B3', 'point')
-        load_container('A3', 'A3', 'point')
+        #load_container('A3', 'A3', 'trash-box')
+        insert = ('A3', 'trash-box', 'A3')
+        #save_data("custom_workspace", insert)
 
-        update_containers_list('A1_trash-box')
-        update_containers_list('B1_tiprack-1000ul')
-        update_containers_list('B2_tiprack-1000ul')
-        update_containers_list('C1_24-well-plate')
-        update_containers_list('C2_24-well-plate')
-        update_containers_list('B3_point')
-        update_containers_list('A3_point')
+        #load_container('A2', 'A2', 'tiprack-1000ul')
+        insert = ('A3', 'tiprack-1000ul', 'A3')
+        #save_data("custom_workspace", insert)
+
+        #load_container('B2', 'B2', 'tiprack-100ul')
+        insert = ('B2', 'tiprack-1000ul', 'B2')
+        #save_data("custom_workspace", insert)
+
+        #load_container('A1', 'A1', '24-well-plate')
+        insert = ('A1', '24-well-plate', 'A1')
+        #save_data("custom_workspace", insert)
+
+        #load_container('B1', 'B1', '48-well-plate')
+        insert = ('B1', '48-well-plate', 'B1')
+        #save_data("custom_workspace", insert)
+
+        #load_container('A3', 'A3', 'point')
+        insert = ('A3', 'point', 'A3')
+        #save_data("custom_workspace", insert)
+
+
+        update_containers_list('C1_trash-box')
+        update_containers_list('A2_tiprack-1000ul')
+        update_containers_list('A3_tiprack-1000ul')
+        update_containers_list('A1_24-well-plate')
+        update_containers_list('B1_48-well-plate')
+        update_containers_list('B2_point')
 
 
         temp = robot.containers()
@@ -394,9 +446,13 @@ def load_pre_pip(): #For Testing
     global count_preload_p
 
     if count_preload_p == 0:
-        loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
+        #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
+        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'B2_point')
+        save_data("custom_pipette", insert) 
         update_pipette('pipette_a', 1)
-        loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
+        #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
+        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_point')
+        save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)
         count_preload_p = count_preload_p + 1
@@ -517,14 +573,18 @@ def move_z_pos():
 def home_axis():
     calibrationControlHome()
 
-#Save Container Calibration
 def save_containers_calibration():
+    """
+    Save Container Calibration
+    """
     pip = varpip.get()
     con = c_varcon.get()
-
+    
+    contype = con[3:]
     con = con[0:2]
+    
 
-    saveCalibration(con, pip)
+    saveCalibration(pip, con, contype)
 
     confirmation_box(5)
 
@@ -542,11 +602,9 @@ def load_axis():
     moveDefaultLocation_C(pip, con, contype)
 
 
-
-
 # Setup Workspace
 def setup_workspace():
-    """ Setup Workspace"""
+    """ Setup Workspace Function Link"""
 
     #Reset Counter
     global count_C
@@ -566,8 +624,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A1', 'A1', BB)
-        insert = ('A1', BB, 'A1')
-        save_data("custom_workspace", insert)
+        #insert = ('A1', BB, 'A1')
+        #save_data("custom_workspace", insert)
 
     if A2_W.get() != '':
         print('Entry Found in A2')
@@ -577,8 +635,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A2', 'A2', BB)
-        insert = ('A2', BB, 'A2')
-        save_data("custom_workspace", insert)
+        #insert = ('A2', BB, 'A2')
+        #save_data("custom_workspace", insert)
 
     if A3_W.get() != '':
         print('Entry Found in A3')
@@ -588,8 +646,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('A3', 'A3', BB)
-        insert = ('A3', BB, 'A3')
-        save_data("custom_workspace", insert)
+        #insert = ('A3', BB, 'A3')
+        #save_data("custom_workspace", insert)
 
     if B1_W.get() != '':
         print('Entry Found in B1')
@@ -599,8 +657,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('B1', 'B1', BB)
-        insert = ('B1', BB, 'B1')
-        save_data("custom_workspace", insert)
+        #insert = ('B1', BB, 'B1')
+        #save_data("custom_workspace", insert)
 
     if B2_W.get() != '':
         print('Entry Found in B2')
@@ -610,8 +668,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('B2', 'B2', BB)
-        insert = ('B2', BB, 'B2')
-        save_data("custom_workspace", insert)
+        #insert = ('B2', BB, 'B2')
+        #save_data("custom_workspace", insert)
 
     if B3_W.get() != '':
         print('Entry Found in B3')
@@ -619,10 +677,10 @@ def setup_workspace():
         BB = B3_W.get()
         #print(AA)
 
-        update_containers_list(AA)
+        update_containecontypers_list(AA)
         load_container('B3', 'B3', BB)
-        insert = ('B3', BB, 'B3')
-        save_data("custom_workspace", insert)
+        #insert = ('B3', BB, 'B3')
+        #save_data("custom_workspace", insert)
 
     if C1_W.get() != '':
         print('Entry Found in C1')
@@ -632,8 +690,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C1', 'C1', BB)
-        insert = ('C1', BB, 'C1')
-        save_data("custom_workspace", insert)
+        #insert = ('C1', BB, 'C1')
+        #save_data("custom_workspace", insert)
 
     if C2_W.get() != '':
         print('Entry Found in C2')
@@ -643,8 +701,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C2', 'C2', BB)
-        insert = ('C2', BB, 'C2')
-        save_data("custom_workspace", insert)
+        #insert = ('C2', BB, 'C2')
+        #save_data("custom_workspace", insert)
 
     if C3_W.get() != '':
         print('Entry Found in C3')
@@ -654,8 +712,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('C3', 'C3', BB)
-        insert = ('C3', BB, 'C3')
-        save_data("custom_workspace", insert)
+        #insert = ('C3', BB, 'C3')
+        #save_data("custom_workspace", insert)
 
     if D1_W.get() != '':
         print('Entry Found in D1')
@@ -665,8 +723,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D1', 'D1', BB)
-        insert = ('D1', BB, 'D1')
-        save_data("custom_workspace", insert)
+        #insert = ('D1', BB, 'D1')
+        #save_data("custom_workspace", insert)
 
     if D2_W.get() != '':
         print('Entry Found in D2')
@@ -676,8 +734,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D2', 'D2', BB)
-        insert = ('D2', BB, 'D2')
-        save_data("custom_workspace", insert)
+        #insert = ('D2', BB, 'D2')
+        #save_data("custom_workspace", insert)
 
     if D3_W.get() != '':
         print('Entry Found in D3')
@@ -687,8 +745,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('D3', 'D3', BB)
-        insert = ('D3', BB, 'D3')
-        save_data("custom_workspace", insert)
+        #insert = ('D3', BB, 'D3')
+        #save_data("custom_workspace", insert)
 
     if E1_W.get() != '':
         print('Entry Found in E1')
@@ -698,8 +756,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E1', 'E1', BB)
-        insert = ('E1', BB, 'E1')
-        save_data("custom_workspace", insert)
+        #insert = ('E1', BB, 'E1')
+        #save_data("custom_workspace", insert)
 
     if E2_W.get() != '':
         print('Entry Found in E2')
@@ -709,8 +767,8 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E2', 'E2', BB)
-        insert = ('E2', BB, 'E2')
-        save_data("custom_workspace", insert)
+        #insert = ('E2', BB, 'E2')
+        #save_data("custom_workspace", insert)
 
     if E3_W.get() != '':
         print('Entry Found in E3')
@@ -720,21 +778,25 @@ def setup_workspace():
 
         update_containers_list(AA)
         load_container('E3', 'E3', BB)
-        insert = ('E3', BB, 'E3')
-        save_data("custom_workspace", insert)
+        #insert = ('E3', BB, 'E3')
+        #save_data("custom_workspace", insert)
 
     #Update Loaded in Workspace Container List
-    update_containers_list_type()
-    print(loaded_containers)
-    temp = robot.containers()
-    print("Robot Loaded Container List:", temp)
+    try:
+        update_containers_list_type()
+        print(loaded_containers)
+        temp = robot.containers()
+        print("Robot Loaded Container List:", temp)
 
-    confirmation_box(2)
+        confirmation_box(2)
+    except:
+        confirmation_box(9)
 
-#
-#Save Custom Pipette
-#
 def action_save_pip():
+    """
+    Save Custom Pipette
+    Note: The Load Pipette Function is placeholder, it just error checking argument is acceptable
+    """
     if var_p_a.get() == 0:
         axis = 'b'
         print(axis)
@@ -751,13 +813,13 @@ def action_save_pip():
 
 
     temp = s_tip_rack.get()
-    temp = temp[0:2]
+    #temp = temp[0:2]
 
     tiprack = temp
     print(temp)
 
     temp = s_trash.get()
-    temp = temp[0:2]
+    #temp = temp[0:2]
 
     trash = temp
     print(temp)
@@ -771,10 +833,16 @@ def action_save_pip():
     # print(trash)
 
     #Send Command to module load pipette [loadpipette] and save to database [save_data]
-    loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
-    insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
-    save_data("custom_pipette", insert) 
-    print(loaded_pipette_list)
+    try:
+        loadpipette(axis, max_vol, min_vol, asp_speed, dis_speed, tiprack, trash)
+        insert = (axis, max_vol, min_vol, '1', asp_speed, dis_speed, tiprack, trash)
+        save_data("custom_pipette", insert) 
+        print(loaded_pipette_list)
+
+        confirmation_box(10)
+    except:
+        confirmation_box(8)
+
 ###########################################################################################################
 
 
@@ -785,6 +853,11 @@ def action_save_pip():
 #
 ###########################################################################################################
 def opencontainer(location):
+    """
+    Start Protocol from pre-configured/save protocol from database
+    [ WORKING IN PROGRESS ]
+    """
+
     pass
 
 
@@ -796,17 +869,23 @@ def opencontainer(location):
 #
 ###########################################################################################################
 def containersCreationUi():
-    rootCustom = Tk()
-    rootCustom.title('Simpletrons - OT - Container Creation')
+    """ 
+    Graphical UI for Custom Container Creation 
+    [ WORKING IN PROGRESS ]
+
+    """
+
+    rootCustomContainer = Tk()
+    rootCustomContainer.title('Simpletrons - OT - Container Creation')
 
 
     #Create Containers
     var_container_name = StringVar()
 
-    label = ttk.Label(rootCustom, text='Set a Name:', font = ('Arial', 12))
+    label = ttk.Label(rootCustomContainer, text='Set a Name:', font = ('Arial', 12))
     label.grid(column = 0, row = 1) 
     
-    e_container_name = Entry(rootCustom, bd =5, justify = CENTER, textvariable = var_container_name)
+    e_container_name = Entry(rootCustomContainer, bd =5, justify = CENTER, textvariable = var_container_name)
     e_container_name.grid(column = 0, row = 2)  
 
 
@@ -823,16 +902,25 @@ dropdown_ppip = StringVar()
 
 #Update Protocol Dropdown
 def update_dropdown_source_pip():
+    """
+    Update source pipette Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_pipette_list
     dropdown_ppip['values'] = list
     print('Updating Dropdown List: Pipette Protocol')
 
 def update_aspirate_source_rack():
+    """
+    Update Aspirate Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_containers
     dropdown_aspirate_c['values'] = list
     print('Updating Dropdown List: Containers Protocol')
 
 def update_dispense_source_rack():
+    """
+    Update Dispense Source Rack Dropdown List for Protocol UI
+    """
     list = loaded_containers
     dropdown_dispense_c['values'] = list
     print('Updating Dropdown List: Containers Protocol')
@@ -845,6 +933,10 @@ v4 = StringVar()
 step = 1
 
 def graphicalUIprotocol():
+    """ 
+    Code for Graphical Protocol Creation 
+    Note: Remember to include global variable for any PhotoImage
+    """ 
 
     global v1
     global v2
@@ -888,12 +980,12 @@ def graphicalUIprotocol():
     # Start Pre Configured Software 
     ##########################################################################################################
     #Start Protocol
-    def start_protocol():
+    def start_protocol_ui():
 
         pass
 
     ###########################################################################################################
-    # Draw Graphics
+    # Draw Graphics (Containers)
     ########################################################################################################### 
 
     def callback_a(eventObject):
@@ -1034,11 +1126,6 @@ def graphicalUIprotocol():
         background3 = ttk.Label(proroot, image = background_image3)
         background3.grid(column = 0, row = 12, columnspan = 5)
 
-    def run_step():
-        ''' Run Current Step'''
-
-        pass
-
     ###########################################################################################################
     # Save Steps to Database
     ###########################################################################################################
@@ -1046,16 +1133,15 @@ def graphicalUIprotocol():
         """ Save Step to Database """
         global step
         notes = 'null'
+        step_count = False
         # Reference
         # shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
         print(shortcuts.get())
         if shortcuts.get() == "Simple_Transfer":
-            ''' '''
-
+            ''' Simple Transfer '''
             #Check if Friendly Name is available if not set a default based of step
             if len(f_name.get()) == 0:
                 name = "step" + str(step)
-
             else:
                 name = f_name.get()
 
@@ -1070,6 +1156,8 @@ def graphicalUIprotocol():
             value1 = aspirate_con.get()
             #Value 2 (First Container Syntax)
             container_lookup = aspirate_con.get()
+
+            #Check if Point Container (Single Well Items)
             if re.search('point', container_lookup):
                 value2 = "A1"
             else:
@@ -1078,37 +1166,94 @@ def graphicalUIprotocol():
             value3 = dispense_con.get()
             #Value 4 (Second Container Syntax)
             container_lookup = dispense_con.get()
+
             if re.search('point', container_lookup):
                 value4 = "A1"
             else:
-                value4 = value_b.get()
+                value4 = value_c.get()
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
             else:
                 notes = f_note.get()
 
-            # print(name)
-            # print(notes)
-            # print(sel_pipette)
-            # print(volume)
-            # print(value1)
-            # print(value2)
-            # print(value3)
-            # print(value4)
 
-        if shortcuts.get() == "Multiple_Wells_Transfer":
-            pass
+            if tipchange == True:
+                option = True
+            else:
+                option = False
 
         if shortcuts.get() == "One_to_Many":
-            pass
+            #Check if Friendly Name is available if not set a default based of step
+            if len(f_name.get()) == 0:
+                name = "step" + str(step)
+            else:
+                name = f_name.get()
+            #Shortcut
+            shortcuts_v = shortcuts.get()
 
-        if shortcuts.get() == "Few_to_Many":
-            pass
+            #Volume
+            volume = volume_well.get()
+            #Value 1 (Pipette)
+            sel_pipette = p_varpip.get()
+            #Value 2 (First Container)
+            value1 = aspirate_con.get()
+            #Value 2 (First Container Syntax)
+            container_lookup = aspirate_con.get()
 
-        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, notes)
+            #Check if Point Container (Single Well Items)
+            if re.search('point', container_lookup):
+                value2 = "A1"
+            else:
+                step_count = True
+                confirmation_box(7)
+
+            value3 = dispense_con.get()
+
+            # Code To Find if row or column ()
+            # If you need higher rows count adjust pattern2
+            pattern1 = re.compile("[A-Za-z]+")
+            pattern2 = re.compile("[0-12]+")
+            container_lookup = value_c.get()
+
+            if pattern1.fullmatch(container_lookup) is not None:
+                value4 = value_c.get()
+                option2 = "cols"
+
+            if pattern2.fullmatch(container_lookup) is not None:
+                value4 = value_c.get()
+                option2 = "rows"
+            else:
+                step_count = True
+                confirmation_box(7)
+
+            if len(f_note.get()) == 0:
+                notes = "NULL"
+            else:
+                notes = f_note.get()
+
+            if tipchange == True:
+                option = True
+            else:
+                option = False
+
+        # if shortcuts.get() == "Multiple_Wells_Transfer":
+        #     pass
+            
+
+        # if shortcuts.get() == "Few_to_Many":
+        #     pass
+
+        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
         save_data("custom_protocol", insert)
+
         step = step + 1
+
+        #Reset Count if error occurs in step creation 
+        if step_count == True:
+            step = step - 1
+            step_count = False
+
 
     ###########################################################################################################
 
@@ -1117,12 +1262,14 @@ def graphicalUIprotocol():
     ###########################################################################################################
 
     ###
-    s_menu = Menu(root)
+    s_menu = Menu(proroot)
     proroot.config(menu = s_menu)
 
     #Title
     file_menu = Menu(s_menu)
+    start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
+    file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
 
@@ -1149,6 +1296,15 @@ def graphicalUIprotocol():
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
 
+    tipchange = None
+
+    #Change Tip Tick Box
+    label = ttk.Label(proroot, text="Change Tip?")
+    label.grid(column = 2, row = 3)
+    textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
+    textboxI.grid(column = 2, row = 4)    
+    textboxI.select()
+
     # Friendly Name Input
     label = ttk.Label(proroot, text="Friendly Name:")
     label.grid(column = 1, row = 1)
@@ -1167,7 +1323,7 @@ def graphicalUIprotocol():
     textboxA = Entry(proroot, width=12, textvariable=volume_well)
     textboxA.grid(column = 1, row = 4)
 
-    #Frist Container
+    #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
     label.grid(column = 0, row = 5)
     dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
@@ -1373,7 +1529,7 @@ save_w.grid(column = 2, row = 3)
 label = ttk.Label(tab1b, text='Load Workspace:', font = ('Arial', 12))
 label.grid(column = 3, row = 3)
 
-pree_home_image = PhotoImage(file="graphic/content-save-settings.png")
+pree_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
 save_w.grid(column = 4, row = 3)
 
@@ -1393,6 +1549,31 @@ save_w.grid(column = 4, row = 3)
 varpip = StringVar(root, value='')
 head_speed_a = DoubleVar()
 
+
+def callback_con(eventObject):
+    global vpc1
+
+    global background_cal
+    global background_image_cc
+
+    container_lookup = eventObject.widget.get()
+
+
+    if re.search('tiprack', container_lookup):
+        background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_tip.png')
+        vpc1.set("Tip Rack: pressed down just a tiny bit")
+
+    if re.search('well', container_lookup):
+        background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_con.png')
+        vpc1.set("Well Plate: Ensure a Tip is installed and location is touching the base ")
+
+    background_image_cc = ttk.Label(tab3, image = background_cal)
+    background_image_cc.grid(column = 6, row = 2, rowspan = 7)
+
+    label = ttk.Label(tab3, textvariable=vpc1)
+    label.grid(column = 6, row = 1)
+
+
 #Selection 1 - Pipette
 label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
@@ -1407,6 +1588,7 @@ label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
 label.grid(column = 1, row = 3, padx = 1)
 dropdown_varcon_c = ttk.Combobox(tab3,  state="readonly", textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
+dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
 
 #Section 2 - Pipette Movement 
 
@@ -1425,7 +1607,7 @@ right_b.grid(column = 5, row = 2)
 
 #Movement Pad - Y Axis
 #Set Image to variable
-yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Postive ]
+yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Positive ]
 down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_pos)
 down_b.grid(column = 4, row = 1)
 
@@ -1452,7 +1634,7 @@ home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
 home_b.grid(column = 4, row = 4)
 
 #Move to preconfigured 
-pre_home_image = PhotoImage(file="graphic/content-save-settings.png")
+pre_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
 pre_home_b.grid(column = 5, row = 4)
 
@@ -1468,6 +1650,7 @@ label.grid(column = 1, row = 5)
 #Scale Bar
 scale_a = Scale(tab3, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_a)
 scale_a.grid(column = 1, row = 6)
+scale_a.set(2)
 #Sync Entry Box
 text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
@@ -1558,7 +1741,7 @@ var_max_volume = IntVar()
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
-scale_2 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_max_volume)
+scale_2 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_max_volume)
@@ -1574,7 +1757,7 @@ var_min_volume = IntVar()
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
-scale_3 = Scale(tab1, from_=0, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
+scale_3 = Scale(tab1, from_=100, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_min_volume)
@@ -1590,7 +1773,7 @@ var_aspirate_speed = IntVar()
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
-scale_4 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
@@ -1610,7 +1793,7 @@ var_dispense_speed = IntVar()
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
 #Scale Bar
-scale_5 = Scale(tab1, from_=100, to=600, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_dispense_speed)
@@ -1733,6 +1916,7 @@ label.grid(column = 1, row = 5)
 #Scale Bar
 scale_b = Scale(tab2, from_=0.1, to=10, resolution = 0.1, orient="horizontal", variable = head_speed_p)
 scale_b.grid(column = 1, row = 6)
+scale_b.set(1)
 #Sync Entry Box
 text = Entry(tab2, width=4, textvariable=head_speed_p)
 text.grid(column = 0, row = 6, padx=5)
