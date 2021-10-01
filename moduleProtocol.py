@@ -158,6 +158,7 @@ def start_protocol():
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
+                robot.move_head(z=60, strategy='direct')
 
 
                 #Second Plate Initialisation 
@@ -204,6 +205,7 @@ def start_protocol():
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_a.calibrate_position((plateA, pos))
+                robot.move_head(z=60, strategy='direct')
 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
@@ -217,6 +219,7 @@ def start_protocol():
                 #pipette_b.move_to(calibarate_data)
                 robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
                 robot.move_head(z=calibarate_data[9], strategy='direct')
+                
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_a.calibrate_position((plateB, pos))
@@ -236,19 +239,41 @@ def start_protocol():
             '''
             if pipette == "pipette_b":
 
+                #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
-                #print(plateAName)
+                print(plateAName)
                 #print(planteAType)
 
-                plateA = containers.load(planteAType, plateAName)
+                plateA = containers.load(planteAType, plateAName, 'plateA')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateAName)
+                #pipette_b.move_to(calibarate_data)
+                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+                robot.move_head(z=calibarate_data[6], strategy='direct')
 
+                pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
+                pipette_b.calibrate_position((plateA, pos))
+                robot.move_head(z=60, strategy='direct')
+
+
+                #Second Plate Initialisation 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
                 #print(plateBName)
                 #print(planteBType)
 
-                plateB = containers.load(planteBType, plateBName)
+                plateB = containers.load(planteBType, plateBName, 'plateB')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #pipette_b.move_to(calibarate_data)
+                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+                robot.move_head(z=calibarate_data[6], strategy='direct')
+
+                pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
+                pipette_b.calibrate_position((plateB, pos))
 
 
                 if option2 == "rows":
@@ -350,14 +375,14 @@ def test_save_data():
     notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)
+    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    #save_data("custom_protocol", insert)
     
     
     #5 Step Demo (one to many)
     name = "Step 2" 
     shortcuts = "One_to_Many"
-    sel_pipette = "pipette_a"
+    sel_pipette = "pipette_b"
     volume = 30
     value1 = "A1_24-well-plate"
     value2 = "A2"
@@ -369,8 +394,8 @@ def test_save_data():
     notes = "test notes"
 
     #Insert To Database Function
-    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    #save_data("custom_protocol", insert)    
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
