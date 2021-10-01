@@ -428,7 +428,7 @@ def load_pre_workspace(): #For Testing
 
         update_containers_list('C1_trash-box')
         update_containers_list('A2_tiprack-1000ul')
-        update_containers_list('B2_tiprack-1000ul')
+        update_containers_list('A3_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
         update_containers_list('B2_point')

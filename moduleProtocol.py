@@ -68,8 +68,8 @@ def start_protocol():
         trashName = rawTrash[0:2]
         trashType = rawTrash[3:]
 
-        tiprack = containers.load(trashType, tipName)
-        trash =containers.load(tipType, trashName)
+        tiprack = containers.load(trashType, tipName, 'tiprack')
+        trash = containers.load(tipType, trashName, 'trash')
 
         axis_s = row[1]
 
@@ -86,6 +86,25 @@ def start_protocol():
             trash_container=trash
             )
             print ("Loaded B Axis Pipette")
+            # Calibrate Tip Track and Bin
+            #Load Calibration Data
+            calibarate_data = find_data("custom_workspace", trashName)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+            robot.move_head(z=calibarate_data[6], strategy='direct')
+
+            pos = trash[0].from_center(x=0, y=0, z=-1, reference=trash)
+            pipette_b.calibrate_position((trash, pos))
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware
+            
+            
+            calibarate_data = find_data("custom_workspace", tipName)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+            robot.move_head(z=calibarate_data[6], strategy='direct')
+
+            pos = tiprack[0].from_center(x=0, y=0, z=-1, reference=tiprack)
+            pipette_b.calibrate_position((tiprack, pos))
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware            
+            
 
         if axis_s == 'a':
             pipette_a = instruments.Pipette(
@@ -103,7 +122,7 @@ def start_protocol():
 
 
 
-
+    
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
@@ -142,6 +161,7 @@ def start_protocol():
             ''' [ Simple Transfer ] '''
             if pipette == "pipette_b":
 
+                
                 #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
@@ -177,7 +197,11 @@ def start_protocol():
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))
-
+    
+        
+                #Pick Up Tip
+                
+                pipette_b.pick_up_tip()
                 #print(option)
                 # Check Tip Check Condition
                 if option == '1':
@@ -187,6 +211,8 @@ def start_protocol():
                 else:
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                     print("Complete: Step", id_count, ": Option: Always")
+                    
+                pipette_b.drop_tip()
 
             if pipette == "pipette_a":
 
@@ -334,7 +360,7 @@ def test_save_data():
 
     #1 Setup Pipette Default
     # Axis , max volume , min volume, channel (1 or 8), aspirate speed, dispense speed, tip rack, bin
-    insert = ('b', '1000', '100', '1', 800, 1200, 'A1_tiprack-1000ul', 'A2_point')
+    insert = ('b', '1000', '100', '1', 800, 1200, 'A2_tiprack-1000ul', 'B2_point')
     save_data("custom_pipette", insert) 
 
     #2 Setup Bare Minimal Workspace
@@ -357,6 +383,26 @@ def test_save_data():
 
     insert = (name, container, location, x, y, z)
     save_data("custom_workspace", insert)
+    
+    name = "B2" # Container Name
+    container = "B2_point" # Container Type 
+    location = "B2" # Location Position on workspace
+    x = "159.0074" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = "190.4798"
+    z = "-46.0"
+
+    insert = (name, container, location, x, y, z)
+    save_data("custom_workspace", insert)
+    
+    name = "A2" # Container Name
+    container = "A2_tiprack-1000ul" # Container Type 
+    location = "A2" # Location Position on workspace
+    x = "" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = ""
+    z = ""
+
+    insert = (name, container, location, x, y, z)
+    save_data("custom_workspace", insert)
 
     #3 Step Demo
 
@@ -375,8 +421,8 @@ def test_save_data():
     notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
-    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    #save_data("custom_protocol", insert)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    save_data("custom_protocol", insert)
     
     
     #5 Step Demo (one to many)
@@ -394,8 +440,8 @@ def test_save_data():
     notes = "test notes"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)    
+    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    #save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
