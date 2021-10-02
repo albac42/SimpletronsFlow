@@ -189,7 +189,7 @@ def create_connection():
         print('Datbase Found')
     except Error as e:
         print(e)
-        print('[#A7] Error Loading Database')
+        print('[#A8] Error Loading Database')
 
 
 def create_table(conn, create_table_sql):
