@@ -411,7 +411,7 @@ def saveCalibration(pipette, container, container_type):
         yy= position[1]
         zz= position[2]
 
-        insert = (container, container_type, container, 0  0, 0, xx, yy, zz)
+        insert = (container, container_type, container, 0,  0, 0, xx, yy, zz)
         save_data("custom_workspace_a", insert)
     
     if pipette == "pipette_b":

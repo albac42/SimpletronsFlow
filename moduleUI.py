@@ -1561,7 +1561,7 @@ def callback_con(eventObject):
 
     if re.search('tiprack', container_lookup):
         background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_tip.png')
-        vpc1.set("Tip Rack: pressed down just a tiny bit")
+        vpc1.set("Tip Rack: pressed down just a in small intervals")
 
     if re.search('well', container_lookup):
         background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_con.png')
