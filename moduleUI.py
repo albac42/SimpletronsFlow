@@ -1407,10 +1407,12 @@ root.config(menu = s_menu)
 file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
-file_menu.add_command(label = "Connections Options", command = connecton_graphical)
 file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
 
+file2_menu = Menu(s_menu)
+s_menu.add_cascade(label = "Robot", menu = file2_menu)
+file2_menu.add_command(label = "Connections Options", command = connecton_graphical)
 
 #Start Up UI
 #connecton_graphical()
