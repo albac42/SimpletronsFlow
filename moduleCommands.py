@@ -308,7 +308,26 @@ def find_data(table, name):
         if name == "B2":
             sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B2%'"""        
         if name == "B3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""    
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""
+        if name == "C1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C1%'"""
+        if name == "C2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C2%'"""        
+        if name == "C3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C3%'"""
+        if name == "D1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D1%'"""
+        if name == "D2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D2%'"""        
+        if name == "D3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D3%'"""
+        if name == "E1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E1%'"""
+        if name == "E2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E2%'"""        
+        if name == "E3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E3%'"""
+
     conn = sqlite3.connect(db_file)
     c = conn.cursor()           
 
