@@ -179,12 +179,12 @@ def moveDefaultLocation_C(pipette, container, container_type):
             location = (A1, pos)
             pipette_b.move_to(location)
         if container == 'A2':
-            A2 = containers.load(container_type, 'A2', 'B2')
+            A2 = containers.load(container_type, 'A2', 'A2')
             pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
             location = (A2, pos)
             pipette_b.move_to(location)
         if container == 'A3':
-            A3 = containers.load(container_type, 'A3', 'B3')
+            A3 = containers.load(container_type, 'A3', 'A3')
             pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
             location = (A3, pos)
             pipette_b.move_to(location)
