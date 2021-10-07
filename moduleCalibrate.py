@@ -587,6 +587,10 @@ def moveDefaultLocation_p(pipette, plungerTarget):
 
     """
     """ Tested Working """
+
+    global pipette_a
+    global pipette_b
+    global plungerPos
     #print(pipette)
     #print(plungerTarget)
 
@@ -784,11 +788,11 @@ def ControlPlugger(pipette, key, speed):
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
-        print("Calcuate Pos:", plungerPos)
+        print("Calculate Pos:", plungerPos)
 
     if ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
-        print("Calcuate Pos:", plungerPos)
+        print("Calculate Pos:", plungerPos)
 
     if ((pipette == "pipette_b") and (set_calibration_mode == 1)):
         pipette_b.motor.move(plungerPos)
