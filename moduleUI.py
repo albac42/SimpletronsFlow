@@ -16,6 +16,9 @@ import opentrons
 #Import RE
 import re
 
+#Import threading
+import threading
+
 #Custom module Imports
 from moduleContainers import *
 from moduleCommands import *
@@ -257,7 +260,7 @@ def connecton_graphical():
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
     save_step.grid(column = 0, row = 4)
 
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_robot)
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = threading.Thread(target=home_robot).start())
     save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
@@ -402,11 +405,11 @@ def load_pre_workspace(): #For Testing
 
     if count_preload_c == 0:
         #load_container('A3', 'A3', 'trash-box')
-        insert = ('A3', 'trash-box', 'A3')
+        #insert = ('A3', 'trash-box', 'A3')
         #save_data("custom_workspace", insert)
 
         #load_container('A2', 'A2', 'tiprack-1000ul')
-        insert = ('A3', 'tiprack-1000ul', 'A3')
+        #insert = ('A3', 'tiprack-1000ul', 'A3')
         #save_data("custom_workspace", insert)
 
         #load_container('B2', 'B2', 'tiprack-100ul')
@@ -422,16 +425,16 @@ def load_pre_workspace(): #For Testing
         #save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
-        insert = ('A3', 'point', 'A3')
+        insert = ('B2', 'trash-box', 'B2')
         #save_data("custom_workspace", insert)
 
 
-        update_containers_list('C1_trash-box')
+        #update_containers_list('C1_trash-box')
         update_containers_list('A2_tiprack-1000ul')
-        update_containers_list('A3_tiprack-1000ul')
+        #update_containers_list('A3_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
-        update_containers_list('B2_point')
+        update_containers_list('B2_trash-box')
 
 
         temp = robot.containers()
@@ -447,11 +450,11 @@ def load_pre_pip(): #For Testing
 
     if count_preload_p == 0:
         #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
-        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'B2_point')
-        save_data("custom_pipette", insert) 
-        update_pipette('pipette_a', 1)
+        #insert = ('a', '1000', '100', '1', 600, 800, 'A3_tiprack-1000ul', 'B2_point')
+        #save_data("custom_pipette", insert) 
+        #update_pipette('pipette_a', 1)
         #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
-        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_point')
+        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_trash-box')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)

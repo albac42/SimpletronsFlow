@@ -24,6 +24,8 @@ from opentrons import robot
 #from moduleTransportation import getTransportposition
 #from modulePipetting import *
 #from moduleCalibrate import *
+
+from multiprocessing import Process
 ######################################################################
 db_file = 'database/data.db' 
 
@@ -165,7 +167,7 @@ def reset_all():
             print('[#H2] Unable to Home Robot2')
             pass
     except:
-        print('[#A5] Note: Running Debugging Mode')
+        print('[#A5] Note: Only Opentrons Is connected')
         print('[#H2] Unable to Home Robot2')
         pass
     
