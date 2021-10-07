@@ -24,7 +24,7 @@ from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
-#from moduleProtocol import *
+from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
@@ -984,8 +984,41 @@ def graphicalUIprotocol():
     ##########################################################################################################
     #Start Protocol
     def start_protocol_ui():
+        con_pro_ui_root = Toplevel(root)
 
-        pass
+        con_pro_ui_root.title("Simpletrons - OT: Start Protocol")
+
+        con_pro_ui_root.lift()
+        con_pro_ui_root. attributes("-topmost", True)
+
+        def close_popup():
+            con_pro_ui_root.destroy()
+            con_pro_ui_root.update()
+        ###
+        s_menu = Menu(root)
+        con_pro_ui_root.config(menu = s_menu)
+
+        #Title
+        file_menu = Menu(s_menu)
+        s_menu.add_cascade(label = "File", menu = file_menu)
+        file_menu.add_command(label = "Exit", command = close_popup )
+
+
+        label = ttk.Label(con_pro_ui_root, text = 'Start Protocol:')
+        label.grid(column = 0, row = 1)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = threading.Thread(target=start_protocol).start())
+        save_step.grid(column = 0, row = 2)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = threading.Thread(target=pause_robot).start())
+        save_step.grid(column = 0, row = 3)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = threading.Thread(target=resume_robot).start())
+        save_step.grid(column = 0, row = 4)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = threading.Thread(target=stop_robot).start())
+        save_step.grid(column = 0, row = 5)
+
 
     ###########################################################################################################
     # Draw Graphics (Containers)

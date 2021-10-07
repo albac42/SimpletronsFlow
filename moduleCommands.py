@@ -171,6 +171,21 @@ def reset_all():
         print('[#H2] Unable to Home Robot2')
         pass
     
+
+def stop_robot():
+    robot.stop()
+    print('STOPPING ROBOT / Protocol')
+
+
+def pause_robot():
+    robot.pause()
+    print('PAUSING ROBOT / Protocol')
+
+
+def resume_robot():
+    robot.resume()
+    print('RESUMING ROBOT / Protocol')
+
 # def load_calibration():
 #     """create a table from the create_table_sql statement"""
 #     print('Loaded Pre-Configured Robot Calibration')

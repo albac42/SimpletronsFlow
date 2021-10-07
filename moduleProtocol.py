@@ -503,13 +503,13 @@ def test_save_data():
 
 
 # Start 
-setup_table("custom_protocol")
-setup_table("custom_pipette")
-setup_table("custom_workspace")
+# setup_table("custom_protocol")
+# setup_table("custom_pipette")
+# setup_table("custom_workspace")
 
 
-test_save_data() #Load Test data in database
-start_protocol() #Start Protocol
+# test_save_data() #Load Test data in database
+# start_protocol() #Start Protocol
 
 """
 You would need to delete table upon exiting database 
@@ -520,9 +520,9 @@ recreate the file.
 [This is only require if the code crash during protocol]
 
 """
-deleteTable("custom_protocol") 
-deleteTable("custom_pipette")
-deleteTable("custom_workspace")
+# deleteTable("custom_protocol") 
+# deleteTable("custom_pipette")
+# deleteTable("custom_workspace")
 
 # Cross Linking Platform Code
 # If you wish to work on this section, you require custom library from original raspberry pi with
