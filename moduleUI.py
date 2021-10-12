@@ -1007,16 +1007,19 @@ def graphicalUIprotocol():
         label = ttk.Label(con_pro_ui_root, text = 'Start Protocol:')
         label.grid(column = 0, row = 1)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = threading.Thread(target=start_protocol).start())
+        def send_command_start_protocol():
+            threading.Thread(target=start_protocol()).start()
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
         save_step.grid(column = 0, row = 2)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = threading.Thread(target=pause_robot).start())
+        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = pause_robot)
         save_step.grid(column = 0, row = 3)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = threading.Thread(target=resume_robot).start())
+        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = resume_robot)
         save_step.grid(column = 0, row = 4)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = threading.Thread(target=stop_robot).start())
+        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = resume_robot)
         save_step.grid(column = 0, row = 5)
 
 
@@ -1700,16 +1703,21 @@ label.grid(column = 2, row = 6)
 # Start Command Threading [LL]
 def set_calibration_location():
     threading.Thread(target=moveDefaultLocation_p("pipette_b", "bottom")).start()
+
+def set_calibration_drop_tip():
+    threading.Thread(target=moveDefaultLocation_p("pipette_b", "drop_tip")).start()
     
 label = ttk.Button(tab3, text='Set Calibration', command = set_calibration_location)
 label.grid(column = 3, row = 5, columnspan = 3)
 
+label = ttk.Button(tab3, text='Drop Tip', command = set_calibration_drop_tip)
+label.grid(column = 3, row = 6, columnspan = 3)
 
 #Keyboard Input
-# root.bind("<Left>", move_x_neg)
-# root.bind("<Right>", move_x_pos)
-# root.bind("<Up>", move_y_neg) 
-# root.bind("<Down>", move_y_pos)
+root.bind("<Left>", move_x_neg)
+root.bind("<Right>", move_x_pos)
+root.bind("<Up>", move_y_neg) 
+root.bind("<Down>", move_y_pos)
 
 def key_press(event):
     if event.char == "R":
@@ -1964,8 +1972,8 @@ position_display_x.set("x: 0") #Set Default Label
 
 
 #Keyboard Input
-# root.bind("<Prior>", move_pip_action_up) #Page UP
-# root.bind("<Next>", move_pip_action_down) #PageDown
+root.bind("<Prior>", move_pip_action_up) #Page UP
+root.bind("<Next>", move_pip_action_down) #PageDown
 
 
 def key_press(event):

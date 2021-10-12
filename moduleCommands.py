@@ -25,7 +25,8 @@ from opentrons import robot
 #from modulePipetting import *
 #from moduleCalibrate import *
 
-from multiprocessing import Process
+#Import threading
+import threading
 ######################################################################
 db_file = 'database/data.db' 
 
@@ -174,17 +175,17 @@ def reset_all():
         pass
 
 def stop_robot():
-    robot.stop()
+    threading.Thread(target=robot.stop()).start()
     print('STOPPING ROBOT / Protocol')
 
 
 def pause_robot():
-    robot.pause()
+    threading.Thread(target=robot.pause()).start()
     print('PAUSING ROBOT / Protocol')
 
 
 def resume_robot():
-    robot.resume()
+    threading.Thread(target=robot.resume()).start()
     print('RESUMING ROBOT / Protocol')
 
 

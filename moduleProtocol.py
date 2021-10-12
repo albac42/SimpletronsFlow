@@ -390,7 +390,9 @@ def start_protocol():
 
 
 
-    pipette_b.drop_tip()                    
+    #Finally both Drop Tip 
+    pipette_b.drop_tip()
+    pipette_a.drop_tip()                 
     #Exit Database 
     conn.close() 
 
