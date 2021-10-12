@@ -1697,21 +1697,13 @@ text.bind("<Return>", lambda event: scale_a.configure(to=head_speed_a.get()))
 label = ttk.Label(tab3, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
+# Start Command Threading [LL]
+def set_calibration_location():
+    threading.Thread(target=moveDefaultLocation_p("pipette_b", "bottom")).start()
+    
+label = ttk.Button(tab3, text='Set Calibration', command = set_calibration_location)
+label.grid(column = 3, row = 5, columnspan = 3)
 
-label = ttk.Label(tab3, text='Robot Position:', font = ('Arial', 10))
-label.grid(column = 1, row = 7)
-#Display Coordinate
-label = ttk.Label(tab3, textvariable=position_display_xx)
-label.grid(column = 0, row = 8)
-position_display_xx.set("x: 0") #Set Default Label
-
-label = ttk.Label(tab3, textvariable=position_display_y)
-label.grid(column = 1, row = 8)
-position_display_y.set("y: 0") #Set Default Label
-
-label = ttk.Label(tab3, textvariable=position_display_z)
-label.grid(column = 2, row = 8)
-position_display_z.set("z: 0") #Set Default Label
 
 #Keyboard Input
 # root.bind("<Left>", move_x_neg)

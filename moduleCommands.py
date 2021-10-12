@@ -80,9 +80,14 @@ def connect():
         robot.connect('Virtual Smoothie')
         versions = robot.versions()
         print('Opentrons Robot Connected, Robot Firmware Version:', versions)
-        #robot2.connect()
-        #robot2.connect(robot2USB)
-        #print('Opentrons Robot Connected')
+
+        try:    
+            robot2.connect()
+            robot2.connect(robot2USB)
+            print('Opentrons Robot Connected')
+        except:
+            print('Opentrons Robot Not Connected')
+            print('[#A3] Running Debugging Mode')            
     except:
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
@@ -94,9 +99,6 @@ def manual_connect():
         robot.connect("/dev/ttyACM0")
         versions = robot.versions()
         print('Opentrons Robot Connected, Robot Firmware Version:', versions)
-        #robot2.connect()
-        #robot2.connect(robot2USB)
-        #print('Opentrons Robot Connected')
     except:
         print('Opentrons Robot Not Connected')
         print('[#A3] Running Debugging Mode')
@@ -161,16 +163,15 @@ def reset_all():
             #ResetRobot 2(Transport Platforms)
             print('Reseting Transport Robot')
             robot2.reset()
-            print('Successfully Rested Opentrons Robot')
+            print('Successfully Rested Robot2')
         except:
             print('[#A5] Note: Running Debugging Mode')
-            print('[#H2] Unable to Home Robot2')
+            print('[#H2] Unable to Reset Robot2')
             pass
     except:
         print('[#A5] Note: Only Opentrons Is connected')
-        print('[#H2] Unable to Home Robot2')
+        print('[#H2] Unable to Reset Robot2')
         pass
-    
 
 def stop_robot():
     robot.stop()
@@ -185,10 +186,6 @@ def pause_robot():
 def resume_robot():
     robot.resume()
     print('RESUMING ROBOT / Protocol')
-
-# def load_calibration():
-#     """create a table from the create_table_sql statement"""
-#     print('Loaded Pre-Configured Robot Calibration')
 
 
 ##################################################################
