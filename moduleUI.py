@@ -16,12 +16,15 @@ import opentrons
 #Import RE
 import re
 
+#Import threading
+import threading
+
 #Custom module Imports
 from moduleContainers import *
 from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
-#from moduleProtocol import *
+from moduleProtocol import *
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
@@ -257,7 +260,7 @@ def connecton_graphical():
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
     save_step.grid(column = 0, row = 4)
 
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_robot)
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = threading.Thread(target=home_robot).start())
     save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
@@ -402,11 +405,11 @@ def load_pre_workspace(): #For Testing
 
     if count_preload_c == 0:
         #load_container('A3', 'A3', 'trash-box')
-        insert = ('A3', 'trash-box', 'A3')
+        #insert = ('A3', 'trash-box', 'A3')
         #save_data("custom_workspace", insert)
 
         #load_container('A2', 'A2', 'tiprack-1000ul')
-        insert = ('A3', 'tiprack-1000ul', 'A3')
+        #insert = ('A3', 'tiprack-1000ul', 'A3')
         #save_data("custom_workspace", insert)
 
         #load_container('B2', 'B2', 'tiprack-100ul')
@@ -422,16 +425,16 @@ def load_pre_workspace(): #For Testing
         #save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
-        insert = ('A3', 'point', 'A3')
+        insert = ('B2', 'trash-box', 'B2')
         #save_data("custom_workspace", insert)
 
 
-        update_containers_list('C1_trash-box')
+        #update_containers_list('C1_trash-box')
         update_containers_list('A2_tiprack-1000ul')
-        update_containers_list('A3_tiprack-1000ul')
+        #update_containers_list('A3_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
-        update_containers_list('B2_point')
+        update_containers_list('B2_trash-box')
 
 
         temp = robot.containers()
@@ -447,11 +450,11 @@ def load_pre_pip(): #For Testing
 
     if count_preload_p == 0:
         #loadpipette ('a', 1000, 100, 800, 1200, 'B1', 'A2')
-        insert = ('a', '1000', '100', '1', 600, 800, 'B2_tiprack-1000ul', 'B2_point')
-        save_data("custom_pipette", insert) 
-        update_pipette('pipette_a', 1)
+        #insert = ('a', '1000', '100', '1', 600, 800, 'A3_tiprack-1000ul', 'B2_point')
+        #save_data("custom_pipette", insert) 
+        #update_pipette('pipette_a', 1)
         #loadpipette ('b', 1000, 100, 800, 1200, 'B2', 'A2')
-        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_point')
+        insert = ('b', '1000', '100', '1', 600, 800, 'A2_tiprack-1000ul', 'B2_trash-box')
         save_data("custom_pipette", insert) 
         update_pipette('pipette_b', 0)
         confirmation_box(7)
@@ -981,8 +984,41 @@ def graphicalUIprotocol():
     ##########################################################################################################
     #Start Protocol
     def start_protocol_ui():
+        con_pro_ui_root = Toplevel(root)
 
-        pass
+        con_pro_ui_root.title("Simpletrons - OT: Start Protocol")
+
+        con_pro_ui_root.lift()
+        con_pro_ui_root. attributes("-topmost", True)
+
+        def close_popup():
+            con_pro_ui_root.destroy()
+            con_pro_ui_root.update()
+        ###
+        s_menu = Menu(root)
+        con_pro_ui_root.config(menu = s_menu)
+
+        #Title
+        file_menu = Menu(s_menu)
+        s_menu.add_cascade(label = "File", menu = file_menu)
+        file_menu.add_command(label = "Exit", command = close_popup )
+
+
+        label = ttk.Label(con_pro_ui_root, text = 'Start Protocol:')
+        label.grid(column = 0, row = 1)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = threading.Thread(target=start_protocol).start())
+        save_step.grid(column = 0, row = 2)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = threading.Thread(target=pause_robot).start())
+        save_step.grid(column = 0, row = 3)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = threading.Thread(target=resume_robot).start())
+        save_step.grid(column = 0, row = 4)
+
+        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = threading.Thread(target=stop_robot).start())
+        save_step.grid(column = 0, row = 5)
+
 
     ###########################################################################################################
     # Draw Graphics (Containers)
@@ -1407,10 +1443,12 @@ root.config(menu = s_menu)
 file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
-file_menu.add_command(label = "Connections Options", command = connecton_graphical)
 file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
 
+file2_menu = Menu(s_menu)
+s_menu.add_cascade(label = "Robot", menu = file2_menu)
+file2_menu.add_command(label = "Connections Options", command = connecton_graphical)
 
 #Start Up UI
 #connecton_graphical()
@@ -1561,7 +1599,7 @@ def callback_con(eventObject):
 
     if re.search('tiprack', container_lookup):
         background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_tip.png')
-        vpc1.set("Tip Rack: pressed down just a tiny bit")
+        vpc1.set("Tip Rack: pressed down just a in small intervals")
 
     if re.search('well', container_lookup):
         background_cal=tk.PhotoImage(file='graphic/calibrate/calibrate_con.png')
@@ -1741,7 +1779,7 @@ var_max_volume = IntVar()
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
-scale_2 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_max_volume)
+scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_max_volume)
@@ -1757,7 +1795,7 @@ var_min_volume = IntVar()
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
-scale_3 = Scale(tab1, from_=100, to=500, resolution = 1, orient="horizontal", variable = var_min_volume)
+scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_min_volume)
@@ -1773,7 +1811,7 @@ var_aspirate_speed = IntVar()
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
-scale_4 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
@@ -1793,7 +1831,7 @@ var_dispense_speed = IntVar()
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
 #Scale Bar
-scale_5 = Scale(tab1, from_=100, to=800, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_dispense_speed)

@@ -24,6 +24,8 @@ from opentrons import robot
 #from moduleTransportation import getTransportposition
 #from modulePipetting import *
 #from moduleCalibrate import *
+
+from multiprocessing import Process
 ######################################################################
 db_file = 'database/data.db' 
 
@@ -165,10 +167,25 @@ def reset_all():
             print('[#H2] Unable to Home Robot2')
             pass
     except:
-        print('[#A5] Note: Running Debugging Mode')
+        print('[#A5] Note: Only Opentrons Is connected')
         print('[#H2] Unable to Home Robot2')
         pass
     
+
+def stop_robot():
+    robot.stop()
+    print('STOPPING ROBOT / Protocol')
+
+
+def pause_robot():
+    robot.pause()
+    print('PAUSING ROBOT / Protocol')
+
+
+def resume_robot():
+    robot.resume()
+    print('RESUMING ROBOT / Protocol')
+
 # def load_calibration():
 #     """create a table from the create_table_sql statement"""
 #     print('Loaded Pre-Configured Robot Calibration')
@@ -189,7 +206,7 @@ def create_connection():
         print('Datbase Found')
     except Error as e:
         print(e)
-        print('[#A7] Error Loading Database')
+        print('[#A8] Error Loading Database')
 
 
 def create_table(conn, create_table_sql):
@@ -270,8 +287,17 @@ def save_data(table, insert):
             VALUES(?,?,?,?,?,?) '''
 
     if table == "custom_workspace":
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z, xx, yy, zz)
+            VALUES(?,?,?,?,?,?,?,?,?) '''
+
+    if table == "custom_workspace_a":
+        sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, xx, yy, zz)
+            VALUES(?,?,?,?,?,?) '''
+
+    if table == "custom_workspace_b":
         sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z)
             VALUES(?,?,?,?,?,?) '''
+
 
     if table == "custom_protocol":
         sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
@@ -299,7 +325,26 @@ def find_data(table, name):
         if name == "B2":
             sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B2%'"""        
         if name == "B3":
-            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""    
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%B3%'"""
+        if name == "C1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C1%'"""
+        if name == "C2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C2%'"""        
+        if name == "C3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%C3%'"""
+        if name == "D1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D1%'"""
+        if name == "D2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D2%'"""        
+        if name == "D3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%D3%'"""
+        if name == "E1":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E1%'"""
+        if name == "E2":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E2%'"""        
+        if name == "E3":
+            sqlite_select_query = """SELECT * FROM custom_workspace where name like '%E3%'"""
+
     conn = sqlite3.connect(db_file)
     c = conn.cursor()           
 
@@ -378,9 +423,12 @@ def setup_table(variable):
                                             name text NOT NULL,
                                             container text,
                                             location text,
-                                            x REAL,
+                                            x REAL, 
                                             y REAL,
-                                            z REAL
+                                            z REAL,
+                                            xx REAL, 
+                                            yy REAL,
+                                            zz REAL
                                         ); """
 
     #Custom protocol Database Creation - Temp

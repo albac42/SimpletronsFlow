@@ -23,6 +23,14 @@ from time import sleep
  Please edit below test_save_data if you play around wish to use
  code to write your protocol. Please refer to documentation for more info 
 """
+    
+pipette_a = instruments.Pipette(
+    axis='b',
+    max_volume=200)
+pipette_b = instruments.Pipette(
+    axis='a',
+    max_volume=200)
+
 
 def start_protocol():
     """
@@ -47,12 +55,9 @@ def start_protocol():
 
     #Load Pipette
     # Load Blank Default Pipette
-    pipette_a = instruments.Pipette(
-        axis='b',
-        max_volume=200)
-    pipette_b = instruments.Pipette(
-        axis='a',
-        max_volume=200)
+    global pipette_b
+    global pipette_a
+
 
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
@@ -89,7 +94,7 @@ def start_protocol():
             # Calibrate Tip Track and Bin
             #Load Calibration Data
             calibarate_data = find_data("custom_workspace", trashName)
-            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
             robot.move_head(z=calibarate_data[6], strategy='direct')
 
             pos = trash[0].from_center(x=0, y=0, z=-1, reference=trash)
@@ -98,15 +103,18 @@ def start_protocol():
             
             
             calibarate_data = find_data("custom_workspace", tipName)
-            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
             robot.move_head(z=calibarate_data[6], strategy='direct')
 
             pos = tiprack[0].from_center(x=0, y=0, z=-1, reference=tiprack)
             pipette_b.calibrate_position((tiprack, pos))
-            robot.move_head(z=60, strategy='direct') # Move Clear Labware            
+            #robot.move_head(z=60, strategy='direct') # Move Clear Labware            
             
 
         if axis_s == 'a':
+            """ Not Complete Yet """
+
+
             pipette_a = instruments.Pipette(
             axis='a',
             name='pipette_a',
@@ -121,7 +129,10 @@ def start_protocol():
             print ("Loaded A Axis Pipette")
 
 
-
+    #Pick Up Tip [ Pick Up Tips ]
+    pipette_b.pick_up_tip(tiprack[0])
+    robot.move_head(z=60, strategy='direct')
+    #pipette_a.pick_up_tip()
     
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
@@ -155,26 +166,37 @@ def start_protocol():
         option2 = row[10]
 
         #Note: https://docs.opentrons.com/ot1/transfer.html 
-        #Use above resource for opentrons API shortcut
+        #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
         if shortcut == "Simple_Transfer":
-            ''' [ Simple Transfer ] '''
+            ''' [ Simple Transfer ] 
+            
+            Do Note: Calibration data is stored on database in separated columns for pipette A and B 
+            The Protocol won't run if calibration data is incorrect or blank. 
+
+
+            '''
             if pipette == "pipette_b":
 
                 
                 #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
-                print(plateAName)
+                #print(plateAName)
                 #print(planteAType)
 
                 plateA = containers.load(planteAType, plateAName, 'plateA')
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
-                robot.move_head(z=calibarate_data[6], strategy='direct')
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
@@ -191,19 +213,20 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
-                robot.move_head(z=calibarate_data[6], strategy='direct')
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))
     
-        
-                #Pick Up Tip
-                
-                pipette_b.pick_up_tip()
                 #print(option)
-                # Check Tip Check Condition
+                # This will send command to perform desire task  
                 if option == '1':
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")
@@ -212,10 +235,9 @@ def start_protocol():
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                     print("Complete: Step", id_count, ": Option: Always")
                     
-                pipette_b.drop_tip()
 
             if pipette == "pipette_a":
-
+                """ Not Complete Yet """
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
                 #print(plateAName)
@@ -250,6 +272,8 @@ def start_protocol():
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_a.calibrate_position((plateB, pos))
 
+                # Check Tip Check Condition
+                # This will send command to perform desire task                
                 if option == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")
@@ -257,6 +281,8 @@ def start_protocol():
                 else:
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                     print("Complete: Step", id_count, ": Option: Always")
+
+
 
         if shortcut == "One_to_Many":
             ''' One_to_Many
@@ -275,9 +301,14 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateAName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
-                robot.move_head(z=calibarate_data[6], strategy='direct')
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=calibarate_data[6], strategy='arc')
+                    #robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    break
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
@@ -294,9 +325,14 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60)
-                robot.move_head(z=calibarate_data[6], strategy='direct')
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=calibarate_data[6], strategy='arc')
+                    #robot.move_head(z=calibarate_data[6], strategy='arc')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    break
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))
@@ -318,6 +354,10 @@ def start_protocol():
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')                    
 
             if pipette == "pipette_a":
+
+                """
+                Not Completed Yet
+                """
 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
@@ -350,7 +390,7 @@ def start_protocol():
 
 
 
-
+    pipette_b.drop_tip()                    
     #Exit Database 
     conn.close() 
 
@@ -370,18 +410,24 @@ def test_save_data():
     x = "44.068" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
     y = "14.4053"
     z = "-65.9"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
 
     name = "B1" # Container Name
     container = "48-well-plate" # Container Type 
     location = "B1" # Location Position on workspace
     x = "131.0789" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
-    y = "15.46"
+    y = "15.46" # Pipette B
     z = "-67.8"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
     
     name = "B2" # Container Name
@@ -390,18 +436,24 @@ def test_save_data():
     x = "159.0074" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
     y = "190.4798"
     z = "-46.0"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
     
     name = "A2" # Container Name
     container = "A2_tiprack-1000ul" # Container Type 
     location = "A2" # Location Position on workspace
-    x = "0" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
-    y = "0"
-    z = "0"
+    x = "39.2424" #Manual Calibration Data [DO NOT EDIT If you don't know actual value]
+    y = "146.85"
+    z = "-72"
+    xx = "0"
+    yy ="0"
+    zz = "0"
 
-    insert = (name, container, location, x, y, z)
+    insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
 
     #3 Step Demo
@@ -411,7 +463,7 @@ def test_save_data():
     name = "Step 1" # Step Name 
     shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
     sel_pipette = "pipette_b" # Pipette Name (pipette_b or pipette_a)
-    volume = 30 # Volume (Double Variable)
+    volume = 100 # Volume (Double Variable)
     value1 = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
     value2 = "B1" #Well Cell for first plate
     value3 = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
@@ -421,15 +473,15 @@ def test_save_data():
     notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
-    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    #save_data("custom_protocol", insert)
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    save_data("custom_protocol", insert)
     
     
     #5 Step Demo (one to many)
     name = "Step 2" 
     shortcuts = "One_to_Many"
     sel_pipette = "pipette_b"
-    volume = 30
+    volume = 200
     value1 = "A1_24-well-plate"
     value2 = "A2"
     value3 = "B1_48-well-plate"
@@ -440,21 +492,24 @@ def test_save_data():
     notes = "test notes"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)    
+    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    #save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
 #It will load a test data
 
+
+
+
 # Start 
-setup_table("custom_protocol")
-setup_table("custom_pipette")
-setup_table("custom_workspace")
+# setup_table("custom_protocol")
+# setup_table("custom_pipette")
+# setup_table("custom_workspace")
 
 
-test_save_data() #Load Test data in database
-start_protocol() #Start Protocol
+# test_save_data() #Load Test data in database
+# start_protocol() #Start Protocol
 
 """
 You would need to delete table upon exiting database 
@@ -462,13 +517,12 @@ You would need to delete table upon exiting database
 If you getting data base lock, you need to delete database/data.db and 
 recreate the file. 
 
-You can start cleardatabase.py to reset the database to default
 [This is only require if the code crash during protocol]
 
 """
-deleteTable("custom_protocol") 
-deleteTable("custom_pipette")
-deleteTable("custom_workspace")
+# deleteTable("custom_protocol") 
+# deleteTable("custom_pipette")
+# deleteTable("custom_workspace")
 
 # Cross Linking Platform Code
 # If you wish to work on this section, you require custom library from original raspberry pi with

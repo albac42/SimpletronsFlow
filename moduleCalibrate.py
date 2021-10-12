@@ -179,12 +179,12 @@ def moveDefaultLocation_C(pipette, container, container_type):
             location = (A1, pos)
             pipette_b.move_to(location)
         if container == 'A2':
-            A2 = containers.load(container_type, 'A2', 'B2')
+            A2 = containers.load(container_type, 'A2', 'A2')
             pos = A2[0].from_center(x=0, y=0, z=-1, reference=A2)
             location = (A2, pos)
             pipette_b.move_to(location)
         if container == 'A3':
-            A3 = containers.load(container_type, 'A3', 'B3')
+            A3 = containers.load(container_type, 'A3', 'A3')
             pos = A3[0].from_center(x=0, y=0, z=-1, reference=A3)
             location = (A3, pos)
             pipette_b.move_to(location)
@@ -401,18 +401,18 @@ def saveCalibration(pipette, container, container_type):
         z= position[2]
 
         insert = (container, container_type, container, x, y, z)
-        save_data("custom_workspace", insert)
+        save_data("custom_workspace_b", insert)
 
     if pipette == "pipette_a":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
 
-        x= position[0]
-        y= position[1]
-        z= position[2]
+        xx= position[0]
+        yy= position[1]
+        zz= position[2]
 
-        insert = (container, container_type, container, x, y, z)
-        save_data("custom_workspace", insert)
+        insert = (container, container_type, container, xx, yy, zz)
+        save_data("custom_workspace_a", insert)
     
     if pipette == "pipette_b":
         if container == 'A1':
@@ -587,6 +587,10 @@ def moveDefaultLocation_p(pipette, plungerTarget):
 
     """
     """ Tested Working """
+
+    global pipette_a
+    global pipette_b
+    global plungerPos
     #print(pipette)
     #print(plungerTarget)
 
@@ -784,11 +788,11 @@ def ControlPlugger(pipette, key, speed):
     
     if ((key == "z_up") and (set_calibration_mode == 1)):
         plungerPos=plungerPos-movementAmount
-        print("Calcuate Pos:", plungerPos)
+        print("Calculate Pos:", plungerPos)
 
     if ((key == "z_down") and (set_calibration_mode == 1)):
         plungerPos=plungerPos+movementAmount
-        print("Calcuate Pos:", plungerPos)
+        print("Calculate Pos:", plungerPos)
 
     if ((pipette == "pipette_b") and (set_calibration_mode == 1)):
         pipette_b.motor.move(plungerPos)
