@@ -259,8 +259,12 @@ def connecton_graphical():
 
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
     save_step.grid(column = 0, row = 4)
+    
+    def home_treading():
+        print("Starting Threading: Home")
+        threading.Thread(target=home_robot).start()
 
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = threading.Thread(target=home_robot).start())
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_treading)
     save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
