@@ -978,6 +978,12 @@ def graphicalUIprotocol():
 
     proroot.title("Simpletrons - OT: Protocol Designer")
     #newWindow.geometry("200x60")
+    
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    proroot.geometry("+{}+{}".format(positionRight, positionDown))
 
     def close_popup():
         proroot.destroy()
@@ -1013,9 +1019,12 @@ def graphicalUIprotocol():
 
         def send_command_start_protocol():
             threading.Thread(target=start_protocol()).start()
-
+        
         save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
         save_step.grid(column = 0, row = 2)
+            
+
+        
 
         save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = pause_robot)
         save_step.grid(column = 0, row = 3)
@@ -1713,7 +1722,7 @@ def set_calibration_location():
 def set_calibration_drop_tip():
     threading.Thread(target=moveDefaultLocation_p("pipette_b", "drop_tip")).start()
     
-label = ttk.Button(tab3, text='Set Calibration', command = set_calibration_location)
+label = ttk.Button(tab3, text='Pickup Tip', command = set_calibration_location)
 label.grid(column = 3, row = 5, columnspan = 3)
 
 label = ttk.Button(tab3, text='Drop Tip', command = set_calibration_drop_tip)
