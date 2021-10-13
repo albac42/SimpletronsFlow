@@ -429,7 +429,7 @@ def load_pre_workspace(): #For Testing
         #save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
-        insert = ('B2', 'trash-box', 'B2')
+        insert = ('B2', 'point', 'B2')
         #save_data("custom_workspace", insert)
 
 
@@ -438,7 +438,7 @@ def load_pre_workspace(): #For Testing
         #update_containers_list('A3_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
-        update_containers_list('B2_trash-box')
+        update_containers_list('B2_point')
 
 
         temp = robot.containers()
@@ -1225,6 +1225,8 @@ def graphicalUIprotocol():
                 option = True
             else:
                 option = False
+                
+            option2 = "None"
 
         if shortcuts.get() == "One_to_Many":
             #Check if Friendly Name is available if not set a default based of step

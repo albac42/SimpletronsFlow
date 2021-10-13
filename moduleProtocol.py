@@ -6,7 +6,7 @@ from moduleContainers import *
 from modulePipetting import *
 from time import sleep
 
-
+import threading
 # For Jupiter Environment  
 # from opentrons.util import environment
 # environment.refresh()
@@ -31,8 +31,10 @@ pipette_b = instruments.Pipette(
     axis='a',
     max_volume=200)
 
-
 def start_protocol():
+    threading.Thread(target=start_protocol_temp()).start()
+
+def start_protocol_temp():
     """
     Start Protocol based on information in database
     Any database shortcut please refer to moduleCommands
@@ -41,9 +43,9 @@ def start_protocol():
     This API will grab all steps and send command to OT-1
     """
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
-    manual_connect()    
+    #manual_connect()    
+    #threading.Thread(target=home_robot()).start()
     home_robot()
-
 
     step_count = read_row('custom_protocol')
     print(step_count)
