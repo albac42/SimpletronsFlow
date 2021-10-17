@@ -7,6 +7,11 @@ from modulePipetting import *
 from time import sleep
 
 import threading
+
+#START UP GUI
+from tkinter.ttk import Combobox
+import tkinter as tk    
+from tkinter import ttk
 # For Jupiter Environment  
 # from opentrons.util import environment
 # environment.refresh()
@@ -34,6 +39,29 @@ pipette_b = instruments.Pipette(
 def start_protocol():
     threading.Thread(target=start_protocol_temp()).start()
 
+
+
+def New_UI():
+    root = Tk()
+    root.title('Simpletrons - OT')
+
+    root.lift()
+    root. attributes("-topmost", True)
+
+    def close_popup():
+        root.destroy()
+        root.update()
+    
+    ###
+    s_menu = Menu(root)
+    root.config(menu = s_menu)
+
+    #Title
+    file_menu = Menu(s_menu)
+    s_menu.add_cascade(label = "File", menu = file_menu)
+    file_menu.add_command(label = "Exit", command = close_popup )
+
+
 def start_protocol_temp():
     """
     Start Protocol based on information in database
@@ -60,6 +88,8 @@ def start_protocol_temp():
     global pipette_b
     global pipette_a
 
+
+    threading.Thread(target=New_UI()).start()
 
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
