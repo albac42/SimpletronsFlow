@@ -1228,6 +1228,11 @@ def graphicalUIprotocol():
             print("Load Container Image:", container_lookup)
             temp = 1
 
+        if re.search('48-well-plate', container_lookup):
+            background_image2=tk.PhotoImage(file='graphic/labware/48-well-plate.png')
+            print("Load Container Image:", container_lookup)
+            temp = 1
+
         if re.search('point', container_lookup):
             background_image2=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
@@ -1297,6 +1302,12 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
             print("Load Container Image:", container_lookup)
             temp = 1
+
+        if re.search('48-well-plate', container_lookup):
+            background_image3=tk.PhotoImage(file='graphic/labware/48-well-plate.png')
+            print("Load Container Image:", container_lookup)
+            temp = 1
+            
         if re.search('point', container_lookup):
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
@@ -1718,15 +1729,17 @@ save_button_image = PhotoImage(file="graphic/content-save-outline.png")
 save_w = ttk.Button(tab1b, image = save_button_image, width = 5, command = setup_workspace)
 save_w.grid(column = 2, row = 3)
 
-Tooltip(save_w, text='Test', wraplength=wraplength)
+Tooltip(save_w, text='Load Current Workspace', wraplength=wraplength)
 
 #Save Button - Load Pre-Configured Workspace
 label = ttk.Label(tab1b, text='Load Workspace:', font = ('Arial', 12))
 label.grid(column = 3, row = 3)
 
 pree_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
-save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
-save_w.grid(column = 4, row = 3)
+save_ww = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
+save_ww.grid(column = 4, row = 3)
+
+Tooltip(save_ww, text='Load Pre Configured Workspace', wraplength=wraplength)
 
 #Button
 
@@ -1770,20 +1783,27 @@ def callback_con(eventObject):
 
 
 #Selection 1 - Pipette
-label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
-label.grid(column = 1, row = 1, padx = 1)
+label_select_pipette_c = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
+label_select_pipette_c.grid(column = 1, row = 1, padx = 1)
 dropdown_varpip_c = ttk.Combobox(tab3,  state="readonly" , textvariable = varpip, postcommand = update_dropdown_pip_c)
 dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
+Tooltip(label_select_pipette_c, text='Select Pipette that will be used for following container', wraplength=wraplength)
+Tooltip(dropdown_varpip_c, text='Select Pipette that will be used for following container', wraplength=wraplength)
+
 
 #Drop Down Default Selection
 c_varcon = StringVar(root, value='')
 
 #Selection 1 - Containers
-label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
-label.grid(column = 1, row = 3, padx = 1)
+label_select_container_c = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
+label_select_container_c.grid(column = 1, row = 3, padx = 1)
 dropdown_varcon_c = ttk.Combobox(tab3,  state="readonly", textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
 dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
+Tooltip(label_select_container_c, text='Please calibrate all container and Press Save even if calibration point is correct', wraplength=wraplength)
+Tooltip(dropdown_varcon_c, text='Please calibrate all container and Press Save even if calibration point is correct', wraplength=wraplength)
+
+
 
 #Section 2 - Pipette Movement 
 
@@ -1793,59 +1813,77 @@ dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
 xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ X Axis Negative ]
 left_b = ttk.Button(tab3, image = xn_button_image, width = 5, command = move_x_neg)
 left_b.grid(column = 3, row = 2)
+Tooltip(left_b, text='Move Robot X Axis - [Left]', wraplength=wraplength)
+
 
 #Movement Pad - X Axis
 #Set Image to variable 
 xp_button_image = PhotoImage(file="graphic/arrow-right-bold-circle.png") # [ X Axis Positive ]
 right_b = ttk.Button(tab3, image = xp_button_image, width = 5, command = move_x_pos)
 right_b.grid(column = 5, row = 2)
+Tooltip(right_b, text='Move Robot X Axis - [Right]', wraplength=wraplength)
+
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Positive ]
 down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_pos)
 down_b.grid(column = 4, row = 1)
+Tooltip(down_b, text='Move Robot Y Axis - [Down]', wraplength=wraplength)
+
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Negative ]
 up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_neg)
 up_b.grid(column = 4, row = 3)
-
+Tooltip(up_b, text='Move Robot Y Axis - [Up]', wraplength=wraplength)
 
 #Movement Pad - Z Axis [Pipette Movement] Down
 zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png")  # [ Z Axis Negative ]
 z_up_b = ttk.Button(tab3, image = zd_button_image, width = 5, command = move_z_neg)
 z_up_b.grid(column = 3, row = 3)
+Tooltip(z_up_b, text='Move Robot Pipette Arm - [Up]', wraplength=wraplength)
 
 #Movement Pad - Z Axis [Pipette Movement] UP
 zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") # [ z Axis Positive ]
 z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5, command = move_z_pos)
 z_down_b.grid(column = 3, row = 1)
+Tooltip(z_up_b, text='Move Robot Pipette Arm - [Down]', wraplength=wraplength)
+
 
 #Home
 home_image = PhotoImage(file="graphic/home.png") 
 home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
 home_b.grid(column = 4, row = 4)
+Tooltip(home_b, text='Home all axis on robot (OT-1)', wraplength=wraplength)
+
 
 #Move to preconfigured 
 pre_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
 pre_home_b.grid(column = 5, row = 4)
+Tooltip(pre_home_b, text='Go To Selected Container Calibration Point', wraplength=wraplength)
+
 
 #Save Button - Calibration 
 #save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 save_c = ttk.Button(tab3, image = save_button_image, width = 5, command = save_containers_calibration)
 save_c.grid(column = 3, row = 4)
+Tooltip(save_c, text='Save Calibration', wraplength=wraplength)
 
 
 #Change Movement Speed
-label = ttk.Label(tab3, text='Set Movement Speed:', font = ('Arial', 10))
-label.grid(column = 1, row = 5)
+label_movenment_speed = ttk.Label(tab3, text='Set Movement Speed:', font = ('Arial', 10))
+label_movenment_speed.grid(column = 1, row = 5)
+Tooltip(label_movenment_speed, text='Set Movement Speed of Robot', wraplength=wraplength)
+
 #Scale Bar
 scale_a = Scale(tab3, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_a)
 scale_a.grid(column = 1, row = 6)
 scale_a.set(2)
+Tooltip(scale_a, text='Set Movement Speed of Robot', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
@@ -1861,11 +1899,15 @@ def set_calibration_location():
 def set_calibration_drop_tip():
     threading.Thread(target=moveDefaultLocation_p("pipette_b", "drop_tip")).start()
     
-label = ttk.Button(tab3, text='Pickup Tip', command = set_calibration_location)
-label.grid(column = 3, row = 5, columnspan = 3)
+label_set_calibration = ttk.Button(tab3, text='Pickup Tip', command = set_calibration_location)
+label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+Tooltip(label_set_calibration, text='Set Calibration Point for Tip Calibration', wraplength=wraplength)
 
-label = ttk.Button(tab3, text='Drop Tip', command = set_calibration_drop_tip)
-label.grid(column = 3, row = 6, columnspan = 3)
+
+label_drop_tip_c = ttk.Button(tab3, text='Drop Tip', command = set_calibration_drop_tip)
+label_drop_tip_c.grid(column = 3, row = 6, columnspan = 3)
+Tooltip(label_drop_tip_c, text='Drop Pipette Tip', wraplength=wraplength)
+
 
 #Keyboard Input
 root.bind("<Left>", move_x_neg)
@@ -1996,14 +2038,14 @@ label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
 
 #Selection 5 - Select a Tip Rack
-label = ttk.Label(tab1, text='Select a Tip Rack:', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Tip Rack:*', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
 
 #Selection 6 - Select a Bin
-label = ttk.Label(tab1, text='Select a Bin:', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
@@ -2014,6 +2056,7 @@ label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
 label.grid(column = 6, row = 4)
 save_pip = ttk.Button(tab1, image = save_button_image, width = 5, command = action_save_pip)
 save_pip.grid(column = 6, row = 5)
+Tooltip(save_pip, text='Save and Load Current Pipette Based off your selected slider', wraplength=wraplength)
 
 # Separator object
 separator = ttk.Separator(tab1, orient='vertical')
@@ -2024,6 +2067,8 @@ label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
 label.grid(column = 6, row = 6)
 pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5, command = load_pre_pip)
 pre_select_pip.grid(column = 6, row = 7)
+Tooltip(pre_select_pip, text='Load Pre Configured Pipette [Ask Tech or Check Documentation for pipette parameters] ', wraplength=wraplength)
+
 
 
 #########################################################################################################
@@ -2070,6 +2115,7 @@ label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
 dropdown_cpip = ttk.Combobox(tab2,  state="readonly", textvariable = varpip, postcommand = update_dropdown_pip)
 dropdown_cpip.grid(column = 1, row = 2, padx = 1)
+Tooltip(dropdown_cpip, text='Select Pipette To Calibrate', wraplength=wraplength)
 
 #Drop Down Default Selection
 pippos = StringVar(root, value=' ')
@@ -2080,15 +2126,20 @@ dropdown_cpos = ttk.Combobox(tab2,  state="readonly", textvariable = pippos, pos
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
 dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
+Tooltip(dropdown_cpos, text='Select a Calibration Point', wraplength=wraplength)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
 z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5, command = move_pip_action_down)
 z_up_bp.grid(column = 3, row = 3)
+Tooltip(z_up_bp, text='Move Pipette Piston Location [Down] ', wraplength=wraplength)
+
 
 #Movement Pad - Z Axis [Pipette Movement] UP 
 z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5, command = move_pip_action_up)
 z_down_bp.grid(column = 3, row = 1)
+Tooltip(z_down_bp, text='Move Pipette Piston Location [Up] ', wraplength=wraplength)
+
 
 #Home Button
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
