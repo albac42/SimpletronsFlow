@@ -298,7 +298,7 @@ def confirmation_box(variable):
 
     elif variable == 5:
         newWindow.geometry("180x60")
-        label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
+        label = Label(newWindow, text='Successfully Save \n Calibration Container', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
@@ -2258,14 +2258,20 @@ Tooltip(z_down_bp, text='Move Pipette Piston Location [Up] ', wraplength=wraplen
 #Home Button
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
 home_b.grid(column = 4, row = 4)
+Tooltip(home_b, text='Home Selected Pipette Axis ', wraplength=wraplength)
+
 
 #Move to pre configured 
 pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5, command = move_prepip_action)
 pre_home_b.grid(column = 5, row = 4)
+Tooltip(pre_home_b, text='Move to selected calibration position', wraplength=wraplength)
+
 
 #Save Button - Calibration  
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
 save_p.grid(column = 3, row = 4)
+Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
+
 
 #Change Movement Speed
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
@@ -2282,12 +2288,12 @@ text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
 label = ttk.Label(tab2, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
-label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
-label.grid(column = 1, row = 7)
-#Display Coordinate
-label = ttk.Label(tab2, textvariable=position_display_x)
-label.grid(column = 1, row = 8)
-position_display_x.set("x: 0") #Set Default Label
+# label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
+# label.grid(column = 1, row = 7)
+# #Display Coordinate
+# label = ttk.Label(tab2, textvariable=position_display_x)
+# label.grid(column = 1, row = 8)
+# position_display_x.set("x: 0") #Set Default Label
 
 
 #Keyboard Input
