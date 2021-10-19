@@ -494,8 +494,6 @@ def dump_database(filename):
     copyfile(db_file, str(filename))
     print("Successfully Copied db to another db")
 
-dump_database('test')
-
 ###########################################################################################################
 #
 # JSON IMPORT FUNCTION

@@ -245,11 +245,15 @@ def confirmation_box(variable):
     newWindow.geometry("200x60")
 
     #Set Window Location
-    windowWidth = root.winfo_reqwidth()
-    windowHeight = root.winfo_reqheight()
-    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
-    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
-    newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+    # windowWidth = root.winfo_reqwidth()
+    # windowHeight = root.winfo_reqheight()
+    # positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    # positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    # newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+    x = root.winfo_x()
+    y = root.winfo_y()
+
+    newWindow.geometry("+%d+%d" % (x + 100, y + 200))
 
     def close_popup():
         newWindow.destroy()
@@ -374,6 +378,12 @@ def connecton_graphical():
 
     conroot.lift()
     conroot. attributes("-topmost", True)
+
+
+    x = root.winfo_x()
+    y = root.winfo_y()
+
+    conroot.geometry("+%d+%d" % (x + 100, y + 200))
 
     def close_popup():
         conroot.destroy()
@@ -1713,83 +1723,107 @@ my_canvas = ttk.Label(tab1b, image = background_image)
 my_canvas.grid(column = 0, row = 0, rowspan = 3, columnspan = 5)
 
 #Col A
-dropdown = ttk.Combobox(tab1b, textvariable = A1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 2, padx = 1)
-dropdown.lift()
+dropdown_1 = ttk.Combobox(tab1b, textvariable = A1_W, width = 19)
+dropdown_1['values'] = container_list 
+dropdown_1.grid(column = 0, row = 2, padx = 1)
+dropdown_1.lift()
+Tooltip(dropdown_1, text='Workspace A1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = A2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = A3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 0, padx = 1)
-dropdown.lift()
+dropdown_2 = ttk.Combobox(tab1b, textvariable = A2_W, width = 19)
+dropdown_2['values'] = container_list 
+dropdown_2.grid(column = 0, row = 1, padx = 1)
+dropdown_2.lift()
+Tooltip(dropdown_2, text='Workspace A2 Cell', wraplength=wraplength)
+
+
+dropdown_3 = ttk.Combobox(tab1b, textvariable = A3_W, width = 19)
+dropdown_3['values'] = container_list 
+dropdown_3.grid(column = 0, row = 0, padx = 1)
+dropdown_3.lift()
+Tooltip(dropdown_3, text='Workspace A3 Cell', wraplength=wraplength)
 
 #Col B
-dropdown = ttk.Combobox(tab1b, textvariable = B1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 2, padx = 1)
-dropdown.lift()
+dropdown_4 = ttk.Combobox(tab1b, textvariable = B1_W, width = 19)
+dropdown_4['values'] = container_list 
+dropdown_4.grid(column = 1, row = 2, padx = 1)
+dropdown_4.lift()
+Tooltip(dropdown_4, text='Workspace B1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = B2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 1, padx = 1)
-dropdown.lift()
+dropdown_5 = ttk.Combobox(tab1b, textvariable = B2_W, width = 19)
+dropdown_5['values'] = container_list 
+dropdown_5.grid(column = 1, row = 1, padx = 1)
+dropdown_5.lift()
+Tooltip(dropdown_5, text='Workspace B2 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = B3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 0, padx = 1)
-dropdown.lift()
+dropdown_6 = ttk.Combobox(tab1b, textvariable = B3_W, width = 19)
+dropdown_6['values'] = container_list 
+dropdown_6.grid(column = 1, row = 0, padx = 1)
+dropdown_6.lift()
+Tooltip(dropdown_6, text='Workspace B3 Cell', wraplength=wraplength)
+
 
 #Col C
-dropdown = ttk.Combobox(tab1b, textvariable = C1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 2, padx = 1)
-dropdown.lift()
+dropdown_7 = ttk.Combobox(tab1b, textvariable = C1_W, width = 19)
+dropdown_7['values'] = container_list 
+dropdown_7.grid(column = 2, row = 2, padx = 1)
+dropdown_7.lift()
+Tooltip(dropdown_7, text='Workspace C1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = C2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = C3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 0, padx = 1)
-dropdown.lift()
+dropdown_8 = ttk.Combobox(tab1b, textvariable = C2_W, width = 19)
+dropdown_8['values'] = container_list 
+dropdown_8.grid(column = 2, row = 1, padx = 1)
+dropdown_8.lift()
+Tooltip(dropdown_8, text='Workspace C2 Cell', wraplength=wraplength)
+
+
+dropdown_9 = ttk.Combobox(tab1b, textvariable = C3_W, width = 19)
+dropdown_9['values'] = container_list 
+dropdown_9.grid(column = 2, row = 0, padx = 1)
+dropdown_9.lift()
+Tooltip(dropdown_9, text='Workspace C3 Cell', wraplength=wraplength)
+
 
 #Col D
-dropdown = ttk.Combobox(tab1b, textvariable = D1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 2, padx = 1)
-dropdown.lift()
+dropdown_10 = ttk.Combobox(tab1b, textvariable = D1_W, width = 19)
+dropdown_10['values'] = container_list 
+dropdown_10.grid(column = 3, row = 2, padx = 1)
+dropdown_10.lift()
+Tooltip(dropdown_10, text='Workspace D1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = D2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 1, padx = 1)
-dropdown.lift()
+dropdown_11 = ttk.Combobox(tab1b, textvariable = D2_W, width = 19)
+dropdown_11['values'] = container_list 
+dropdown_11.grid(column = 3, row = 1, padx = 1)
+dropdown_11.lift()
+Tooltip(dropdown_11, text='Workspace D2 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = D3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 0, padx = 1)
-dropdown.lift()
+dropdown_12 = ttk.Combobox(tab1b, textvariable = D3_W, width = 19)
+dropdown_12['values'] = container_list 
+dropdown_12.grid(column = 3, row = 0, padx = 1)
+dropdown_12.lift()
+Tooltip(dropdown_12, text='Workspace D3 Cell', wraplength=wraplength)
 #Col E
-dropdown = ttk.Combobox(tab1b, textvariable = E1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 2, padx = 1)
-dropdown.lift()
+dropdown_13 = ttk.Combobox(tab1b, textvariable = E1_W, width = 19)
+dropdown_13['values'] = container_list 
+dropdown_13.grid(column = 4, row = 2, padx = 1)
+dropdown_13.lift()
+Tooltip(dropdown_13, text='Workspace E1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = E2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = E3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 0, padx = 1)
-dropdown.lift()
+dropdown_14 = ttk.Combobox(tab1b, textvariable = E2_W, width = 19)
+dropdown_14['values'] = container_list 
+dropdown_14.grid(column = 4, row = 1, padx = 1)
+dropdown_14.lift()
+Tooltip(dropdown_14, text='Workspace E2 Cell', wraplength=wraplength)
+
+
+dropdown_14 = ttk.Combobox(tab1b, textvariable = E3_W, width = 19)
+dropdown_14['values'] = container_list 
+dropdown_14.grid(column = 4, row = 0, padx = 1)
+dropdown_14.lift()
+Tooltip(dropdown_14, text='Workspace E3 Cell', wraplength=wraplength)
+
 
 #Save Button - Save Workspace 
 label = ttk.Label(tab1b, text='Save Workspace:', font = ('Arial', 12))
@@ -2025,11 +2059,13 @@ s_trash = StringVar(root, value='')
 
 
 #Selection 1 - Axis
-label = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
-label.grid(column = 1, row = 0)
+label_axis = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
+label_axis.grid(column = 1, row = 0)
+Tooltip(label_axis, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 #Scale Bar
 scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
 scale_1.grid(column = 1, row = 1)
+Tooltip(scale_1, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 
 left_hand_image = PhotoImage(file="graphic/hand-left.png")
 right_hand_image = PhotoImage(file="graphic/hand-right.png")
@@ -2047,6 +2083,8 @@ label.grid(column = 1, row = 2)
 #Scale Bar
 scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
+Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_max_volume)
 text.grid(column = 0, row = 3, padx=5)
@@ -2063,6 +2101,7 @@ label.grid(column = 1, row = 4)
 #Scale Bar
 scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
+Tooltip(scale_3, text='Set Pipette Min Volume', wraplength=wraplength)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_min_volume)
 text.grid(column = 0, row = 5, padx=5)
@@ -2079,6 +2118,8 @@ label.grid(column = 1, row = 6)
 #Scale Bar
 scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
+Tooltip(scale_4, text='Set Pipette aspirate speed', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
 text.grid(column = 0, row = 7, padx=5)
@@ -2099,6 +2140,7 @@ label.grid(column = 1, row = 8)
 #Scale Bar
 scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
+Tooltip(scale_5, text='Set Pipette dispense speed', wraplength=wraplength)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_dispense_speed)
 text.grid(column = 0, row = 9, padx=5)
@@ -2113,6 +2155,7 @@ label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
+Tooltip(dropdown_tip_rack, text='Set a Pipette Tip Rack', wraplength=wraplength)
 
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
@@ -2120,6 +2163,7 @@ label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_trash.grid(column = 6, row = 3)
+Tooltip(dropdown_trash, text='Set a Pipette Trash Rack', wraplength=wraplength)
 
 # Save Button
 label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
