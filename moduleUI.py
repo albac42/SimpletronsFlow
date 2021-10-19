@@ -25,6 +25,9 @@ from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
 from moduleProtocol import *
+
+## OS Path
+import os.path
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
@@ -66,7 +69,7 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 #
 # Global Variable 
 #
-##########################################################################################################
+###########################################################################################################
 # Remember to verify the custom container exist before adding into this container list to reduce errors
 
 shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
@@ -85,6 +88,143 @@ count_C = 0
 
 ###########################################################################################################
 
+###########################################################################################################
+#
+# Class Tool Tip
+#
+###########################################################################################################
+
+# Class Tool Tip
+class Tooltip:
+    '''
+    It creates a tooltip for a given widget as the mouse goes on it.
+    Source: 
+    http://www.daniweb.com/programming/software-development/
+           code/484591/a-tooltip-class-for-tkinter
+    '''
+
+    def __init__(self, widget,
+                 *,
+                 bg='#FFFFEA',
+                 pad=(5, 3, 5, 3),
+                 text='widget info',
+                 waittime=400,
+                 wraplength=250):
+
+        self.waittime = waittime  # in miliseconds, originally 500
+        self.wraplength = wraplength  # in pixels, originally 180
+        self.widget = widget
+        self.text = text
+        self.widget.bind("<Enter>", self.onEnter)
+        self.widget.bind("<Leave>", self.onLeave)
+        self.widget.bind("<ButtonPress>", self.onLeave)
+        self.bg = bg
+        self.pad = pad
+        self.id = None
+        self.tw = None
+
+    def onEnter(self, event=None):
+        self.schedule()
+
+    def onLeave(self, event=None):
+        self.unschedule()
+        self.hide()
+
+    def schedule(self):
+        self.unschedule()
+        self.id = self.widget.after(self.waittime, self.show)
+
+    def unschedule(self):
+        id_ = self.id
+        self.id = None
+        if id_:
+            self.widget.after_cancel(id_)
+
+    def show(self):
+        def tip_pos_calculator(widget, label,
+                               *,
+                               tip_delta=(10, 5), pad=(5, 3, 5, 3)):
+
+            w = widget
+
+            s_width, s_height = w.winfo_screenwidth(), w.winfo_screenheight()
+
+            width, height = (pad[0] + label.winfo_reqwidth() + pad[2],
+                             pad[1] + label.winfo_reqheight() + pad[3])
+
+            mouse_x, mouse_y = w.winfo_pointerxy()
+
+            x1, y1 = mouse_x + tip_delta[0], mouse_y + tip_delta[1]
+            x2, y2 = x1 + width, y1 + height
+
+            x_delta = x2 - s_width
+            if x_delta < 0:
+                x_delta = 0
+            y_delta = y2 - s_height
+            if y_delta < 0:
+                y_delta = 0
+
+            offscreen = (x_delta, y_delta) != (0, 0)
+
+            if offscreen:
+
+                if x_delta:
+                    x1 = mouse_x - tip_delta[0] - width
+
+                if y_delta:
+                    y1 = mouse_y - tip_delta[1] - height
+
+            offscreen_again = y1 < 0  # out on the top
+
+            if offscreen_again:
+                # No further checks will be done.
+
+                # TIP:
+                # A further mod might automagically augment the
+                # wraplength when the tooltip is too high to be
+                # kept inside the screen.
+                y1 = 0
+
+            return x1, y1
+
+        bg = self.bg
+        pad = self.pad
+        widget = self.widget
+
+        # creates a toplevel window
+        self.tw = tk.Toplevel(widget)
+
+        # Leaves only the label and removes the app window
+        self.tw.wm_overrideredirect(True)
+
+        win = tk.Frame(self.tw,
+                       background=bg,
+                       borderwidth=0)
+        label = tk.Label(win,
+                          text=self.text,
+                          justify=tk.LEFT,
+                          background=bg,
+                          relief=tk.SOLID,
+                          borderwidth=0,
+                          wraplength=self.wraplength)
+
+        label.grid(padx=(pad[0], pad[2]),
+                   pady=(pad[1], pad[3]),
+                   sticky=tk.NSEW)
+        win.grid()
+
+        x, y = tip_pos_calculator(widget, label)
+
+        self.tw.wm_geometry("+%d+%d" % (x, y))
+
+    def hide(self):
+        tw = self.tw
+        if tw:
+            tw.destroy()
+        self.tw = None
+
+
+wraplength=200
 ###########################################################################################################
 #
 # Popup Window [If You need create popup windows use below template]
@@ -259,8 +399,12 @@ def connecton_graphical():
 
     save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
     save_step.grid(column = 0, row = 4)
+    
+    def home_treading():
+        print("Starting Threading: Home")
+        threading.Thread(target=home_robot).start()
 
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = threading.Thread(target=home_robot).start())
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_treading)
     save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
@@ -425,7 +569,7 @@ def load_pre_workspace(): #For Testing
         #save_data("custom_workspace", insert)
 
         #load_container('A3', 'A3', 'point')
-        insert = ('B2', 'trash-box', 'B2')
+        insert = ('B2', 'point', 'B2')
         #save_data("custom_workspace", insert)
 
 
@@ -434,7 +578,7 @@ def load_pre_workspace(): #For Testing
         #update_containers_list('A3_tiprack-1000ul')
         update_containers_list('A1_24-well-plate')
         update_containers_list('B1_48-well-plate')
-        update_containers_list('B2_trash-box')
+        update_containers_list('B2_point')
 
 
         temp = robot.containers()
@@ -892,6 +1036,64 @@ def containersCreationUi():
     e_container_name.grid(column = 0, row = 2)  
 
 
+
+def import_protocol_ui():
+    pass
+
+###########################################################################################################
+#
+# Containers Creation UI [ WORKING IN PROGRESS ]
+#
+###########################################################################################################
+def export_protocol():
+    """
+    Export UI
+    """
+    global version
+    global root
+
+
+    ExportWindow = Toplevel(root)
+
+    ExportWindow.title("Simpletrons - OT")
+    ExportWindow.geometry("130x120")
+
+    save_name = StringVar()
+
+    #Set Window Location
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    ExportWindow.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+    def close_popup():
+
+        ExportWindow.destroy()
+        ExportWindow.update()
+
+    label = ttk.Label(ExportWindow, text="Export As ")
+    label.grid(column = 0, row = 0)
+
+    textboxA = Entry(ExportWindow, textvariable=save_name)
+    textboxA.grid(column = 0, row = 1)
+
+
+    def export_database():
+        if os.path.isfile('database/'+str(save_name.get())+'.db'):
+            print(print(save_name.get()))
+            print('Database Already Exits, please try another name')
+        else:
+            print(save_name.get())
+            dump_database(save_name.get())
+
+    #Save Button
+    save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
+    save_step = ttk.Button(ExportWindow, image = save_button_image, width = 5, command = export_database)
+    save_step.grid(column = 0, row = 2)
+    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing file on database folder', wraplength=wraplength)
+
 ###########################################################################################################
 #
 # UI Protocol [Pop Up]
@@ -932,6 +1134,7 @@ v1 = StringVar()
 v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
+current_step_label_v = StringVar()
 
 step = 1
 
@@ -958,6 +1161,7 @@ def graphicalUIprotocol():
     global background3
     global background2
     global step
+    global current_step_label_v
 
     f_name = StringVar()
     volume_well = DoubleVar()
@@ -969,11 +1173,16 @@ def graphicalUIprotocol():
     aspirate_con = StringVar()
     dispense_con = StringVar()
 
-
     proroot = Toplevel(root)
 
     proroot.title("Simpletrons - OT: Protocol Designer")
     #newWindow.geometry("200x60")
+    
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    proroot.geometry("+{}+{}".format(positionRight, positionDown))
 
     def close_popup():
         proroot.destroy()
@@ -1007,17 +1216,16 @@ def graphicalUIprotocol():
         label = ttk.Label(con_pro_ui_root, text = 'Start Protocol:')
         label.grid(column = 0, row = 1)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = threading.Thread(target=start_protocol).start())
-        save_step.grid(column = 0, row = 2)
+        def send_command_start_protocol():
+            threading.Thread(target=start_protocol()).start()
+        
+        start_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
+        start_step.grid(column = 0, row = 2)
+        Tooltip(start_step, text='Start Protocol', wraplength=wraplength)
 
-        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = threading.Thread(target=pause_robot).start())
-        save_step.grid(column = 0, row = 3)
-
-        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = threading.Thread(target=resume_robot).start())
-        save_step.grid(column = 0, row = 4)
-
-        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = threading.Thread(target=stop_robot).start())
-        save_step.grid(column = 0, row = 5)
+        stop_step = ttk.Button(con_pro_ui_root, text = 'STOP', width = 6, command = resume_robot)
+        stop_step.grid(column = 0, row = 5)
+        Tooltip(stop_step, text='Stop Protocol - Note Will Close Application', wraplength=wraplength)
 
 
     ###########################################################################################################
@@ -1072,6 +1280,11 @@ def graphicalUIprotocol():
 
         if re.search('24-well-plate', container_lookup):
             background_image2=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
+            print("Load Container Image:", container_lookup)
+            temp = 1
+
+        if re.search('48-well-plate', container_lookup):
+            background_image2=tk.PhotoImage(file='graphic/labware/48-well-plate.png')
             print("Load Container Image:", container_lookup)
             temp = 1
 
@@ -1144,6 +1357,12 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/24-well-plate.png')
             print("Load Container Image:", container_lookup)
             temp = 1
+
+        if re.search('48-well-plate', container_lookup):
+            background_image3=tk.PhotoImage(file='graphic/labware/48-well-plate.png')
+            print("Load Container Image:", container_lookup)
+            temp = 1
+
         if re.search('point', container_lookup):
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
@@ -1163,7 +1382,9 @@ def graphicalUIprotocol():
         background3.grid(column = 0, row = 12, columnspan = 5)
 
     ###########################################################################################################
+    #
     # Save Steps to Database
+    #
     ###########################################################################################################
     def save_step():
         """ Save Step to Database """
@@ -1218,6 +1439,8 @@ def graphicalUIprotocol():
                 option = True
             else:
                 option = False
+                
+            option2 = "None"
 
         if shortcuts.get() == "One_to_Many":
             #Check if Friendly Name is available if not set a default based of step
@@ -1285,6 +1508,8 @@ def graphicalUIprotocol():
 
         step = step + 1
 
+        current_step_label_v.set("Step:" + str(step)) #Set Default Label
+
         #Reset Count if error occurs in step creation 
         if step_count == True:
             step = step - 1
@@ -1306,6 +1531,8 @@ def graphicalUIprotocol():
     start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
+    file_menu.add_command(label = "Export", command = export_protocol)
+    file_menu.add_command(label = "Import Protocol", command = import_protocol_ui)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
 
@@ -1318,19 +1545,24 @@ def graphicalUIprotocol():
     label.grid(column = 0, row = 0)
     v1.set("Transfer: Basic") #Set Default Label
 
-    label = ttk.Label(proroot, text = 'Shortcuts Function:*')
-    label.grid(column = 0, row = 1)
+    label = ttk.Label(proroot, text = 'Shortcuts Function:*').grid(column = 0, row = 1)
+
+    current_step_label = ttk.Label(proroot, width=12, textvariable=current_step_label_v)
+    current_step_label.grid(column = 1, row = 0)
+    current_step_label_v.set("Step: 1") #Set Default Label
     
     dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
     dropdown_shortcuts['values'] = shortcuts_list
     dropdown_shortcuts.current(0)   #Set Default Selection
     dropdown_shortcuts.grid(column = 0, row = 2)
+    Tooltip(dropdown_shortcuts, text='Select a shortcut Function', wraplength=wraplength)
 
     # Friendly Note Input
     label = ttk.Label(proroot, text="Friendly Note:")
     label.grid(column = 2, row = 1)
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
+    Tooltip(dropdown_shortcuts, text='Enter a more readable note for this step', wraplength=wraplength)
 
     tipchange = None
 
@@ -1340,12 +1572,14 @@ def graphicalUIprotocol():
     textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
     textboxI.grid(column = 2, row = 4)    
     textboxI.select()
+    Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
 
     # Friendly Name Input
     label = ttk.Label(proroot, text="Friendly Name:")
     label.grid(column = 1, row = 1)
     textboxF = Entry(proroot, width=12, textvariable=f_name)
     textboxF.grid(column = 1, row = 2)
+    Tooltip(textboxF, text='Set a Friendly for this step in the protocol', wraplength=wraplength)
 
     #Select Pipette
     label = ttk.Label(proroot, text = 'Pipette:*')
@@ -1358,6 +1592,7 @@ def graphicalUIprotocol():
     v2.set("Volume Per Well: (uL)*") #Set Default Label
     textboxA = Entry(proroot, width=12, textvariable=volume_well)
     textboxA.grid(column = 1, row = 4)
+    Tooltip(textboxF, text='Set a level to transfer', wraplength=wraplength)
 
     #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
@@ -1389,6 +1624,7 @@ def graphicalUIprotocol():
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
     save_step.grid(column = 4, row = 6)
+    Tooltip(textboxI, text='Save Protocol', wraplength=wraplength)
 
 
 
@@ -1563,13 +1799,17 @@ save_button_image = PhotoImage(file="graphic/content-save-outline.png")
 save_w = ttk.Button(tab1b, image = save_button_image, width = 5, command = setup_workspace)
 save_w.grid(column = 2, row = 3)
 
+Tooltip(save_w, text='Load Current Workspace', wraplength=wraplength)
+
 #Save Button - Load Pre-Configured Workspace
 label = ttk.Label(tab1b, text='Load Workspace:', font = ('Arial', 12))
 label.grid(column = 3, row = 3)
 
 pree_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
-save_w = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
-save_w.grid(column = 4, row = 3)
+save_ww = ttk.Button(tab1b, image = pree_home_image, width = 5, command = load_pre_workspace)
+save_ww.grid(column = 4, row = 3)
+
+Tooltip(save_ww, text='Load Pre Configured Workspace', wraplength=wraplength)
 
 #Button
 
@@ -1613,20 +1853,27 @@ def callback_con(eventObject):
 
 
 #Selection 1 - Pipette
-label = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
-label.grid(column = 1, row = 1, padx = 1)
+label_select_pipette_c = ttk.Label(tab3, text='Select a Pipette', font = ('Arial', 12))
+label_select_pipette_c.grid(column = 1, row = 1, padx = 1)
 dropdown_varpip_c = ttk.Combobox(tab3,  state="readonly" , textvariable = varpip, postcommand = update_dropdown_pip_c)
 dropdown_varpip_c.grid(column = 1, row = 2, padx = 1)
+Tooltip(label_select_pipette_c, text='Select Pipette that will be used for following container', wraplength=wraplength)
+Tooltip(dropdown_varpip_c, text='Select Pipette that will be used for following container', wraplength=wraplength)
+
 
 #Drop Down Default Selection
 c_varcon = StringVar(root, value='')
 
 #Selection 1 - Containers
-label = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
-label.grid(column = 1, row = 3, padx = 1)
+label_select_container_c = ttk.Label(tab3, text='Select a Container', font = ('Arial', 12))
+label_select_container_c.grid(column = 1, row = 3, padx = 1)
 dropdown_varcon_c = ttk.Combobox(tab3,  state="readonly", textvariable = c_varcon, postcommand = update_dropdown_con_c)
 dropdown_varcon_c.grid(column = 1, row = 4, padx = 1)
 dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
+Tooltip(label_select_container_c, text='Please calibrate all container and Press Save even if calibration point is correct', wraplength=wraplength)
+Tooltip(dropdown_varcon_c, text='Please calibrate all container and Press Save even if calibration point is correct', wraplength=wraplength)
+
+
 
 #Section 2 - Pipette Movement 
 
@@ -1636,59 +1883,77 @@ dropdown_varcon_c.bind("<<ComboboxSelected>>", callback_con)
 xn_button_image = PhotoImage(file="graphic/arrow-left-bold-circle.png") # [ X Axis Negative ]
 left_b = ttk.Button(tab3, image = xn_button_image, width = 5, command = move_x_neg)
 left_b.grid(column = 3, row = 2)
+Tooltip(left_b, text='Move Robot X Axis - [Left]', wraplength=wraplength)
+
 
 #Movement Pad - X Axis
 #Set Image to variable 
 xp_button_image = PhotoImage(file="graphic/arrow-right-bold-circle.png") # [ X Axis Positive ]
 right_b = ttk.Button(tab3, image = xp_button_image, width = 5, command = move_x_pos)
 right_b.grid(column = 5, row = 2)
+Tooltip(right_b, text='Move Robot X Axis - [Right]', wraplength=wraplength)
+
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yn_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png")  # [ y Axis Positive ]
 down_b = ttk.Button(tab3, image = yn_button_image, width = 5, command = move_y_pos)
 down_b.grid(column = 4, row = 1)
+Tooltip(down_b, text='Move Robot Y Axis - [Down]', wraplength=wraplength)
+
 
 #Movement Pad - Y Axis
 #Set Image to variable
 yp_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png") # [ y Axis Negative ]
 up_b = ttk.Button(tab3, image = yp_button_image, width = 5, command = move_y_neg)
 up_b.grid(column = 4, row = 3)
-
+Tooltip(up_b, text='Move Robot Y Axis - [Up]', wraplength=wraplength)
 
 #Movement Pad - Z Axis [Pipette Movement] Down
 zd_button_image = PhotoImage(file="graphic/arrow-down-bold-circle.png")  # [ Z Axis Negative ]
 z_up_b = ttk.Button(tab3, image = zd_button_image, width = 5, command = move_z_neg)
 z_up_b.grid(column = 3, row = 3)
+Tooltip(z_up_b, text='Move Robot Pipette Arm - [Up]', wraplength=wraplength)
 
 #Movement Pad - Z Axis [Pipette Movement] UP
 zu_button_image = PhotoImage(file="graphic/arrow-up-bold-circle.png") # [ z Axis Positive ]
 z_down_b = ttk.Button(tab3, image = zu_button_image, width = 5, command = move_z_pos)
 z_down_b.grid(column = 3, row = 1)
+Tooltip(z_up_b, text='Move Robot Pipette Arm - [Down]', wraplength=wraplength)
+
 
 #Home
 home_image = PhotoImage(file="graphic/home.png") 
 home_b = ttk.Button(tab3, image = home_image, width = 5, command = home_axis)
 home_b.grid(column = 4, row = 4)
+Tooltip(home_b, text='Home all axis on robot (OT-1)', wraplength=wraplength)
+
 
 #Move to preconfigured 
 pre_home_image = PhotoImage(file="graphic/cog-refresh-outline.png")
 pre_home_b = ttk.Button(tab3, image = pre_home_image, width = 5, command = load_axis)
 pre_home_b.grid(column = 5, row = 4)
+Tooltip(pre_home_b, text='Go To Selected Container Calibration Point', wraplength=wraplength)
+
 
 #Save Button - Calibration 
 #save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
 save_c = ttk.Button(tab3, image = save_button_image, width = 5, command = save_containers_calibration)
 save_c.grid(column = 3, row = 4)
+Tooltip(save_c, text='Save Calibration', wraplength=wraplength)
 
 
 #Change Movement Speed
-label = ttk.Label(tab3, text='Set Movement Speed:', font = ('Arial', 10))
-label.grid(column = 1, row = 5)
+label_movenment_speed = ttk.Label(tab3, text='Set Movement Speed:', font = ('Arial', 10))
+label_movenment_speed.grid(column = 1, row = 5)
+Tooltip(label_movenment_speed, text='Set Movement Speed of Robot', wraplength=wraplength)
+
 #Scale Bar
 scale_a = Scale(tab3, from_=0.1, to=80, resolution = 0.1, orient="horizontal", variable = head_speed_a)
 scale_a.grid(column = 1, row = 6)
 scale_a.set(2)
+Tooltip(scale_a, text='Set Movement Speed of Robot', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab3, width=4, textvariable=head_speed_a)
 text.grid(column = 0, row = 6, padx=5)
@@ -1697,27 +1962,28 @@ text.bind("<Return>", lambda event: scale_a.configure(to=head_speed_a.get()))
 label = ttk.Label(tab3, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
+# Start Command Threading [LL]
+def set_calibration_location():
+    threading.Thread(target=moveDefaultLocation_p("pipette_b", "bottom")).start()
 
-label = ttk.Label(tab3, text='Robot Position:', font = ('Arial', 10))
-label.grid(column = 1, row = 7)
-#Display Coordinate
-label = ttk.Label(tab3, textvariable=position_display_xx)
-label.grid(column = 0, row = 8)
-position_display_xx.set("x: 0") #Set Default Label
+def set_calibration_drop_tip():
+    threading.Thread(target=moveDefaultLocation_p("pipette_b", "drop_tip")).start()
+    
+label_set_calibration = ttk.Button(tab3, text='Pickup Tip', command = set_calibration_location)
+label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+Tooltip(label_set_calibration, text='Set Calibration Point for Tip Calibration', wraplength=wraplength)
 
-label = ttk.Label(tab3, textvariable=position_display_y)
-label.grid(column = 1, row = 8)
-position_display_y.set("y: 0") #Set Default Label
 
-label = ttk.Label(tab3, textvariable=position_display_z)
-label.grid(column = 2, row = 8)
-position_display_z.set("z: 0") #Set Default Label
+label_drop_tip_c = ttk.Button(tab3, text='Drop Tip', command = set_calibration_drop_tip)
+label_drop_tip_c.grid(column = 3, row = 6, columnspan = 3)
+Tooltip(label_drop_tip_c, text='Drop Pipette Tip', wraplength=wraplength)
+
 
 #Keyboard Input
-# root.bind("<Left>", move_x_neg)
-# root.bind("<Right>", move_x_pos)
-# root.bind("<Up>", move_y_neg) 
-# root.bind("<Down>", move_y_pos)
+root.bind("<Left>", move_x_neg)
+root.bind("<Right>", move_x_pos)
+root.bind("<Up>", move_y_neg) 
+root.bind("<Down>", move_y_pos)
 
 def key_press(event):
     if event.char == "R":
@@ -1842,14 +2108,14 @@ label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
 
 #Selection 5 - Select a Tip Rack
-label = ttk.Label(tab1, text='Select a Tip Rack:', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Tip Rack:*', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
 
 #Selection 6 - Select a Bin
-label = ttk.Label(tab1, text='Select a Bin:', font = ('Arial', 12))
+label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
@@ -1860,6 +2126,7 @@ label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
 label.grid(column = 6, row = 4)
 save_pip = ttk.Button(tab1, image = save_button_image, width = 5, command = action_save_pip)
 save_pip.grid(column = 6, row = 5)
+Tooltip(save_pip, text='Save and Load Current Pipette Based off your selected slider', wraplength=wraplength)
 
 # Separator object
 separator = ttk.Separator(tab1, orient='vertical')
@@ -1870,6 +2137,8 @@ label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
 label.grid(column = 6, row = 6)
 pre_select_pip = ttk.Button(tab1, image = pre_home_image, width = 5, command = load_pre_pip)
 pre_select_pip.grid(column = 6, row = 7)
+Tooltip(pre_select_pip, text='Load Pre Configured Pipette [Ask Tech or Check Documentation for pipette parameters] ', wraplength=wraplength)
+
 
 
 #########################################################################################################
@@ -1916,6 +2185,7 @@ label = ttk.Label(tab2, text='Select a Pipette:', font = ('Arial', 12))
 label.grid(column = 1, row = 1, padx = 1)
 dropdown_cpip = ttk.Combobox(tab2,  state="readonly", textvariable = varpip, postcommand = update_dropdown_pip)
 dropdown_cpip.grid(column = 1, row = 2, padx = 1)
+Tooltip(dropdown_cpip, text='Select Pipette To Calibrate', wraplength=wraplength)
 
 #Drop Down Default Selection
 pippos = StringVar(root, value=' ')
@@ -1926,15 +2196,20 @@ dropdown_cpos = ttk.Combobox(tab2,  state="readonly", textvariable = pippos, pos
 dropdown_cpos['values'] = [ 'top','bottom', 'blow_out','drop_tip']
 dropdown_cpos.grid(column = 1, row = 4, padx = 1)
 dropdown_cpos.bind("<<ComboboxSelected>>", callback_p)
+Tooltip(dropdown_cpos, text='Select a Calibration Point', wraplength=wraplength)
 
 #Pipette Movement Increments
 #Movement Pad - Z Axis [Pipette Movement] Down
 z_up_bp = ttk.Button(tab2, image = zd_button_image, width = 5, command = move_pip_action_down)
 z_up_bp.grid(column = 3, row = 3)
+Tooltip(z_up_bp, text='Move Pipette Piston Location [Down] ', wraplength=wraplength)
+
 
 #Movement Pad - Z Axis [Pipette Movement] UP 
 z_down_bp = ttk.Button(tab2, image = zu_button_image, width = 5, command = move_pip_action_up)
 z_down_bp.grid(column = 3, row = 1)
+Tooltip(z_down_bp, text='Move Pipette Piston Location [Up] ', wraplength=wraplength)
+
 
 #Home Button
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
@@ -1972,8 +2247,8 @@ position_display_x.set("x: 0") #Set Default Label
 
 
 #Keyboard Input
-# root.bind("<Prior>", move_pip_action_up) #Page UP
-# root.bind("<Next>", move_pip_action_down) #PageDown
+root.bind("<Prior>", move_pip_action_up) #Page UP
+root.bind("<Next>", move_pip_action_down) #PageDown
 
 
 def key_press(event):

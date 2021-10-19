@@ -172,6 +172,7 @@ def moveDefaultLocation_C(pipette, container, container_type):
             )
             print ("Loaded A Axis Pipette")
 
+    # Load Calibration Point using calibration.json file instead of save data point position
     if pipette == "pipette_b":
         if container == 'A1':
             A1 = containers.load(container_type, 'A1', 'A1')
@@ -337,7 +338,7 @@ def saveCalibration(pipette, container, container_type):
     #global pipette_b
 
 
-    #Load Pipette
+    #Load Pipette from database
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
@@ -392,6 +393,9 @@ def saveCalibration(pipette, container, container_type):
     #print(container)
     #print(container_type)
 
+    '''
+    Save Calibration Point Manually to database
+    '''
     if pipette == "pipette_b":
         position=list(robot._driver.get_head_position()["current"])
         print(position)
@@ -414,6 +418,7 @@ def saveCalibration(pipette, container, container_type):
         insert = (container, container_type, container, xx, yy, zz)
         save_data("custom_workspace_a", insert)
     
+    # [Below Code allow you check workspace slot calibration Point even after database get cleared]
     if pipette == "pipette_b":
         if container == 'A1':
             A1 = containers.load(container_type, 'A1', 'A1')

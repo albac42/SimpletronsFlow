@@ -6,7 +6,12 @@ from moduleContainers import *
 from modulePipetting import *
 from time import sleep
 
+import threading
 
+#START UP GUI
+from tkinter.ttk import Combobox
+import tkinter as tk    
+from tkinter import ttk
 # For Jupiter Environment  
 # from opentrons.util import environment
 # environment.refresh()
@@ -31,8 +36,33 @@ pipette_b = instruments.Pipette(
     axis='a',
     max_volume=200)
 
-
 def start_protocol():
+    threading.Thread(target=start_protocol_temp()).start()
+
+
+
+def New_UI():
+    root = Tk()
+    root.title('Simpletrons - OT')
+
+    root.lift()
+    root. attributes("-topmost", True)
+
+    def close_popup():
+        root.destroy()
+        root.update()
+    
+    ###
+    s_menu = Menu(root)
+    root.config(menu = s_menu)
+
+    #Title
+    file_menu = Menu(s_menu)
+    s_menu.add_cascade(label = "File", menu = file_menu)
+    file_menu.add_command(label = "Exit", command = close_popup )
+
+
+def start_protocol_temp():
     """
     Start Protocol based on information in database
     Any database shortcut please refer to moduleCommands
@@ -41,9 +71,9 @@ def start_protocol():
     This API will grab all steps and send command to OT-1
     """
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
-    manual_connect()    
+    #manual_connect()    
+    #threading.Thread(target=home_robot()).start()
     home_robot()
-
 
     step_count = read_row('custom_protocol')
     print(step_count)
@@ -58,6 +88,8 @@ def start_protocol():
     global pipette_b
     global pipette_a
 
+
+    threading.Thread(target=New_UI()).start()
 
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
@@ -237,24 +269,32 @@ def start_protocol():
                     
 
             if pipette == "pipette_a":
-                """ Not Complete Yet """
+                ''' Pipette A'''
+                #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
                 #print(plateAName)
                 #print(planteAType)
 
                 plateA = containers.load(planteAType, plateAName, 'plateA')
-
+                
                 #Load Calibration Data
-                calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
-                robot.move_head(z=calibarate_data[9], strategy='direct')
+                calibarate_data = find_data("custom_workspace", plateAName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_a.calibrate_position((plateA, pos))
                 robot.move_head(z=60, strategy='direct')
 
+
+                #Second Plate Initialisation 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
                 #print(plateBName)
@@ -264,16 +304,20 @@ def start_protocol():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
-                robot.move_head(z=calibarate_data[9], strategy='direct')
-                
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_a.calibrate_position((plateB, pos))
-
-                # Check Tip Check Condition
-                # This will send command to perform desire task                
+    
+                #print(option)
+                # This will send command to perform desire task  
                 if option == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")
@@ -390,7 +434,9 @@ def start_protocol():
 
 
 
-    pipette_b.drop_tip()                    
+    #Finally both Drop Tip 
+    pipette_b.drop_tip()
+    pipette_a.drop_tip()                 
     #Exit Database 
     conn.close() 
 
