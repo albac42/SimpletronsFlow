@@ -269,24 +269,32 @@ def start_protocol_temp():
                     
 
             if pipette == "pipette_a":
-                """ Not Complete Yet """
+                ''' Pipette A'''
+                #First Plate Initialisation 
                 plateAName = plateA[0:2]
                 planteAType = plateA[3:]
                 #print(plateAName)
                 #print(planteAType)
 
                 plateA = containers.load(planteAType, plateAName, 'plateA')
-
+                
                 #Load Calibration Data
-                calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
-                robot.move_head(z=calibarate_data[9], strategy='direct')
+                calibarate_data = find_data("custom_workspace", plateAName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_a.calibrate_position((plateA, pos))
                 robot.move_head(z=60, strategy='direct')
 
+
+                #Second Plate Initialisation 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
                 #print(plateBName)
@@ -296,16 +304,20 @@ def start_protocol_temp():
                 
                 #Load Calibration Data
                 calibarate_data = find_data("custom_workspace", plateBName)
-                #pipette_b.move_to(calibarate_data)
-                robot.move_head(x=calibarate_data[7],y=calibarate_data[8],z=60)
-                robot.move_head(z=calibarate_data[9], strategy='direct')
-                
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_a.calibrate_position((plateB, pos))
-
-                # Check Tip Check Condition
-                # This will send command to perform desire task                
+    
+                #print(option)
+                # This will send command to perform desire task  
                 if option == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")

@@ -25,6 +25,9 @@ from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
 from moduleProtocol import *
+
+## OS Path
+import os.path
 ###########################################################################################################
 
 # Python TK Graphical Interface Note: [Run on Start]
@@ -1033,6 +1036,64 @@ def containersCreationUi():
     e_container_name.grid(column = 0, row = 2)  
 
 
+
+def import_protocol_ui():
+    pass
+
+###########################################################################################################
+#
+# Containers Creation UI [ WORKING IN PROGRESS ]
+#
+###########################################################################################################
+def export_protocol():
+    """
+    Export UI
+    """
+    global version
+    global root
+
+
+    ExportWindow = Toplevel(root)
+
+    ExportWindow.title("Simpletrons - OT")
+    ExportWindow.geometry("130x120")
+
+    save_name = StringVar()
+
+    #Set Window Location
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    ExportWindow.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+    def close_popup():
+
+        ExportWindow.destroy()
+        ExportWindow.update()
+
+    label = ttk.Label(ExportWindow, text="Export As ")
+    label.grid(column = 0, row = 0)
+
+    textboxA = Entry(ExportWindow, textvariable=save_name)
+    textboxA.grid(column = 0, row = 1)
+
+
+    def export_database():
+        if os.path.isfile('database/'+str(save_name.get())+'.db'):
+            print(print(save_name.get()))
+            print('Database Already Exits, please try another name')
+        else:
+            print(save_name.get())
+            dump_database(save_name.get())
+
+    #Save Button
+    save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
+    save_step = ttk.Button(ExportWindow, image = save_button_image, width = 5, command = export_database)
+    save_step.grid(column = 0, row = 2)
+    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing file on database folder', wraplength=wraplength)
+
 ###########################################################################################################
 #
 # UI Protocol [Pop Up]
@@ -1073,6 +1134,7 @@ v1 = StringVar()
 v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
+current_step_label_v = StringVar()
 
 step = 1
 
@@ -1099,6 +1161,7 @@ def graphicalUIprotocol():
     global background3
     global background2
     global step
+    global current_step_label_v
 
     f_name = StringVar()
     volume_well = DoubleVar()
@@ -1109,7 +1172,6 @@ def graphicalUIprotocol():
     p_varpip = StringVar()
     aspirate_con = StringVar()
     dispense_con = StringVar()
-
 
     proroot = Toplevel(root)
 
@@ -1157,20 +1219,13 @@ def graphicalUIprotocol():
         def send_command_start_protocol():
             threading.Thread(target=start_protocol()).start()
         
-        save_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
-        save_step.grid(column = 0, row = 2)
-            
+        start_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
+        start_step.grid(column = 0, row = 2)
+        Tooltip(start_step, text='Start Protocol', wraplength=wraplength)
 
-        
-
-        save_step = ttk.Button(con_pro_ui_root, text = 'Pause', width = 5, command = pause_robot)
-        save_step.grid(column = 0, row = 3)
-
-        save_step = ttk.Button(con_pro_ui_root, text = 'Resume', width = 16, command = resume_robot)
-        save_step.grid(column = 0, row = 4)
-
-        save_step = ttk.Button(con_pro_ui_root, text = 'Stop', width = 6, command = resume_robot)
-        save_step.grid(column = 0, row = 5)
+        stop_step = ttk.Button(con_pro_ui_root, text = 'STOP', width = 6, command = resume_robot)
+        stop_step.grid(column = 0, row = 5)
+        Tooltip(stop_step, text='Stop Protocol - Note Will Close Application', wraplength=wraplength)
 
 
     ###########################################################################################################
@@ -1307,7 +1362,7 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/48-well-plate.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            
+
         if re.search('point', container_lookup):
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
@@ -1327,7 +1382,9 @@ def graphicalUIprotocol():
         background3.grid(column = 0, row = 12, columnspan = 5)
 
     ###########################################################################################################
+    #
     # Save Steps to Database
+    #
     ###########################################################################################################
     def save_step():
         """ Save Step to Database """
@@ -1451,6 +1508,8 @@ def graphicalUIprotocol():
 
         step = step + 1
 
+        current_step_label_v.set("Step:" + str(step)) #Set Default Label
+
         #Reset Count if error occurs in step creation 
         if step_count == True:
             step = step - 1
@@ -1472,6 +1531,8 @@ def graphicalUIprotocol():
     start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
+    file_menu.add_command(label = "Export", command = export_protocol)
+    file_menu.add_command(label = "Import Protocol", command = import_protocol_ui)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
 
@@ -1484,19 +1545,24 @@ def graphicalUIprotocol():
     label.grid(column = 0, row = 0)
     v1.set("Transfer: Basic") #Set Default Label
 
-    label = ttk.Label(proroot, text = 'Shortcuts Function:*')
-    label.grid(column = 0, row = 1)
+    label = ttk.Label(proroot, text = 'Shortcuts Function:*').grid(column = 0, row = 1)
+
+    current_step_label = ttk.Label(proroot, width=12, textvariable=current_step_label_v)
+    current_step_label.grid(column = 1, row = 0)
+    current_step_label_v.set("Step: 1") #Set Default Label
     
     dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
     dropdown_shortcuts['values'] = shortcuts_list
     dropdown_shortcuts.current(0)   #Set Default Selection
     dropdown_shortcuts.grid(column = 0, row = 2)
+    Tooltip(dropdown_shortcuts, text='Select a shortcut Function', wraplength=wraplength)
 
     # Friendly Note Input
     label = ttk.Label(proroot, text="Friendly Note:")
     label.grid(column = 2, row = 1)
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
+    Tooltip(dropdown_shortcuts, text='Enter a more readable note for this step', wraplength=wraplength)
 
     tipchange = None
 
@@ -1506,12 +1572,14 @@ def graphicalUIprotocol():
     textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
     textboxI.grid(column = 2, row = 4)    
     textboxI.select()
+    Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
 
     # Friendly Name Input
     label = ttk.Label(proroot, text="Friendly Name:")
     label.grid(column = 1, row = 1)
     textboxF = Entry(proroot, width=12, textvariable=f_name)
     textboxF.grid(column = 1, row = 2)
+    Tooltip(textboxF, text='Set a Friendly for this step in the protocol', wraplength=wraplength)
 
     #Select Pipette
     label = ttk.Label(proroot, text = 'Pipette:*')
@@ -1524,6 +1592,7 @@ def graphicalUIprotocol():
     v2.set("Volume Per Well: (uL)*") #Set Default Label
     textboxA = Entry(proroot, width=12, textvariable=volume_well)
     textboxA.grid(column = 1, row = 4)
+    Tooltip(textboxF, text='Set a level to transfer', wraplength=wraplength)
 
     #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
@@ -1555,6 +1624,7 @@ def graphicalUIprotocol():
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
     save_step.grid(column = 4, row = 6)
+    Tooltip(textboxI, text='Save Protocol', wraplength=wraplength)
 
 
 

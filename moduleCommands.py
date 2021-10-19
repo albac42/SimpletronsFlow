@@ -27,6 +27,9 @@ from opentrons import robot
 
 #Import threading
 import threading
+
+#Copy File
+from shutil import copyfile
 ######################################################################
 db_file = 'database/data.db' 
 
@@ -349,7 +352,9 @@ def find_data(table, name):
     c.execute(sqlite_select_query)        
     for row in c:
         print(row)
-        
+
+    #Close Database Connection
+    conn.close()          
     return(row)
 
 # #Read Data
@@ -476,6 +481,20 @@ def setup_table(variable):
         print("Error! cannot create the database connection.")
 
 
+
+
+def dump_database(filename):
+    '''
+    Copy/Export Database 
+
+    '''
+
+    filename = 'database/'+str(filename)+'.db'    
+
+    copyfile(db_file, str(filename))
+    print("Successfully Copied db to another db")
+
+dump_database('test')
 
 ###########################################################################################################
 #
