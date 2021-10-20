@@ -1302,14 +1302,13 @@ def graphicalUIprotocol():
             background_image2=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxB.grid_forget()
+            textboxB.set("A1")
 
-        if bool(re.search('point', container_lookup)) == False:
-            #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-            print("Reload Entry Box", container_lookup)
-            temp = 1
-            textboxB = Entry(proroot, width=12, textvariable=value_c)
-            textboxB.grid(column = 1, row = 6)  
+        # if bool(re.search('point', container_lookup)) == False:
+        #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+        #     print("Reload Entry Box", container_lookup)
+        #     temp = 1
+
 
         label = ttk.Label(proroot, text="Plate A")
         label.grid(column = 0, row = 9)
@@ -1377,14 +1376,13 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxC.grid_forget()
+            textboxC.set("A1")
 
-        if bool(re.search('point', container_lookup)) == False:
-            #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-            print("Reload Entry Box", container_lookup)
-            temp = 1
-            textboxC = Entry(proroot, width=12, textvariable=value_b)
-            textboxC.grid(column = 3, row = 6)  
+        # if bool(re.search('point', container_lookup)) == False:
+        #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+        #     print("Reload Entry Box", container_lookup)
+        #     temp = 1
+
 
         label = ttk.Label(proroot, text="Plate B")
         label.grid(column = 0, row = 11)
@@ -1474,27 +1472,36 @@ def graphicalUIprotocol():
             if re.search('point', container_lookup):
                 value2 = "A1"
             else:
-                step_count = True
-                confirmation_box(7)
+                value2 = value_b.get()
 
             value3 = dispense_con.get()
 
             # Code To Find if row or column ()
             # If you need higher rows count adjust pattern2
-            pattern1 = re.compile("[A-Za-z]+")
-            pattern2 = re.compile("[0-12]+")
+            # pattern1 = re.compile("[A-Za-z]+")
+            # pattern2 = re.compile("[0-12]+")
             container_lookup = value_c.get()
 
-            if pattern1.fullmatch(container_lookup) is not None:
+            if re.match("[A-Za-z]+" , container_lookup) is not None:
                 value4 = value_c.get()
                 option2 = "cols"
-
-            if pattern2.fullmatch(container_lookup) is not None:
-                value4 = value_c.get()
-                option2 = "rows"
+                print("Loaded Cols")
+                print("Check Input Cell")
             else:
                 step_count = True
                 confirmation_box(7)
+                print("Check Input Cell")
+                
+
+            if re.match("[0-12]+", container_lookup)  is not None:
+                value4 = value_c.get()
+                option2 = "rows"
+                print("Loaded Row")
+            else:
+                step_count = True
+                confirmation_box(7)
+                print("Check Input Cell")
+                
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1503,6 +1510,7 @@ def graphicalUIprotocol():
 
             if tipchange == True:
                 option = True
+
             else:
                 option = False
 
@@ -1614,8 +1622,9 @@ def graphicalUIprotocol():
     label = ttk.Label(proroot, textvariable=v3)
     label.grid(column = 1, row = 5)
     v3.set("Wells:*") #Set Default Label
-    textboxB = Entry(proroot, width=12, textvariable=value_b)
+    textboxB = tk.Entry(proroot, width=12, textvariable=value_b)
     textboxB.grid(column = 1, row = 6)
+    Tooltip(textboxB, text='Insert Well Position', wraplength=wraplength)
 
     #Second Container
     label = ttk.Label(proroot, text = 'Dispense:*')
@@ -1627,8 +1636,10 @@ def graphicalUIprotocol():
     label = ttk.Label(proroot, textvariable=v4)
     label.grid(column = 3, row = 5)
     v4.set("Wells:*") #Set Default Label
-    textboxC = Entry(proroot, width=12, textvariable=value_c)
+    textboxC = tk.Entry(proroot, width=12, textvariable=value_c)
     textboxC.grid(column = 3, row = 6)
+    Tooltip(textboxC, text='Insert Well Position', wraplength=wraplength)
+
 
     #Save Button
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
