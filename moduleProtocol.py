@@ -89,7 +89,7 @@ def start_protocol_temp():
     global pipette_a
 
 
-    threading.Thread(target=New_UI()).start()
+    #threading.Thread(target=New_UI()).start()
 
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
