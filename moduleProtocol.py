@@ -140,7 +140,7 @@ def start_protocol_temp():
 
             pos = tiprack[0].from_center(x=0, y=0, z=-1, reference=tiprack)
             pipette_b.calibrate_position((tiprack, pos))
-            #robot.move_head(z=60, strategy='direct') # Move Clear Labware            
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware            
             
 
         if axis_s == 'a':
