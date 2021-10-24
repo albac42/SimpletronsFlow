@@ -28,6 +28,8 @@ from moduleProtocol import *
 
 ## OS Path
 import os.path
+import os
+from tkinter import filedialog
 
 # Class Tool Tip
 class Tooltip:
@@ -46,8 +48,8 @@ class Tooltip:
                  waittime=400,
                  wraplength=250):
 
-        self.waittime = waittime  # in miliseconds, originally 500
-        self.wraplength = wraplength  # in pixels, originally 180
+        self.waittime = waittime
+        self.wraplength = wraplength
         self.widget = widget
         self.text = text
         self.widget.bind("<Enter>", self.onEnter)
@@ -161,7 +163,7 @@ class Tooltip:
 
 
 #Start Protocol
-def start_protocol_ui_demo():
+def start_protocol_ui_demo(db_file):
 
     con_pro_ui_root = Tk()
 
@@ -189,7 +191,7 @@ def start_protocol_ui_demo():
     label.grid(column = 0, row = 1)
 
     def send_command_start_protocol():
-        threading.Thread(target=start_protocol()).start()
+        threading.Thread(target=start_protocol_temp(db_file)).start()
     
     start_step = ttk.Button(con_pro_ui_root, text = 'Start', width = 8, command = send_command_start_protocol)
     start_step.grid(column = 0, row = 2)
@@ -207,5 +209,46 @@ def load_demo_protocol():
     deleteTable("custom_pipette")
     deleteTable("custom_workspace")
         
-    test_save_data()
-    start_protocol_ui_demo()
+    test_save_data_demo()
+    start_protocol_ui_demo('database/data.db')
+
+
+def import_protocol():
+
+    con_pro_ui_root = Tk()
+
+    wraplength = 250
+
+    con_pro_ui_root.title("Simpletrons - OT: Start Protocol")
+
+    con_pro_ui_root.lift()
+    con_pro_ui_root. attributes("-topmost", True)
+
+    windowWidth = con_pro_ui_root.winfo_reqwidth() 
+    windowHeight = con_pro_ui_root.winfo_reqheight()
+    positionRight = int(con_pro_ui_root.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(con_pro_ui_root.winfo_screenheight()/2 - windowHeight/2)
+    con_pro_ui_root.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+
+    def close_popup():
+        con_pro_ui_root.destroy()
+        con_pro_ui_root.update()
+
+    con_pro_ui_root.withdraw() #use to hide tkinter window
+
+    currdir = os.getcwd()+str("/export/")
+    tempdir = filedialog.askopenfilename(parent=con_pro_ui_root, initialdir=currdir, title='Please select a db', filetypes = (("db files","*.db"),("all files","*.*")))
+
+    if len(tempdir) > 0:
+        print ("You chosen %s" % tempdir)
+
+
+    start_protocol_ui_demo(tempdir)
+
+    con_pro_ui_root.destroy()
+    try:
+        con_pro_ui_root.update()
+    except:
+        pass

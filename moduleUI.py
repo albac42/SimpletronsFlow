@@ -968,7 +968,7 @@ def export_protocol():
 
 
     def export_database():
-        if os.path.isfile('database/'+str(save_name.get())+'.db'):
+        if os.path.isfile('export/'+str(save_name.get())+'.db'):
             print(print(save_name.get()))
             print('Database Already Exits, please try another name')
         else:
@@ -979,7 +979,7 @@ def export_protocol():
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(ExportWindow, image = save_button_image, width = 5, command = export_database)
     save_step.grid(column = 0, row = 2)
-    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing file on database folder', wraplength=wraplength)
+    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing files on export folder', wraplength=wraplength)
 
 ###########################################################################################################
 #
@@ -1439,7 +1439,7 @@ def graphicalUIprotocol():
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     file_menu.add_command(label = "Export", command = export_protocol)
-    file_menu.add_command(label = "Import Protocol", command = import_protocol_ui)
+    file_menu.add_command(label = "Import Protocol", command = import_protocol)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
 

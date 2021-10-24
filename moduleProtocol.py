@@ -37,10 +37,10 @@ pipette_b = instruments.Pipette(
     max_volume=200)
 
 def start_protocol():
-    threading.Thread(target=start_protocol_temp()).start()
+    threading.Thread(target=start_protocol_temp('database/data.db')).start()
 
 
-def start_protocol_temp():
+def start_protocol_temp(db_file):
     """
     Start Protocol based on information in database
     Any database shortcut please refer to moduleCommands
@@ -501,8 +501,8 @@ def start_protocol_temp():
 
     print('Successfully Completed Protocol Run')
 
-# Test Data [Use this to test Protocol API without front-end]
-def test_save_data():
+ 
+def test_save_data_demo():
     """ Debugging Temp Data"""
 
     #1 Setup Pipette Default
@@ -563,9 +563,6 @@ def test_save_data():
     insert = (name, container, location, x, y, z, xx, yy, zz)
     save_data("custom_workspace", insert)
 
-    #3 Step Demo
-
-
     #4 Step Demo (Simple Transfer)
     name = "Step 1" # Step Name 
     shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
@@ -600,8 +597,7 @@ def test_save_data():
 
     #Insert To Database Function
     insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    save_data("custom_protocol", insert)    
-
+    save_data("custom_protocol", insert)  
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
 #It will load a test data
