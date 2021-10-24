@@ -40,28 +40,6 @@ def start_protocol():
     threading.Thread(target=start_protocol_temp()).start()
 
 
-
-def New_UI():
-    root = Tk()
-    root.title('Simpletrons - OT')
-
-    root.lift()
-    root. attributes("-topmost", True)
-
-    def close_popup():
-        root.destroy()
-        root.update()
-    
-    ###
-    s_menu = Menu(root)
-    root.config(menu = s_menu)
-
-    #Title
-    file_menu = Menu(s_menu)
-    s_menu.add_cascade(label = "File", menu = file_menu)
-    file_menu.add_command(label = "Exit", command = close_popup )
-
-
 def start_protocol_temp():
     """
     Start Protocol based on information in database
@@ -140,13 +118,14 @@ def start_protocol_temp():
 
             pos = tiprack[0].from_center(x=0, y=0, z=-1, reference=tiprack)
             pipette_b.calibrate_position((tiprack, pos))
-            robot.move_head(z=60, strategy='direct') # Move Clear Labware            
-            
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware   
+
+            #Pick Up Tip [ Pick Up Tips ]
+            pipette_b.pick_up_tip(tiprack[0])
+            robot.move_head(z=60, strategy='direct')           
 
         if axis_s == 'a':
             """ Not Complete Yet """
-
-
             pipette_a = instruments.Pipette(
             axis='a',
             name='pipette_a',
@@ -159,13 +138,27 @@ def start_protocol_temp():
             trash_container=trash
             )
             print ("Loaded A Axis Pipette")
+            calibarate_data = find_data("custom_workspace", trashName)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+            robot.move_head(z=calibarate_data[6], strategy='direct')
 
+            pos = trash[0].from_center(x=0, y=0, z=-1, reference=trash)
+            pipette_a.calibrate_position((trash, pos))
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware
+            
+            
+            calibarate_data = find_data("custom_workspace", tipName)
+            robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+            robot.move_head(z=calibarate_data[6], strategy='direct')
 
-    #Pick Up Tip [ Pick Up Tips ]
-    pipette_b.pick_up_tip(tiprack[0])
-    robot.move_head(z=60, strategy='direct')
-    #pipette_a.pick_up_tip()
-    
+            pos = tiprack[0].from_center(x=0, y=0, z=-1, reference=tiprack)
+            pipette_a.calibrate_position((tiprack, pos))
+            robot.move_head(z=60, strategy='direct') # Move Clear Labware 
+
+            #Pick Up Tip [ Pick Up Tips ]
+            pipette_b.pick_up_tip(tiprack[0])
+            robot.move_head(z=60, strategy='direct')  
+
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
@@ -177,6 +170,9 @@ def start_protocol_temp():
     """
     for row in c:
         print(row)
+
+        # global pipette_b
+        # global pipette_a
 
         #Load Variable from database row
         id_count = row[0]
@@ -266,7 +262,9 @@ def start_protocol_temp():
                 else:
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                     print("Complete: Step", id_count, ": Option: Always")
-                    
+
+                for c in robot.commands():
+                    print(c)                    
 
             if pipette == "pipette_a":
                 ''' Pipette A'''
@@ -326,6 +324,8 @@ def start_protocol_temp():
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                     print("Complete: Step", id_count, ": Option: Always")
 
+                for c in robot.commands():
+                    print(c)
 
 
         if shortcut == "One_to_Many":
@@ -401,7 +401,10 @@ def start_protocol_temp():
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
                     if option == '0':
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')                    
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
+
+                for c in robot.commands():
+                    print(c)                    
 
             if pipette == "pipette_a":
 
@@ -472,14 +475,29 @@ def start_protocol_temp():
 
                     if option == '0':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
-
-
+                for c in robot.commands():
+                    print(c)
+                    
 
     #Finally both Drop Tip at end of protocol
-    pipette_b.drop_tip()
-    pipette_a.drop_tip()                 
+    try:
+        pipette_b.drop_tip()
+    except:
+        pass
+        print("Skip Drop Tip: B")
+    try:
+        pipette_a.drop_tip()
+    except:
+        pass
+        print("Skip Drop Tip: A")
+
     #Exit Database 
-    conn.close() 
+    try:
+        conn.close() 
+    except:
+        pass
+        print("Error ")     
+
 
     print('Successfully Completed Protocol Run')
 
@@ -581,8 +599,8 @@ def test_save_data():
     notes = "test notes"
 
     #Insert To Database Function
-    #insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-    #save_data("custom_protocol", insert)    
+    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    save_data("custom_protocol", insert)    
 
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]
@@ -590,8 +608,7 @@ def test_save_data():
 
 
 
-
-# Start 
+ 
 # setup_table("custom_protocol")
 # setup_table("custom_pipette")
 # setup_table("custom_workspace")
@@ -600,15 +617,15 @@ def test_save_data():
 # test_save_data() #Load Test data in database
 # start_protocol() #Start Protocol
 
-"""
-You would need to delete table upon exiting database 
+# """
+# You would need to delete table upon exiting database 
 
-If you getting data base lock, you need to delete database/data.db and 
-recreate the file. 
+# If you getting data base lock, you need to delete database/data.db and 
+# recreate the file. 
 
-[This is only require if the code crash during protocol]
+# [This is only require if the code crash during protocol]
 
-"""
+# """
 # deleteTable("custom_protocol") 
 # deleteTable("custom_pipette")
 # deleteTable("custom_workspace")

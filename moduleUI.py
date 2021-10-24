@@ -25,6 +25,7 @@ from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
 from moduleProtocol import *
+from moduleClass import *
 
 ## OS Path
 import os.path
@@ -36,7 +37,7 @@ import os.path
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 1 Dev'
+version = 'Version: Private Alpha 1.5 Dev'
 
 ###########################################################################################################
 #
@@ -93,137 +94,6 @@ count_C = 0
 # Class Tool Tip
 #
 ###########################################################################################################
-
-# Class Tool Tip
-class Tooltip:
-    '''
-    It creates a tooltip for a given widget as the mouse goes on it.
-    Source: 
-    http://www.daniweb.com/programming/software-development/
-           code/484591/a-tooltip-class-for-tkinter
-    '''
-
-    def __init__(self, widget,
-                 *,
-                 bg='#FFFFEA',
-                 pad=(5, 3, 5, 3),
-                 text='widget info',
-                 waittime=400,
-                 wraplength=250):
-
-        self.waittime = waittime  # in miliseconds, originally 500
-        self.wraplength = wraplength  # in pixels, originally 180
-        self.widget = widget
-        self.text = text
-        self.widget.bind("<Enter>", self.onEnter)
-        self.widget.bind("<Leave>", self.onLeave)
-        self.widget.bind("<ButtonPress>", self.onLeave)
-        self.bg = bg
-        self.pad = pad
-        self.id = None
-        self.tw = None
-
-    def onEnter(self, event=None):
-        self.schedule()
-
-    def onLeave(self, event=None):
-        self.unschedule()
-        self.hide()
-
-    def schedule(self):
-        self.unschedule()
-        self.id = self.widget.after(self.waittime, self.show)
-
-    def unschedule(self):
-        id_ = self.id
-        self.id = None
-        if id_:
-            self.widget.after_cancel(id_)
-
-    def show(self):
-        def tip_pos_calculator(widget, label,
-                               *,
-                               tip_delta=(10, 5), pad=(5, 3, 5, 3)):
-
-            w = widget
-
-            s_width, s_height = w.winfo_screenwidth(), w.winfo_screenheight()
-
-            width, height = (pad[0] + label.winfo_reqwidth() + pad[2],
-                             pad[1] + label.winfo_reqheight() + pad[3])
-
-            mouse_x, mouse_y = w.winfo_pointerxy()
-
-            x1, y1 = mouse_x + tip_delta[0], mouse_y + tip_delta[1]
-            x2, y2 = x1 + width, y1 + height
-
-            x_delta = x2 - s_width
-            if x_delta < 0:
-                x_delta = 0
-            y_delta = y2 - s_height
-            if y_delta < 0:
-                y_delta = 0
-
-            offscreen = (x_delta, y_delta) != (0, 0)
-
-            if offscreen:
-
-                if x_delta:
-                    x1 = mouse_x - tip_delta[0] - width
-
-                if y_delta:
-                    y1 = mouse_y - tip_delta[1] - height
-
-            offscreen_again = y1 < 0  # out on the top
-
-            if offscreen_again:
-                # No further checks will be done.
-
-                # TIP:
-                # A further mod might automagically augment the
-                # wraplength when the tooltip is too high to be
-                # kept inside the screen.
-                y1 = 0
-
-            return x1, y1
-
-        bg = self.bg
-        pad = self.pad
-        widget = self.widget
-
-        # creates a toplevel window
-        self.tw = tk.Toplevel(widget)
-
-        # Leaves only the label and removes the app window
-        self.tw.wm_overrideredirect(True)
-
-        win = tk.Frame(self.tw,
-                       background=bg,
-                       borderwidth=0)
-        label = tk.Label(win,
-                          text=self.text,
-                          justify=tk.LEFT,
-                          background=bg,
-                          relief=tk.SOLID,
-                          borderwidth=0,
-                          wraplength=self.wraplength)
-
-        label.grid(padx=(pad[0], pad[2]),
-                   pady=(pad[1], pad[3]),
-                   sticky=tk.NSEW)
-        win.grid()
-
-        x, y = tip_pos_calculator(widget, label)
-
-        self.tw.wm_geometry("+%d+%d" % (x, y))
-
-    def hide(self):
-        tw = self.tw
-        if tw:
-            tw.destroy()
-        self.tw = None
-
-
 wraplength=200
 ###########################################################################################################
 #
@@ -352,6 +222,13 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
 
+    elif variable == 11:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error: Check Well Input', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
     else:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
@@ -1201,6 +1078,9 @@ def graphicalUIprotocol():
     ###########################################################################################################
     # Start Pre Configured Software 
     ##########################################################################################################
+
+
+
     #Start Protocol
     def start_protocol_ui():
         con_pro_ui_root = Toplevel(root)
@@ -1209,6 +1089,12 @@ def graphicalUIprotocol():
 
         con_pro_ui_root.lift()
         con_pro_ui_root. attributes("-topmost", True)
+
+        windowWidth = proroot.winfo_reqwidth()
+        windowHeight = proroot.winfo_reqheight()
+        positionRight = int(proroot.winfo_screenwidth()/2 - windowWidth/2)
+        positionDown = int(proroot.winfo_screenheight()/2 - windowHeight/2)
+        con_pro_ui_root.geometry("+{}+{}".format(positionRight, positionDown))
 
         def close_popup():
             con_pro_ui_root.destroy()
@@ -1234,8 +1120,9 @@ def graphicalUIprotocol():
         Tooltip(start_step, text='Start Protocol', wraplength=wraplength)
 
         stop_step = ttk.Button(con_pro_ui_root, text = 'STOP', width = 6, command = resume_robot)
-        stop_step.grid(column = 0, row = 5)
+        stop_step.grid(column = 1, row = 2)
         Tooltip(stop_step, text='Stop Protocol - Note Will Close Application', wraplength=wraplength)
+
 
 
     ###########################################################################################################
@@ -1302,7 +1189,8 @@ def graphicalUIprotocol():
             background_image2=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxB.set("A1")
+            textboxB.delete(0, 'end')
+            textboxB.insert(0,"A1")
 
         # if bool(re.search('point', container_lookup)) == False:
         #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
@@ -1376,7 +1264,8 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxC.set("A1")
+            textboxC.delete(0, 'end')
+            textboxC.insert(0,"A1")
 
         # if bool(re.search('point', container_lookup)) == False:
         #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
@@ -1489,7 +1378,7 @@ def graphicalUIprotocol():
                 print("Check Input Cell")
             else:
                 step_count = True
-                confirmation_box(7)
+                confirmation_box(11)
                 print("Check Input Cell")
                 
 
@@ -1499,7 +1388,7 @@ def graphicalUIprotocol():
                 print("Loaded Row")
             else:
                 step_count = True
-                confirmation_box(7)
+                confirmation_box(11)
                 print("Check Input Cell")
                 
 
@@ -1704,8 +1593,10 @@ file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
 
 file2_menu = Menu(s_menu)
-s_menu.add_cascade(label = "Robot", menu = file2_menu)
-file2_menu.add_command(label = "Connections Options", command = connecton_graphical)
+s_menu.add_cascade(label = "Troubleshooting", menu = file2_menu)
+file2_menu.add_command(label = "Robot Connections Options", command = connecton_graphical)
+file2_menu.add_command(label = "Start Demo Protocol", command = load_demo_protocol)
+
 
 #Start Up UI
 #connecton_graphical()
