@@ -488,13 +488,10 @@ def dump_database(filename):
     Copy/Export Database 
 
     '''
-
-    filename = 'database/'+str(filename)+'.db'    
+    filename = 'export/'+str(filename)+'.db'    
 
     copyfile(db_file, str(filename))
     print("Successfully Copied db to another db")
-
-dump_database('test')
 
 ###########################################################################################################
 #

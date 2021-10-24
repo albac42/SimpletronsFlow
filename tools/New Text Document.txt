@@ -1,0 +1,33 @@
+import sqlite3
+from sqlite3 import Error
+
+
+"""
+Print database Table
+
+"""
+db_file = 'data.db' 
+
+conn = sqlite3.connect(db_file)
+c = conn.cursor()
+
+print("Printing Custom Pipette")
+sqlite_select_query = """SELECT * FROM custom_pipette"""
+c.execute(sqlite_select_query) 
+for row in c:
+	print(row)
+
+print("Printing Custom Workspace")
+sqlite_select_query = """SELECT * FROM custom_workspace"""
+c.execute(sqlite_select_query) 
+for row in c:
+	print(row)
+
+
+print("Printing custom protocol")
+sqlite_select_query = """SELECT * FROM custom_protocol"""
+c.execute(sqlite_select_query) 
+for row in c:
+	print(row)
+
+conn.close()

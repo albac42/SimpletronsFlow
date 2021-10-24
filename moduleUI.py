@@ -25,6 +25,7 @@ from moduleCommands import *
 from moduleCalibrate import *
 from modulePipetting import *
 from moduleProtocol import *
+from moduleClass import *
 
 ## OS Path
 import os.path
@@ -36,7 +37,7 @@ import os.path
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 1 Dev'
+version = 'Version: Private Alpha 1.5 Dev'
 
 ###########################################################################################################
 #
@@ -93,137 +94,6 @@ count_C = 0
 # Class Tool Tip
 #
 ###########################################################################################################
-
-# Class Tool Tip
-class Tooltip:
-    '''
-    It creates a tooltip for a given widget as the mouse goes on it.
-    Source: 
-    http://www.daniweb.com/programming/software-development/
-           code/484591/a-tooltip-class-for-tkinter
-    '''
-
-    def __init__(self, widget,
-                 *,
-                 bg='#FFFFEA',
-                 pad=(5, 3, 5, 3),
-                 text='widget info',
-                 waittime=400,
-                 wraplength=250):
-
-        self.waittime = waittime  # in miliseconds, originally 500
-        self.wraplength = wraplength  # in pixels, originally 180
-        self.widget = widget
-        self.text = text
-        self.widget.bind("<Enter>", self.onEnter)
-        self.widget.bind("<Leave>", self.onLeave)
-        self.widget.bind("<ButtonPress>", self.onLeave)
-        self.bg = bg
-        self.pad = pad
-        self.id = None
-        self.tw = None
-
-    def onEnter(self, event=None):
-        self.schedule()
-
-    def onLeave(self, event=None):
-        self.unschedule()
-        self.hide()
-
-    def schedule(self):
-        self.unschedule()
-        self.id = self.widget.after(self.waittime, self.show)
-
-    def unschedule(self):
-        id_ = self.id
-        self.id = None
-        if id_:
-            self.widget.after_cancel(id_)
-
-    def show(self):
-        def tip_pos_calculator(widget, label,
-                               *,
-                               tip_delta=(10, 5), pad=(5, 3, 5, 3)):
-
-            w = widget
-
-            s_width, s_height = w.winfo_screenwidth(), w.winfo_screenheight()
-
-            width, height = (pad[0] + label.winfo_reqwidth() + pad[2],
-                             pad[1] + label.winfo_reqheight() + pad[3])
-
-            mouse_x, mouse_y = w.winfo_pointerxy()
-
-            x1, y1 = mouse_x + tip_delta[0], mouse_y + tip_delta[1]
-            x2, y2 = x1 + width, y1 + height
-
-            x_delta = x2 - s_width
-            if x_delta < 0:
-                x_delta = 0
-            y_delta = y2 - s_height
-            if y_delta < 0:
-                y_delta = 0
-
-            offscreen = (x_delta, y_delta) != (0, 0)
-
-            if offscreen:
-
-                if x_delta:
-                    x1 = mouse_x - tip_delta[0] - width
-
-                if y_delta:
-                    y1 = mouse_y - tip_delta[1] - height
-
-            offscreen_again = y1 < 0  # out on the top
-
-            if offscreen_again:
-                # No further checks will be done.
-
-                # TIP:
-                # A further mod might automagically augment the
-                # wraplength when the tooltip is too high to be
-                # kept inside the screen.
-                y1 = 0
-
-            return x1, y1
-
-        bg = self.bg
-        pad = self.pad
-        widget = self.widget
-
-        # creates a toplevel window
-        self.tw = tk.Toplevel(widget)
-
-        # Leaves only the label and removes the app window
-        self.tw.wm_overrideredirect(True)
-
-        win = tk.Frame(self.tw,
-                       background=bg,
-                       borderwidth=0)
-        label = tk.Label(win,
-                          text=self.text,
-                          justify=tk.LEFT,
-                          background=bg,
-                          relief=tk.SOLID,
-                          borderwidth=0,
-                          wraplength=self.wraplength)
-
-        label.grid(padx=(pad[0], pad[2]),
-                   pady=(pad[1], pad[3]),
-                   sticky=tk.NSEW)
-        win.grid()
-
-        x, y = tip_pos_calculator(widget, label)
-
-        self.tw.wm_geometry("+%d+%d" % (x, y))
-
-    def hide(self):
-        tw = self.tw
-        if tw:
-            tw.destroy()
-        self.tw = None
-
-
 wraplength=200
 ###########################################################################################################
 #
@@ -245,11 +115,15 @@ def confirmation_box(variable):
     newWindow.geometry("200x60")
 
     #Set Window Location
-    windowWidth = root.winfo_reqwidth()
-    windowHeight = root.winfo_reqheight()
-    positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
-    positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
-    newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+    # windowWidth = root.winfo_reqwidth()
+    # windowHeight = root.winfo_reqheight()
+    # positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
+    # positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
+    # newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+    x = root.winfo_x()
+    y = root.winfo_y()
+
+    newWindow.geometry("+%d+%d" % (x + 100, y + 200))
 
     def close_popup():
         newWindow.destroy()
@@ -294,7 +168,7 @@ def confirmation_box(variable):
 
     elif variable == 5:
         newWindow.geometry("180x60")
-        label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
+        label = Label(newWindow, text='Successfully Save \n Calibration Container', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
@@ -348,6 +222,13 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
 
+    elif variable == 11:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error: Check Well Input', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
     else:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
@@ -374,6 +255,12 @@ def connecton_graphical():
 
     conroot.lift()
     conroot. attributes("-topmost", True)
+
+
+    x = root.winfo_x()
+    y = root.winfo_y()
+
+    conroot.geometry("+%d+%d" % (x + 100, y + 200))
 
     def close_popup():
         conroot.destroy()
@@ -1081,7 +968,7 @@ def export_protocol():
 
 
     def export_database():
-        if os.path.isfile('database/'+str(save_name.get())+'.db'):
+        if os.path.isfile('export/'+str(save_name.get())+'.db'):
             print(print(save_name.get()))
             print('Database Already Exits, please try another name')
         else:
@@ -1092,7 +979,7 @@ def export_protocol():
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(ExportWindow, image = save_button_image, width = 5, command = export_database)
     save_step.grid(column = 0, row = 2)
-    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing file on database folder', wraplength=wraplength)
+    Tooltip(save_step, text='Export File as entered name - Cannot be blank or same as existing files on export folder', wraplength=wraplength)
 
 ###########################################################################################################
 #
@@ -1191,6 +1078,9 @@ def graphicalUIprotocol():
     ###########################################################################################################
     # Start Pre Configured Software 
     ##########################################################################################################
+
+
+
     #Start Protocol
     def start_protocol_ui():
         con_pro_ui_root = Toplevel(root)
@@ -1199,6 +1089,12 @@ def graphicalUIprotocol():
 
         con_pro_ui_root.lift()
         con_pro_ui_root. attributes("-topmost", True)
+
+        windowWidth = proroot.winfo_reqwidth()
+        windowHeight = proroot.winfo_reqheight()
+        positionRight = int(proroot.winfo_screenwidth()/2 - windowWidth/2)
+        positionDown = int(proroot.winfo_screenheight()/2 - windowHeight/2)
+        con_pro_ui_root.geometry("+{}+{}".format(positionRight, positionDown))
 
         def close_popup():
             con_pro_ui_root.destroy()
@@ -1224,8 +1120,9 @@ def graphicalUIprotocol():
         Tooltip(start_step, text='Start Protocol', wraplength=wraplength)
 
         stop_step = ttk.Button(con_pro_ui_root, text = 'STOP', width = 6, command = resume_robot)
-        stop_step.grid(column = 0, row = 5)
+        stop_step.grid(column = 1, row = 2)
         Tooltip(stop_step, text='Stop Protocol - Note Will Close Application', wraplength=wraplength)
+
 
 
     ###########################################################################################################
@@ -1292,14 +1189,14 @@ def graphicalUIprotocol():
             background_image2=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxB.grid_forget()
+            textboxB.delete(0, 'end')
+            textboxB.insert(0,"A1")
 
-        if bool(re.search('point', container_lookup)) == False:
-            #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-            print("Reload Entry Box", container_lookup)
-            temp = 1
-            textboxB = Entry(proroot, width=12, textvariable=value_c)
-            textboxB.grid(column = 1, row = 6)  
+        # if bool(re.search('point', container_lookup)) == False:
+        #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+        #     print("Reload Entry Box", container_lookup)
+        #     temp = 1
+
 
         label = ttk.Label(proroot, text="Plate A")
         label.grid(column = 0, row = 9)
@@ -1367,14 +1264,14 @@ def graphicalUIprotocol():
             background_image3=tk.PhotoImage(file='graphic/labware/point.png')
             print("Load Container Image:", container_lookup)
             temp = 1
-            textboxC.grid_forget()
+            textboxC.delete(0, 'end')
+            textboxC.insert(0,"A1")
 
-        if bool(re.search('point', container_lookup)) == False:
-            #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
-            print("Reload Entry Box", container_lookup)
-            temp = 1
-            textboxC = Entry(proroot, width=12, textvariable=value_b)
-            textboxC.grid(column = 3, row = 6)  
+        # if bool(re.search('point', container_lookup)) == False:
+        #     #background_image3=tk.PhotoImage(file='graphic/labware/point.png')
+        #     print("Reload Entry Box", container_lookup)
+        #     temp = 1
+
 
         label = ttk.Label(proroot, text="Plate B")
         label.grid(column = 0, row = 11)
@@ -1464,27 +1361,36 @@ def graphicalUIprotocol():
             if re.search('point', container_lookup):
                 value2 = "A1"
             else:
-                step_count = True
-                confirmation_box(7)
+                value2 = value_b.get()
 
             value3 = dispense_con.get()
 
             # Code To Find if row or column ()
             # If you need higher rows count adjust pattern2
-            pattern1 = re.compile("[A-Za-z]+")
-            pattern2 = re.compile("[0-12]+")
+            # pattern1 = re.compile("[A-Za-z]+")
+            # pattern2 = re.compile("[0-12]+")
             container_lookup = value_c.get()
 
-            if pattern1.fullmatch(container_lookup) is not None:
+            if re.match("[A-Za-z]+" , container_lookup) is not None:
                 value4 = value_c.get()
                 option2 = "cols"
-
-            if pattern2.fullmatch(container_lookup) is not None:
-                value4 = value_c.get()
-                option2 = "rows"
+                print("Loaded Cols")
+                print("Check Input Cell")
             else:
                 step_count = True
-                confirmation_box(7)
+                confirmation_box(11)
+                print("Check Input Cell")
+                
+
+            if re.match("[0-12]+", container_lookup)  is not None:
+                value4 = value_c.get()
+                option2 = "rows"
+                print("Loaded Row")
+            else:
+                step_count = True
+                confirmation_box(11)
+                print("Check Input Cell")
+                
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1493,6 +1399,7 @@ def graphicalUIprotocol():
 
             if tipchange == True:
                 option = True
+
             else:
                 option = False
 
@@ -1532,7 +1439,7 @@ def graphicalUIprotocol():
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
     file_menu.add_command(label = "Export", command = export_protocol)
-    file_menu.add_command(label = "Import Protocol", command = import_protocol_ui)
+    file_menu.add_command(label = "Import Protocol", command = import_protocol)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
 
@@ -1604,8 +1511,9 @@ def graphicalUIprotocol():
     label = ttk.Label(proroot, textvariable=v3)
     label.grid(column = 1, row = 5)
     v3.set("Wells:*") #Set Default Label
-    textboxB = Entry(proroot, width=12, textvariable=value_b)
+    textboxB = tk.Entry(proroot, width=12, textvariable=value_b)
     textboxB.grid(column = 1, row = 6)
+    Tooltip(textboxB, text='Insert Well Position', wraplength=wraplength)
 
     #Second Container
     label = ttk.Label(proroot, text = 'Dispense:*')
@@ -1617,8 +1525,10 @@ def graphicalUIprotocol():
     label = ttk.Label(proroot, textvariable=v4)
     label.grid(column = 3, row = 5)
     v4.set("Wells:*") #Set Default Label
-    textboxC = Entry(proroot, width=12, textvariable=value_c)
+    textboxC = tk.Entry(proroot, width=12, textvariable=value_c)
     textboxC.grid(column = 3, row = 6)
+    Tooltip(textboxC, text='Insert Well Position', wraplength=wraplength)
+
 
     #Save Button
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
@@ -1683,8 +1593,10 @@ file_menu.add_command(label = "About", command = aboutPage)
 file_menu.add_command(label = "Exit", command = root.quit )
 
 file2_menu = Menu(s_menu)
-s_menu.add_cascade(label = "Robot", menu = file2_menu)
-file2_menu.add_command(label = "Connections Options", command = connecton_graphical)
+s_menu.add_cascade(label = "Troubleshooting", menu = file2_menu)
+file2_menu.add_command(label = "Robot Connections Options", command = connecton_graphical)
+file2_menu.add_command(label = "Start Demo Protocol", command = load_demo_protocol)
+
 
 #Start Up UI
 #connecton_graphical()
@@ -1713,83 +1625,107 @@ my_canvas = ttk.Label(tab1b, image = background_image)
 my_canvas.grid(column = 0, row = 0, rowspan = 3, columnspan = 5)
 
 #Col A
-dropdown = ttk.Combobox(tab1b, textvariable = A1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 2, padx = 1)
-dropdown.lift()
+dropdown_1 = ttk.Combobox(tab1b, textvariable = A1_W, width = 19)
+dropdown_1['values'] = container_list 
+dropdown_1.grid(column = 0, row = 2, padx = 1)
+dropdown_1.lift()
+Tooltip(dropdown_1, text='Workspace A1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = A2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = A3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 0, row = 0, padx = 1)
-dropdown.lift()
+dropdown_2 = ttk.Combobox(tab1b, textvariable = A2_W, width = 19)
+dropdown_2['values'] = container_list 
+dropdown_2.grid(column = 0, row = 1, padx = 1)
+dropdown_2.lift()
+Tooltip(dropdown_2, text='Workspace A2 Cell', wraplength=wraplength)
+
+
+dropdown_3 = ttk.Combobox(tab1b, textvariable = A3_W, width = 19)
+dropdown_3['values'] = container_list 
+dropdown_3.grid(column = 0, row = 0, padx = 1)
+dropdown_3.lift()
+Tooltip(dropdown_3, text='Workspace A3 Cell', wraplength=wraplength)
 
 #Col B
-dropdown = ttk.Combobox(tab1b, textvariable = B1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 2, padx = 1)
-dropdown.lift()
+dropdown_4 = ttk.Combobox(tab1b, textvariable = B1_W, width = 19)
+dropdown_4['values'] = container_list 
+dropdown_4.grid(column = 1, row = 2, padx = 1)
+dropdown_4.lift()
+Tooltip(dropdown_4, text='Workspace B1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = B2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 1, padx = 1)
-dropdown.lift()
+dropdown_5 = ttk.Combobox(tab1b, textvariable = B2_W, width = 19)
+dropdown_5['values'] = container_list 
+dropdown_5.grid(column = 1, row = 1, padx = 1)
+dropdown_5.lift()
+Tooltip(dropdown_5, text='Workspace B2 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = B3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 1, row = 0, padx = 1)
-dropdown.lift()
+dropdown_6 = ttk.Combobox(tab1b, textvariable = B3_W, width = 19)
+dropdown_6['values'] = container_list 
+dropdown_6.grid(column = 1, row = 0, padx = 1)
+dropdown_6.lift()
+Tooltip(dropdown_6, text='Workspace B3 Cell', wraplength=wraplength)
+
 
 #Col C
-dropdown = ttk.Combobox(tab1b, textvariable = C1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 2, padx = 1)
-dropdown.lift()
+dropdown_7 = ttk.Combobox(tab1b, textvariable = C1_W, width = 19)
+dropdown_7['values'] = container_list 
+dropdown_7.grid(column = 2, row = 2, padx = 1)
+dropdown_7.lift()
+Tooltip(dropdown_7, text='Workspace C1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = C2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = C3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 2, row = 0, padx = 1)
-dropdown.lift()
+dropdown_8 = ttk.Combobox(tab1b, textvariable = C2_W, width = 19)
+dropdown_8['values'] = container_list 
+dropdown_8.grid(column = 2, row = 1, padx = 1)
+dropdown_8.lift()
+Tooltip(dropdown_8, text='Workspace C2 Cell', wraplength=wraplength)
+
+
+dropdown_9 = ttk.Combobox(tab1b, textvariable = C3_W, width = 19)
+dropdown_9['values'] = container_list 
+dropdown_9.grid(column = 2, row = 0, padx = 1)
+dropdown_9.lift()
+Tooltip(dropdown_9, text='Workspace C3 Cell', wraplength=wraplength)
+
 
 #Col D
-dropdown = ttk.Combobox(tab1b, textvariable = D1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 2, padx = 1)
-dropdown.lift()
+dropdown_10 = ttk.Combobox(tab1b, textvariable = D1_W, width = 19)
+dropdown_10['values'] = container_list 
+dropdown_10.grid(column = 3, row = 2, padx = 1)
+dropdown_10.lift()
+Tooltip(dropdown_10, text='Workspace D1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = D2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 1, padx = 1)
-dropdown.lift()
+dropdown_11 = ttk.Combobox(tab1b, textvariable = D2_W, width = 19)
+dropdown_11['values'] = container_list 
+dropdown_11.grid(column = 3, row = 1, padx = 1)
+dropdown_11.lift()
+Tooltip(dropdown_11, text='Workspace D2 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = D3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 3, row = 0, padx = 1)
-dropdown.lift()
+dropdown_12 = ttk.Combobox(tab1b, textvariable = D3_W, width = 19)
+dropdown_12['values'] = container_list 
+dropdown_12.grid(column = 3, row = 0, padx = 1)
+dropdown_12.lift()
+Tooltip(dropdown_12, text='Workspace D3 Cell', wraplength=wraplength)
 #Col E
-dropdown = ttk.Combobox(tab1b, textvariable = E1_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 2, padx = 1)
-dropdown.lift()
+dropdown_13 = ttk.Combobox(tab1b, textvariable = E1_W, width = 19)
+dropdown_13['values'] = container_list 
+dropdown_13.grid(column = 4, row = 2, padx = 1)
+dropdown_13.lift()
+Tooltip(dropdown_13, text='Workspace E1 Cell', wraplength=wraplength)
 
-dropdown = ttk.Combobox(tab1b, textvariable = E2_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 1, padx = 1)
-dropdown.lift()
 
-dropdown = ttk.Combobox(tab1b, textvariable = E3_W, width = 19)
-dropdown['values'] = container_list 
-dropdown.grid(column = 4, row = 0, padx = 1)
-dropdown.lift()
+dropdown_14 = ttk.Combobox(tab1b, textvariable = E2_W, width = 19)
+dropdown_14['values'] = container_list 
+dropdown_14.grid(column = 4, row = 1, padx = 1)
+dropdown_14.lift()
+Tooltip(dropdown_14, text='Workspace E2 Cell', wraplength=wraplength)
+
+
+dropdown_14 = ttk.Combobox(tab1b, textvariable = E3_W, width = 19)
+dropdown_14['values'] = container_list 
+dropdown_14.grid(column = 4, row = 0, padx = 1)
+dropdown_14.lift()
+Tooltip(dropdown_14, text='Workspace E3 Cell', wraplength=wraplength)
+
 
 #Save Button - Save Workspace 
 label = ttk.Label(tab1b, text='Save Workspace:', font = ('Arial', 12))
@@ -2025,11 +1961,13 @@ s_trash = StringVar(root, value='')
 
 
 #Selection 1 - Axis
-label = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
-label.grid(column = 1, row = 0)
+label_axis = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
+label_axis.grid(column = 1, row = 0)
+Tooltip(label_axis, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 #Scale Bar
 scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
 scale_1.grid(column = 1, row = 1)
+Tooltip(scale_1, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 
 left_hand_image = PhotoImage(file="graphic/hand-left.png")
 right_hand_image = PhotoImage(file="graphic/hand-right.png")
@@ -2047,6 +1985,8 @@ label.grid(column = 1, row = 2)
 #Scale Bar
 scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
+Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_max_volume)
 text.grid(column = 0, row = 3, padx=5)
@@ -2063,6 +2003,7 @@ label.grid(column = 1, row = 4)
 #Scale Bar
 scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
+Tooltip(scale_3, text='Set Pipette Min Volume', wraplength=wraplength)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_min_volume)
 text.grid(column = 0, row = 5, padx=5)
@@ -2079,6 +2020,8 @@ label.grid(column = 1, row = 6)
 #Scale Bar
 scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
+Tooltip(scale_4, text='Set Pipette aspirate speed', wraplength=wraplength)
+
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
 text.grid(column = 0, row = 7, padx=5)
@@ -2099,6 +2042,7 @@ label.grid(column = 1, row = 8)
 #Scale Bar
 scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
+Tooltip(scale_5, text='Set Pipette dispense speed', wraplength=wraplength)
 #Sync Entry Box
 text = Entry(tab1, width=3, textvariable=var_dispense_speed)
 text.grid(column = 0, row = 9, padx=5)
@@ -2113,6 +2057,7 @@ label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_tip_rack.grid(column = 6, row = 1)
+Tooltip(dropdown_tip_rack, text='Set a Pipette Tip Rack', wraplength=wraplength)
 
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
@@ -2120,6 +2065,7 @@ label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
 #dropdown['values'] = loaded_containers # Replace to Global pipette variable
 dropdown_trash.grid(column = 6, row = 3)
+Tooltip(dropdown_trash, text='Set a Pipette Trash Rack', wraplength=wraplength)
 
 # Save Button
 label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
@@ -2214,14 +2160,24 @@ Tooltip(z_down_bp, text='Move Pipette Piston Location [Up] ', wraplength=wraplen
 #Home Button
 home_b = ttk.Button(tab2, image = home_image, width = 5, command = move_pip_action_home)
 home_b.grid(column = 4, row = 4)
+Tooltip(home_b, text='Home Selected Pipette Axis ', wraplength=wraplength)
+
 
 #Move to pre configured 
 pre_home_b = ttk.Button(tab2, image = pre_home_image, width = 5, command = move_prepip_action)
 pre_home_b.grid(column = 5, row = 4)
+Tooltip(pre_home_b, text='Move to selected calibration position', wraplength=wraplength)
+
 
 #Save Button - Calibration  
 save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_pip_action)
 save_p.grid(column = 3, row = 4)
+Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
+
+label_set_calibration = ttk.Button(tab2, text='Connect to Robot', command = connecton_graphical)
+label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
+
 
 #Change Movement Speed
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
@@ -2238,12 +2194,12 @@ text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
 label = ttk.Label(tab2, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)
 
-label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
-label.grid(column = 1, row = 7)
-#Display Coordinate
-label = ttk.Label(tab2, textvariable=position_display_x)
-label.grid(column = 1, row = 8)
-position_display_x.set("x: 0") #Set Default Label
+# label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
+# label.grid(column = 1, row = 7)
+# #Display Coordinate
+# label = ttk.Label(tab2, textvariable=position_display_x)
+# label.grid(column = 1, row = 8)
+# position_display_x.set("x: 0") #Set Default Label
 
 
 #Keyboard Input
