@@ -2,6 +2,7 @@ __pycache__/
 calibrations/
 database/
 containers/
+export/
 
 
 # Logs and databases #

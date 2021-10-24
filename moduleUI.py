@@ -2174,6 +2174,10 @@ save_p = ttk.Button(tab2, image = save_button_image, width = 5, command = save_p
 save_p.grid(column = 3, row = 4)
 Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
 
+label_set_calibration = ttk.Button(tab2, text='Connect to Robot', command = connecton_graphical)
+label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
+
 
 #Change Movement Speed
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
