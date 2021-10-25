@@ -31,14 +31,17 @@ import os.path
 import os
 from tkinter import filedialog
 
+###########################################################################################################
+#
+# Global Graphical Function - 
+###########################################################################################################
+
 # Class Tool Tip
 class Tooltip:
-    '''
-    It creates a tooltip for a given widget as the mouse goes on it.
-    Source: 
-    http://www.daniweb.com/programming/software-development/
-           code/484591/a-tooltip-class-for-tkinter
-    '''
+    """
+    Tool tip Generation
+
+    """
 
     def __init__(self, widget,
                  *,
@@ -114,12 +117,6 @@ class Tooltip:
             offscreen_again = y1 < 0  # out on the top
 
             if offscreen_again:
-                # No further checks will be done.
-
-                # TIP:
-                # A further mod might automagically augment the
-                # wraplength when the tooltip is too high to be
-                # kept inside the screen.
                 y1 = 0
 
             return x1, y1
@@ -159,7 +156,12 @@ class Tooltip:
         if tw:
             tw.destroy()
         self.tw = None
-
+    '''
+    It creates a tooltip for a given widget as the mouse goes on it.
+    Source: 
+    http://www.daniweb.com/programming/software-development/
+           code/484591/a-tooltip-class-for-tkinter
+    '''
 
 
 ###########################################################################################################
@@ -167,19 +169,52 @@ class Tooltip:
 # Popup Window [If You need create popup windows use below template]
 #
 ###########################################################################################################
+def confirmation_box_v2(text):
+    """
+    Pop Up Windows Creation
+    """
+    newWindow = Tk()
+
+    newWindow.title("Simpletrons - OT")
+    #newWindow.geometry("200x60")
+
+    #Set Window Location
+    windowWidth = newWindow.winfo_reqwidth() 
+    windowHeight = newWindow.winfo_reqheight()
+    positionRight = int(newWindow.winfo_screenwidth()/4 - windowWidth/4)
+    positionDown = int(newWindow.winfo_screenheight()/4 - windowHeight/4)
+    newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+    def close_popup():
+        newWindow.destroy()
+        #newWindow.update()
+
+    def close_popup_protocol_1():
+        """Delete Row"""
+        count = read_row(custom_protocol)
+        deleteRecord(custom_protocol, count)    
+
+
+    label = Label(newWindow, textvariable=text_input, font = ('Arial', 15))
+    label.grid(column = 0, row = 0, sticky="NW")
+    label2 = Label(newWindow, text=version, font = ('Arial', 15))
+    label2.grid(column = 0, row = 1, sticky="NW")
+    text_input.set(text)
+
+
+
 
 def confirmation_box(variable):
     """
     Pop Up Windows Creation
     """
-    global version
-    global root
 
 
     newWindow = Tk()
 
     newWindow.title("Simpletrons - OT")
-    newWindow.geometry("200x60")
+    #newWindow.geometry("200x60")
 
     #Set Window Location
     windowWidth = newWindow.winfo_reqwidth() 

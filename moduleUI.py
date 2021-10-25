@@ -1279,6 +1279,7 @@ def graphicalUIprotocol():
         if step_count == True:
             step = step - 1
             step_count = False
+            confirmation_box_v2("Please Double Check Entered Value")
 
 
     ###########################################################################################################
@@ -1316,7 +1317,7 @@ def graphicalUIprotocol():
     current_step_label.grid(column = 1, row = 0)
     current_step_label_v.set("Step: 1") #Set Default Label
     
-    dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
+    dropdown_shortcuts = ttk.Combobox(proroot, state="readonly", textvariable = shortcuts)
     dropdown_shortcuts['values'] = shortcuts_list
     dropdown_shortcuts.current(0)   #Set Default Selection
     dropdown_shortcuts.grid(column = 0, row = 2)
@@ -1349,7 +1350,7 @@ def graphicalUIprotocol():
     #Select Pipette
     label = ttk.Label(proroot, text = 'Pipette:*')
     label.grid(column = 0, row = 3)
-    dropdown_ppip = ttk.Combobox(proroot, textvariable = p_varpip, postcommand = update_dropdown_source_pip)
+    dropdown_ppip = ttk.Combobox(proroot, state="readonly", textvariable = p_varpip, postcommand = update_dropdown_source_pip)
     dropdown_ppip.grid(column = 0, row = 4)
 
     label = ttk.Label(proroot, textvariable=v2)
@@ -1362,7 +1363,7 @@ def graphicalUIprotocol():
     #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
     label.grid(column = 0, row = 5)
-    dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
+    dropdown_aspirate_c = ttk.Combobox(proroot, state="readonly", textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
     dropdown_aspirate_c.grid(column = 0, row = 6)
     dropdown_aspirate_c.bind("<<ComboboxSelected>>", callback_a)
 
@@ -1376,7 +1377,7 @@ def graphicalUIprotocol():
     #Second Container
     label = ttk.Label(proroot, text = 'Dispense:*')
     label.grid(column = 2, row = 5)
-    dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
+    dropdown_dispense_c = ttk.Combobox(proroot, state="readonly", textvariable = dispense_con, postcommand = update_dispense_source_rack)
     dropdown_dispense_c.grid(column = 2, row = 6)
     dropdown_dispense_c.bind("<<ComboboxSelected>>", callback_b)
 
