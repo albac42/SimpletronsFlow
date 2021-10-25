@@ -162,6 +162,146 @@ class Tooltip:
 
 
 
+###########################################################################################################
+#
+# Popup Window [If You need create popup windows use below template]
+#
+###########################################################################################################
+
+def confirmation_box(variable):
+    """
+    Pop Up Windows Creation
+    """
+    global version
+    global root
+
+
+    newWindow = Tk()
+
+    newWindow.title("Simpletrons - OT")
+    newWindow.geometry("200x60")
+
+    #Set Window Location
+    windowWidth = newWindow.winfo_reqwidth() 
+    windowHeight = newWindow.winfo_reqheight()
+    positionRight = int(newWindow.winfo_screenwidth()/4 - windowWidth/4)
+    positionDown = int(newWindow.winfo_screenheight()/4 - windowHeight/4)
+    newWindow.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+    def close_popup():
+        newWindow.destroy()
+        #newWindow.update()
+
+    def close_popup_protocol_1():
+        """Delete Row"""
+        count = read_row(custom_protocol)
+        deleteRecord(custom_protocol, count)
+
+
+    if variable == 1:
+        newWindow.geometry("200x60")
+        label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
+        label.grid(column = 0, row = 0, sticky="NW")
+        label2 = Label(newWindow, text=version, font = ('Arial', 15))
+        label2.grid(column = 0, row = 1, sticky="NW")
+
+    elif variable == 2:
+        newWindow.geometry("180x60")
+        label = Label(newWindow, text='Successfully Loaded Workspace', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 3:
+        newWindow.geometry("170x60")
+        label = Label(newWindow, text='Successfully Loaded Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 4:
+        newWindow.geometry("180x60")
+        label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 5:
+        newWindow.geometry("180x60")
+        label = Label(newWindow, text='Successfully Save \n Calibration Container', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 6:
+        newWindow.geometry("170x60")
+        label = Label(newWindow, text='Successfully Save \n Pre-Configured Workspace', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 7:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Successfully Save \n Pre-Configured Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 7:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Protocol', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup_protocol_1)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 8:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Pipette \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 9:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error Saving Workspace \n Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 10:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Loaded Custom Pipette', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 11:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Error: Check Well Input', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+    else:
+        newWindow.geometry("180x60")
+        label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)        
+
+
 #Start Protocol
 def start_protocol_ui_demo(db_file):
 
