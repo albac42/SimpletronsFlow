@@ -27,5 +27,6 @@ Thumbs.db
 ######################
 dist/
 build/
-.spec
-.exe
+*.spec
+*.exe
+venv/
