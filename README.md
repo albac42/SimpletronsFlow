@@ -5,6 +5,11 @@ Simpletrons Readme
 Simplify Opentrons API 1 for OT-1
 
 
+[End User Guide](https://github.com/skydivercactus/simpletrons/wiki/Getting-Started-%5B-End-User-Manual-%5D)
+
+
+[Tech User Guide](https://github.com/skydivercactus/simpletrons/wiki/Setting-up-Environment-%5B-Tech-Manual-%5D)
+
 # How to get started
 
 ## Quick Install
