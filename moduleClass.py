@@ -349,7 +349,7 @@ def confirmation_box(variable):
 def connecton_graphical():
     """ Connection UI"""
     """ """
-    conroot = tk()
+    conroot = Tk()
 
     conroot.title("Simpletrons - OT: Protocol - Connection")
 
@@ -364,7 +364,7 @@ def connecton_graphical():
         conroot.destroy()
         #conroot.update()
     ###
-    s_menu = Menu(root)
+    s_menu = Menu(conroot)
     conroot.config(menu = s_menu)
 
     #Title
