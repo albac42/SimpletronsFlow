@@ -950,7 +950,7 @@ def graphicalUIprotocol():
         print(eventObject.widget.get())
         container_lookup = eventObject.widget.get()
         #Grab Value From Entry Box
-        if re.search('96-Deep-Well', container_lookup):
+        if re.search('96-deep-well', container_lookup):
             background_image2=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
             print("Load Container Image:", container_lookup)
             temp = 1
@@ -1025,7 +1025,7 @@ def graphicalUIprotocol():
         print(eventObject.widget.get())
         container_lookup = eventObject.widget.get()
         #Grab Value From Entry Box
-        if re.search('96-Deep-Well', container_lookup):
+        if re.search('96-deep-well', container_lookup):
             background_image3=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
             print("Load Container Image:", container_lookup)
             temp = 1
