@@ -37,7 +37,7 @@ import os.path
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 1.5 Dev'
+
 
 ###########################################################################################################
 #
@@ -98,59 +98,6 @@ wraplength=200
 ###########################################################################################################
 
 
-###########################################################################################################
-#
-# Connection To Robot [Pop Up]
-#
-###########################################################################################################
-
-def connecton_graphical():
-    """ Connection UI"""
-    """ """
-    conroot = Toplevel(root)
-
-    conroot.title("Simpletrons - OT: Protocol - Connection")
-
-    conroot.lift()
-    conroot. attributes("-topmost", True)
-
-
-    x = root.winfo_x()
-    y = root.winfo_y()
-
-    conroot.geometry("+%d+%d" % (x + 100, y + 200))
-
-    def close_popup():
-        conroot.destroy()
-        conroot.update()
-    ###
-    s_menu = Menu(root)
-    conroot.config(menu = s_menu)
-
-    #Title
-    file_menu = Menu(s_menu)
-    s_menu.add_cascade(label = "File", menu = file_menu)
-    file_menu.add_command(label = "Exit", command = close_popup )
-
-
-    label = ttk.Label(conroot, text = 'Robot Connection Options:')
-    label.grid(column = 0, row = 1)
-
-    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect)
-    save_step.grid(column = 0, row = 2)
-
-    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_all)
-    save_step.grid(column = 0, row = 3)
-
-    save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
-    save_step.grid(column = 0, row = 4)
-    
-    def home_treading():
-        print("Starting Threading: Home")
-        threading.Thread(target=home_robot).start()
-
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_treading)
-    save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
 
@@ -1280,6 +1227,8 @@ def graphicalUIprotocol():
             step = step - 1
             step_count = False
             confirmation_box_v2("Please Double Check Entered Value")
+        else:
+            confirmation_box_v2("Protocol Step Saved")
 
 
     ###########################################################################################################
@@ -1297,7 +1246,7 @@ def graphicalUIprotocol():
     start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
-    file_menu.add_command(label = "Export", command = export_protocol)
+    file_menu.add_command(label = "Export Protocol", command = export_protocol)
     file_menu.add_command(label = "Import Protocol", command = import_protocol)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
@@ -1328,7 +1277,7 @@ def graphicalUIprotocol():
     label.grid(column = 2, row = 1)
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
-    Tooltip(dropdown_shortcuts, text='Enter a more readable note for this step', wraplength=wraplength)
+    Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
     tipchange = None
 
@@ -1352,6 +1301,7 @@ def graphicalUIprotocol():
     label.grid(column = 0, row = 3)
     dropdown_ppip = ttk.Combobox(proroot, state="readonly", textvariable = p_varpip, postcommand = update_dropdown_source_pip)
     dropdown_ppip.grid(column = 0, row = 4)
+    Tooltip(dropdown_ppip, text='Select a Pipette', wraplength=wraplength)
 
     label = ttk.Label(proroot, textvariable=v2)
     label.grid(column = 1, row = 3)
@@ -1393,7 +1343,7 @@ def graphicalUIprotocol():
     save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
     save_step.grid(column = 4, row = 6)
-    Tooltip(textboxI, text='Save Protocol', wraplength=wraplength)
+    Tooltip(save_step, text='Save Protocol Step', wraplength=wraplength)
 
 
 
@@ -1449,12 +1399,15 @@ file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
 file_menu.add_command(label = "About", command = aboutPage)
+file_menu.add_command(label = "Source Code", command = open_url_github)
 file_menu.add_command(label = "Exit", command = root.quit )
 
 file2_menu = Menu(s_menu)
 s_menu.add_cascade(label = "Troubleshooting", menu = file2_menu)
 file2_menu.add_command(label = "Robot Connections Options", command = connecton_graphical)
 file2_menu.add_command(label = "Start Demo Protocol", command = load_demo_protocol)
+file2_menu.add_command(label = "Documentation", command = open_url_doc)
+
 
 
 #Start Up UI
@@ -1773,6 +1726,9 @@ label_drop_tip_c = ttk.Button(tab3, text='Drop Tip', command = set_calibration_d
 label_drop_tip_c.grid(column = 3, row = 6, columnspan = 3)
 Tooltip(label_drop_tip_c, text='Drop Pipette Tip', wraplength=wraplength)
 
+label_set_calibration = ttk.Button(tab3, text='Connect to Robot', command = connecton_graphical)
+label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
+Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 #Keyboard Input
 root.bind("<Left>", move_x_neg)
@@ -2034,7 +1990,7 @@ save_p.grid(column = 3, row = 4)
 Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
 
 label_set_calibration = ttk.Button(tab2, text='Connect to Robot', command = connecton_graphical)
-label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
 Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 

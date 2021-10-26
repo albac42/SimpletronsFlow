@@ -30,6 +30,7 @@ from moduleProtocol import *
 import os.path
 import os
 from tkinter import filedialog
+import webbrowser
 
 ###########################################################################################################
 #
@@ -169,6 +170,7 @@ class Tooltip:
 # Popup Window [If You need create popup windows use below template]
 #
 ###########################################################################################################
+
 def confirmation_box_v2(text):
     """
     Pop Up Windows Creation
@@ -195,13 +197,14 @@ def confirmation_box_v2(text):
         count = read_row(custom_protocol)
         deleteRecord(custom_protocol, count)    
 
-
-    label = Label(newWindow, textvariable=text_input, font = ('Arial', 15))
+    print(text)
+    v_text_input = StringVar()
+    label = Label(newWindow, textvariable=v_text_input, font = ('Arial', 15))
     label.grid(column = 0, row = 0, sticky="NW")
-    label2 = Label(newWindow, text=version, font = ('Arial', 15))
-    label2.grid(column = 0, row = 1, sticky="NW")
-    text_input.set(text)
-
+    v_text_input.set(text)
+    save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+    save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+    save_w.grid(column = 0, row = 1)
 
 
 
@@ -210,6 +213,7 @@ def confirmation_box(variable):
     Pop Up Windows Creation
     """
 
+    version = 'Version: Private Alpha 1.5'
 
     newWindow = Tk()
 
@@ -235,7 +239,7 @@ def confirmation_box(variable):
 
 
     if variable == 1:
-        newWindow.geometry("200x60")
+        newWindow.geometry("250x60")
         label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
         label.grid(column = 0, row = 0, sticky="NW")
         label2 = Label(newWindow, text=version, font = ('Arial', 15))
@@ -336,6 +340,57 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)        
 
+###########################################################################################################
+#
+# Connection To Robot [Pop Up]
+#
+###########################################################################################################
+
+def connecton_graphical():
+    """ Connection UI"""
+    """ """
+    conroot = tk()
+
+    conroot.title("Simpletrons - OT: Protocol - Connection")
+
+    #Set Window Location
+    windowWidth = conroot.winfo_reqwidth() 
+    windowHeight = conroot.winfo_reqheight()
+    positionRight = int(conroot.winfo_screenwidth()/4 - windowWidth/4)
+    positionDown = int(conroot.winfo_screenheight()/4 - windowHeight/4)
+    conroot.geometry("+{}+{}".format(positionRight, positionDown))
+
+    def close_popup():
+        conroot.destroy()
+        #conroot.update()
+    ###
+    s_menu = Menu(root)
+    conroot.config(menu = s_menu)
+
+    #Title
+    file_menu = Menu(s_menu)
+    s_menu.add_cascade(label = "File", menu = file_menu)
+    file_menu.add_command(label = "Exit", command = close_popup )
+
+
+    label = ttk.Label(conroot, text = 'Robot Connection Options:')
+    label.grid(column = 0, row = 1)
+
+    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect)
+    save_step.grid(column = 0, row = 2)
+
+    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_all)
+    save_step.grid(column = 0, row = 3)
+
+    save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
+    save_step.grid(column = 0, row = 4)
+    
+    def home_treading():
+        print("Starting Threading: Home")
+        threading.Thread(target=home_robot).start()
+
+    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_treading)
+    save_step.grid(column = 0, row = 5)
 
 #Start Protocol
 def start_protocol_ui_demo(db_file):
@@ -427,3 +482,9 @@ def import_protocol():
         con_pro_ui_root.update()
     except:
         pass
+
+def open_url_github():
+    webbrowser.open("https://github.com/skydivercactus/simpletrons")
+
+def open_url_doc():
+    webbrowser.open("https://github.com/skydivercactus/simpletrons/wiki")
