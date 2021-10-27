@@ -73,8 +73,8 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 ###########################################################################################################
 # Remember to verify the custom container exist before adding into this container list to reduce errors
 
-shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
+shortcuts_list = ['Simple_Transfer', 'One_to_Many']
+container_list = [ '','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
                     '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
                    'custom'
                    ]
@@ -1137,8 +1137,10 @@ def graphicalUIprotocol():
                 notes = f_note.get()
 
 
-            if tipchange == True:
+            #print("TEST: changetip variable", tipchange.get())
+            if tipchange.get() == 1:
                 option = True
+
             else:
                 option = False
                 
@@ -1154,7 +1156,11 @@ def graphicalUIprotocol():
             shortcuts_v = shortcuts.get()
 
             #Volume
-            volume = volume_well.get()
+            if volume_well.get() == 0:
+                print("Please Check Volume Entry Box")
+                step_count = True
+            else:
+                volume = volume_well.get()
             #Value 1 (Pipette)
             sel_pipette = p_varpip.get()
             #Value 2 (First Container)
@@ -1181,28 +1187,24 @@ def graphicalUIprotocol():
                 option2 = "cols"
                 print("Loaded Cols")
                 print("Check Input Cell")
-            else:
-                step_count = True
-                confirmation_box(11)
-                print("Check Input Cell")
-                
-
-            if re.match("[0-12]+", container_lookup)  is not None:
+            elif re.match("[0-12]+", container_lookup)  is not None:
                 value4 = value_c.get()
                 option2 = "rows"
                 print("Loaded Row")
+
             else:
                 step_count = True
                 confirmation_box(11)
-                print("Check Input Cell")
-                
+                print("Warning: Check Input Cell (Only if you see Warning)")
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
             else:
                 notes = f_note.get()
 
-            if tipchange == True:
+
+            #print("TEST: changetip variable", tipchange.get())
+            if tipchange.get() == 1:
                 option = True
 
             else:
@@ -1215,12 +1217,13 @@ def graphicalUIprotocol():
         # if shortcuts.get() == "Few_to_Many":
         #     pass
 
-        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-        save_data("custom_protocol", insert)
+        if step_count == False:
+            insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+            save_data("custom_protocol", insert)
 
-        step = step + 1
+            step = step + 1
 
-        current_step_label_v.set("Step:" + str(step)) #Set Default Label
+            current_step_label_v.set("Step:" + str(step)) #Set Default Label
 
         #Reset Count if error occurs in step creation 
         if step_count == True:
@@ -1279,14 +1282,14 @@ def graphicalUIprotocol():
     textboxF.grid(column = 2, row = 2)
     Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
-    tipchange = None
+    tipchange = IntVar()
 
     #Change Tip Tick Box
     label = ttk.Label(proroot, text="Change Tip?")
     label.grid(column = 2, row = 3)
-    textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
+    textboxI = Checkbutton(proroot, onvalue=1, offvalue=0, variable=tipchange, text='Never')
     textboxI.grid(column = 2, row = 4)    
-    textboxI.select()
+    #textboxI.select()
     Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
 
     # Friendly Name Input
