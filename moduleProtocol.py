@@ -37,7 +37,11 @@ pipette_b = instruments.Pipette(
     max_volume=200)
 
 def start_protocol():
-    threading.Thread(target=start_protocol_temp('database/data.db')).start()
+    try:
+        threading.Thread(target=start_protocol_temp('database/data.db')).start()
+    except:
+        print("Error Loading Protocol")
+        pass
 
 
 def start_protocol_temp(db_file):
@@ -169,40 +173,39 @@ def start_protocol_temp(db_file):
 
     """
     for row in c:
+        print("Loaded Below Protocol from database")
         print(row)
 
         # global pipette_b
         # global pipette_a
 
         #Load Variable from database row
-        id_count = row[0]
+        id_count = row[0] 
 
-        shortcut = row[2]
+        shortcut = row[2] # Shortcut 
 
-        volume = row[4]
+        pipette = row[3] # Pipette
 
-        plateA = row[5]
-        wellA = row[6]
+        volume = row[4] # Volume
+
+        plateA = row[5] #Plate A
+        wellA = row[6] #Well A
 
         plateB = row[7]
         wellB = row[8]
 
-        pipette = row[3]
+        option = row[9] #Option 1: Change Tip
 
-        option = row[9]
+        option2 = row[10] #Conditional Option (One to Many - Rows or Columns)
 
-        option2 = row[10]
 
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
         if shortcut == "Simple_Transfer":
             ''' [ Simple Transfer ] 
-            
             Do Note: Calibration data is stored on database in separated columns for pipette A and B 
             The Protocol won't run if calibration data is incorrect or blank. 
-
-
             '''
             if pipette == "pipette_b":
 
@@ -223,8 +226,8 @@ def start_protocol_temp(db_file):
                     robot.move_head(z=calibarate_data[6], strategy='direct')
                     print("Calibration Loaded")
                 else:
-                    print("Calibration Data not available. please calibrate this container")
-                    #break
+                    print("Calibration Data not available. please calibrate this container:", plateBName)
+                    break
 
                 pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
                 pipette_b.calibrate_position((plateA, pos))
@@ -247,8 +250,8 @@ def start_protocol_temp(db_file):
                     robot.move_head(z=calibarate_data[6], strategy='direct')
                     print("Calibration Loaded")
                 else:
-                    print("Calibration Data not available. please calibrate this container")
-                    #break
+                    print("Calibration Data not available. please calibrate this container:", plateBName)
+                    break
 
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))

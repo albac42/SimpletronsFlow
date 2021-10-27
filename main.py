@@ -52,6 +52,8 @@ create_container('custom', 3, 3, 10, 10, 15, 5)
 """
 Start Module Graphical Front-end
 """
+version = 'Version: Private Alpha 1.5 Dev'
+
 from moduleClass import *
 from moduleUI import *
 ###########################################################################################################

@@ -5,6 +5,7 @@ containers/
 export/
 
 
+
 # Logs and databases #
 ######################
 *.log
@@ -21,3 +22,11 @@ export/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Build generated files #
+######################
+dist/
+build/
+*.spec
+*.exe
+venv/

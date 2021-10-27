@@ -37,7 +37,7 @@ import os.path
 
 ###########################################################################################################
 
-version = 'Version: Private Alpha 1.5 Dev'
+
 
 ###########################################################################################################
 #
@@ -73,8 +73,8 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 ###########################################################################################################
 # Remember to verify the custom container exist before adding into this container list to reduce errors
 
-shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
-container_list = [ '', 'trash-box','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
+shortcuts_list = ['Simple_Transfer', 'One_to_Many']
+container_list = [ '','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
                     '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
                    'custom'
                    ]
@@ -96,203 +96,8 @@ count_C = 0
 ###########################################################################################################
 wraplength=200
 ###########################################################################################################
-#
-# Popup Window [If You need create popup windows use below template]
-#
-###########################################################################################################
-
-def confirmation_box(variable):
-    """
-    Pop Up Windows Creation
-    """
-    global version
-    global root
 
 
-    newWindow = Toplevel(root)
-
-    newWindow.title("Simpletrons - OT")
-    newWindow.geometry("200x60")
-
-    #Set Window Location
-    # windowWidth = root.winfo_reqwidth()
-    # windowHeight = root.winfo_reqheight()
-    # positionRight = int(root.winfo_screenwidth()/3.5 - windowWidth/3.5)
-    # positionDown = int(root.winfo_screenheight()/3.5 - windowHeight/3.5)
-    # newWindow.geometry("+{}+{}".format(positionRight, positionDown))
-    x = root.winfo_x()
-    y = root.winfo_y()
-
-    newWindow.geometry("+%d+%d" % (x + 100, y + 200))
-
-    def close_popup():
-        newWindow.destroy()
-        newWindow.update()
-
-    def close_popup_protocol_1():
-        """Delete Row"""
-        count = read_row(custom_protocol)
-        deleteRecord(custom_protocol, count)
-
-
-    if variable == 1:
-        newWindow.geometry("200x60")
-        label = Label(newWindow, text='Simpletrons - OT', font = ('Arial', 15))
-        label.grid(column = 0, row = 0, sticky="NW")
-        label2 = Label(newWindow, text=version, font = ('Arial', 15))
-        label2.grid(column = 0, row = 1, sticky="NW")
-
-    elif variable == 2:
-        newWindow.geometry("180x60")
-        label = Label(newWindow, text='Successfully Loaded Workspace', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 3:
-        newWindow.geometry("170x60")
-        label = Label(newWindow, text='Successfully Loaded Pipette', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 4:
-        newWindow.geometry("180x60")
-        label = Label(newWindow, text='Successfully Save \n Calibration Pipette', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 5:
-        newWindow.geometry("180x60")
-        label = Label(newWindow, text='Successfully Save \n Calibration Container', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 6:
-        newWindow.geometry("170x60")
-        label = Label(newWindow, text='Successfully Save \n Pre-Configured Workspace', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 7:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Successfully Save \n Pre-Configured Pipette', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 7:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Error Saving Protocol', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup_protocol_1)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 8:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Error Saving Pipette \n Check Terminal Window', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 9:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Error Saving Workspace \n Check Terminal Window', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 10:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Loaded Custom Pipette', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-
-    elif variable == 11:
-        newWindow.geometry("140x60")
-        label = Label(newWindow, text='Error: Check Well Input', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)
-    else:
-        newWindow.geometry("180x60")
-        label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
-        label.grid(column = 0, row = 0, sticky="NW")
-        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
-        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
-        save_w.grid(column = 0, row = 1)        
-
-###########################################################################################################
-
-
-###########################################################################################################
-#
-# Connection To Robot [Pop Up]
-#
-###########################################################################################################
-
-def connecton_graphical():
-    """ Connection UI"""
-    """ """
-    conroot = Toplevel(root)
-
-    conroot.title("Simpletrons - OT: Protocol - Connection")
-
-    conroot.lift()
-    conroot. attributes("-topmost", True)
-
-
-    x = root.winfo_x()
-    y = root.winfo_y()
-
-    conroot.geometry("+%d+%d" % (x + 100, y + 200))
-
-    def close_popup():
-        conroot.destroy()
-        conroot.update()
-    ###
-    s_menu = Menu(root)
-    conroot.config(menu = s_menu)
-
-    #Title
-    file_menu = Menu(s_menu)
-    s_menu.add_cascade(label = "File", menu = file_menu)
-    file_menu.add_command(label = "Exit", command = close_popup )
-
-
-    label = ttk.Label(conroot, text = 'Robot Connection Options:')
-    label.grid(column = 0, row = 1)
-
-    save_step = ttk.Button(conroot, text = 'Connect', width = 8, command = connect)
-    save_step.grid(column = 0, row = 2)
-
-    save_step = ttk.Button(conroot, text = 'Reset', width = 5, command = reset_all)
-    save_step.grid(column = 0, row = 3)
-
-    save_step = ttk.Button(conroot, text = 'Manual Connect', width = 16, command = manual_connect)
-    save_step.grid(column = 0, row = 4)
-    
-    def home_treading():
-        print("Starting Threading: Home")
-        threading.Thread(target=home_robot).start()
-
-    save_step = ttk.Button(conroot, text = 'Home', width = 6, command = home_treading)
-    save_step.grid(column = 0, row = 5)
 
 ###########################################################################################################
 
@@ -1022,6 +827,7 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 current_step_label_v = StringVar()
+delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png")
 
 step = 1
 
@@ -1042,6 +848,7 @@ def graphicalUIprotocol():
     global dispense_con
     global well_1
     global well_2
+    global save_button_image_pro
     global save_button_image_pro
     global background_image2
     global background_image3
@@ -1145,7 +952,7 @@ def graphicalUIprotocol():
         print(eventObject.widget.get())
         container_lookup = eventObject.widget.get()
         #Grab Value From Entry Box
-        if re.search('96-Deep-Well', container_lookup):
+        if re.search('96-deep-well', container_lookup):
             background_image2=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
             print("Load Container Image:", container_lookup)
             temp = 1
@@ -1220,7 +1027,7 @@ def graphicalUIprotocol():
         print(eventObject.widget.get())
         container_lookup = eventObject.widget.get()
         #Grab Value From Entry Box
-        if re.search('96-Deep-Well', container_lookup):
+        if re.search('96-deep-well', container_lookup):
             background_image3=tk.PhotoImage(file='graphic/labware/96-Deep-Well.png')
             print("Load Container Image:", container_lookup)
             temp = 1
@@ -1283,6 +1090,13 @@ def graphicalUIprotocol():
     # Save Steps to Database
     #
     ###########################################################################################################
+    def delete_step():
+        global step
+        deleteTable("custom_protocol")
+        step = 1
+        
+        current_step_label_v.set("Step:" + str(step))
+
     def save_step():
         """ Save Step to Database """
         global step
@@ -1332,8 +1146,10 @@ def graphicalUIprotocol():
                 notes = f_note.get()
 
 
-            if tipchange == True:
+            #print("TEST: changetip variable", tipchange.get())
+            if tipchange.get() == 1:
                 option = True
+
             else:
                 option = False
                 
@@ -1349,7 +1165,11 @@ def graphicalUIprotocol():
             shortcuts_v = shortcuts.get()
 
             #Volume
-            volume = volume_well.get()
+            if volume_well.get() == 0:
+                print("Please Check Volume Entry Box")
+                step_count = True
+            else:
+                volume = volume_well.get()
             #Value 1 (Pipette)
             sel_pipette = p_varpip.get()
             #Value 2 (First Container)
@@ -1376,28 +1196,24 @@ def graphicalUIprotocol():
                 option2 = "cols"
                 print("Loaded Cols")
                 print("Check Input Cell")
-            else:
-                step_count = True
-                confirmation_box(11)
-                print("Check Input Cell")
-                
-
-            if re.match("[0-12]+", container_lookup)  is not None:
+            elif re.match("[0-12]+", container_lookup)  is not None:
                 value4 = value_c.get()
                 option2 = "rows"
                 print("Loaded Row")
+
             else:
                 step_count = True
                 confirmation_box(11)
-                print("Check Input Cell")
-                
+                print("Warning: Check Input Cell (Only if you see Warning)")
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
             else:
                 notes = f_note.get()
 
-            if tipchange == True:
+
+            #print("TEST: changetip variable", tipchange.get())
+            if tipchange.get() == 1:
                 option = True
 
             else:
@@ -1410,17 +1226,21 @@ def graphicalUIprotocol():
         # if shortcuts.get() == "Few_to_Many":
         #     pass
 
-        insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
-        save_data("custom_protocol", insert)
+        if step_count == False:
+            insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+            save_data("custom_protocol", insert)
 
-        step = step + 1
+            step = step + 1
 
-        current_step_label_v.set("Step:" + str(step)) #Set Default Label
+            current_step_label_v.set("Step:" + str(step)) #Set Default Label
 
         #Reset Count if error occurs in step creation 
         if step_count == True:
             step = step - 1
             step_count = False
+            confirmation_box_v2("Please Double Check Entered Value")
+        else:
+            confirmation_box_v2("Protocol Step Saved")
 
 
     ###########################################################################################################
@@ -1438,7 +1258,7 @@ def graphicalUIprotocol():
     start_protocol_menu = Menu(s_menu)
     s_menu.add_cascade(label = "File", menu = file_menu)
     file_menu.add_command(label = "Start Protocol", command = start_protocol_ui)
-    file_menu.add_command(label = "Export", command = export_protocol)
+    file_menu.add_command(label = "Export Protocol", command = export_protocol)
     file_menu.add_command(label = "Import Protocol", command = import_protocol)
     file_menu.add_command(label = "Exit", command = close_popup )
     ####
@@ -1458,7 +1278,7 @@ def graphicalUIprotocol():
     current_step_label.grid(column = 1, row = 0)
     current_step_label_v.set("Step: 1") #Set Default Label
     
-    dropdown_shortcuts = ttk.Combobox(proroot, textvariable = shortcuts)
+    dropdown_shortcuts = ttk.Combobox(proroot, state="readonly", textvariable = shortcuts)
     dropdown_shortcuts['values'] = shortcuts_list
     dropdown_shortcuts.current(0)   #Set Default Selection
     dropdown_shortcuts.grid(column = 0, row = 2)
@@ -1469,16 +1289,16 @@ def graphicalUIprotocol():
     label.grid(column = 2, row = 1)
     textboxF = Entry(proroot, textvariable=f_note)
     textboxF.grid(column = 2, row = 2)
-    Tooltip(dropdown_shortcuts, text='Enter a more readable note for this step', wraplength=wraplength)
+    Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
-    tipchange = None
+    tipchange = IntVar()
 
     #Change Tip Tick Box
     label = ttk.Label(proroot, text="Change Tip?")
     label.grid(column = 2, row = 3)
-    textboxI = Checkbutton(proroot, variable=tipchange, text='Never')
+    textboxI = Checkbutton(proroot, onvalue=1, offvalue=0, variable=tipchange, text='Never')
     textboxI.grid(column = 2, row = 4)    
-    textboxI.select()
+    #textboxI.select()
     Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
 
     # Friendly Name Input
@@ -1491,8 +1311,9 @@ def graphicalUIprotocol():
     #Select Pipette
     label = ttk.Label(proroot, text = 'Pipette:*')
     label.grid(column = 0, row = 3)
-    dropdown_ppip = ttk.Combobox(proroot, textvariable = p_varpip, postcommand = update_dropdown_source_pip)
+    dropdown_ppip = ttk.Combobox(proroot, state="readonly", textvariable = p_varpip, postcommand = update_dropdown_source_pip)
     dropdown_ppip.grid(column = 0, row = 4)
+    Tooltip(dropdown_ppip, text='Select a Pipette', wraplength=wraplength)
 
     label = ttk.Label(proroot, textvariable=v2)
     label.grid(column = 1, row = 3)
@@ -1504,7 +1325,7 @@ def graphicalUIprotocol():
     #First Container
     label = ttk.Label(proroot, text = 'Aspirate:*')
     label.grid(column = 0, row = 5)
-    dropdown_aspirate_c = ttk.Combobox(proroot, textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
+    dropdown_aspirate_c = ttk.Combobox(proroot, state="readonly", textvariable = aspirate_con, postcommand = update_aspirate_source_rack)
     dropdown_aspirate_c.grid(column = 0, row = 6)
     dropdown_aspirate_c.bind("<<ComboboxSelected>>", callback_a)
 
@@ -1518,7 +1339,7 @@ def graphicalUIprotocol():
     #Second Container
     label = ttk.Label(proroot, text = 'Dispense:*')
     label.grid(column = 2, row = 5)
-    dropdown_dispense_c = ttk.Combobox(proroot, textvariable = dispense_con, postcommand = update_dispense_source_rack)
+    dropdown_dispense_c = ttk.Combobox(proroot, state="readonly", textvariable = dispense_con, postcommand = update_dispense_source_rack)
     dropdown_dispense_c.grid(column = 2, row = 6)
     dropdown_dispense_c.bind("<<ComboboxSelected>>", callback_b)
 
@@ -1531,12 +1352,16 @@ def graphicalUIprotocol():
 
 
     #Save Button
-    save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
+    #save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
     save_step.grid(column = 4, row = 6)
-    Tooltip(textboxI, text='Save Protocol', wraplength=wraplength)
+    Tooltip(save_step, text='Save Protocol Step', wraplength=wraplength)
 
-
+    #Delete Protocol
+    #delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png") 
+    delete_step = ttk.Button(proroot, image = delete_button_image_pro, width = 5, command = delete_step)
+    delete_step.grid(column = 4, row = 0)
+    Tooltip(delete_step, text='Delete ALL Protocol Step', wraplength=wraplength)
 
 
 
@@ -1590,12 +1415,15 @@ file_menu = Menu(s_menu)
 s_menu.add_cascade(label = "File", menu = file_menu)
 file_menu.add_command(label = "New Protocol..." , command=graphicalUIprotocol)
 file_menu.add_command(label = "About", command = aboutPage)
+file_menu.add_command(label = "Source Code", command = open_url_github)
 file_menu.add_command(label = "Exit", command = root.quit )
 
 file2_menu = Menu(s_menu)
 s_menu.add_cascade(label = "Troubleshooting", menu = file2_menu)
 file2_menu.add_command(label = "Robot Connections Options", command = connecton_graphical)
 file2_menu.add_command(label = "Start Demo Protocol", command = load_demo_protocol)
+file2_menu.add_command(label = "Documentation", command = open_url_doc)
+
 
 
 #Start Up UI
@@ -1914,6 +1742,9 @@ label_drop_tip_c = ttk.Button(tab3, text='Drop Tip', command = set_calibration_d
 label_drop_tip_c.grid(column = 3, row = 6, columnspan = 3)
 Tooltip(label_drop_tip_c, text='Drop Pipette Tip', wraplength=wraplength)
 
+label_set_calibration = ttk.Button(tab3, text='Connect to Robot', command = connecton_graphical)
+label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
+Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 #Keyboard Input
 root.bind("<Left>", move_x_neg)
@@ -2175,7 +2006,7 @@ save_p.grid(column = 3, row = 4)
 Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
 
 label_set_calibration = ttk.Button(tab2, text='Connect to Robot', command = connecton_graphical)
-label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
+label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
 Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 
