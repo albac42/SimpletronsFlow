@@ -827,6 +827,7 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 current_step_label_v = StringVar()
+delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png")
 
 step = 1
 
@@ -847,6 +848,7 @@ def graphicalUIprotocol():
     global dispense_con
     global well_1
     global well_2
+    global save_button_image_pro
     global save_button_image_pro
     global background_image2
     global background_image3
@@ -1088,6 +1090,13 @@ def graphicalUIprotocol():
     # Save Steps to Database
     #
     ###########################################################################################################
+    def delete_step():
+        global step
+        deleteTable("custom_protocol")
+        step = 1
+        
+        current_step_label_v.set("Step:" + str(step))
+
     def save_step():
         """ Save Step to Database """
         global step
@@ -1343,12 +1352,16 @@ def graphicalUIprotocol():
 
 
     #Save Button
-    save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
+    #save_button_image_pro = PhotoImage(file="graphic/content-save-outline.png") 
     save_step = ttk.Button(proroot, image = save_button_image, width = 5, command = save_step)
     save_step.grid(column = 4, row = 6)
     Tooltip(save_step, text='Save Protocol Step', wraplength=wraplength)
 
-
+    #Delete Protocol
+    #delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png") 
+    delete_step = ttk.Button(proroot, image = delete_button_image_pro, width = 5, command = delete_step)
+    delete_step.grid(column = 4, row = 0)
+    Tooltip(delete_step, text='Delete ALL Protocol Step', wraplength=wraplength)
 
 
 
