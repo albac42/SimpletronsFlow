@@ -171,7 +171,8 @@ class Tooltip:
 #
 ###########################################################################################################
 
-def confirmation_box_v2(text):
+
+def confirmation_box_v2(text_temp):
     """
     Pop Up Windows Creation
     """
@@ -187,6 +188,7 @@ def confirmation_box_v2(text):
     positionDown = int(newWindow.winfo_screenheight()/4 - windowHeight/4)
     newWindow.geometry("+{}+{}".format(positionRight, positionDown))
 
+    #global v_text_input
 
     def close_popup():
         newWindow.destroy()
@@ -197,11 +199,11 @@ def confirmation_box_v2(text):
         count = read_row(custom_protocol)
         deleteRecord(custom_protocol, count)    
 
-    print(text)
-    v_text_input = StringVar()
-    label = Label(newWindow, textvariable=v_text_input, font = ('Arial', 15))
+    print(text_temp)
+    v_text_input = "Default"
+    label = Label(newWindow, textvariable=v_text_input)
     label.grid(column = 0, row = 0, sticky="NW")
-    v_text_input.set(text)
+    v_text_input.set(str(text_temp))
     save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
     save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
     save_w.grid(column = 0, row = 1)
@@ -332,9 +334,26 @@ def confirmation_box(variable):
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
+
+    elif variable == 12:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Protocol Step Saved', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
+    elif variable == 13:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Please Double Check \n Entered Value', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
+
     else:
         newWindow.geometry("180x60")
-        label = Label(newWindow, text='Error: Please Check Terminal Window', font = ('Arial', 9))
+        label = Label(newWindow, text='Error: Please Check \n Terminal Window', font = ('Arial', 9))
         label.grid(column = 0, row = 0, sticky="NW")
         save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)

@@ -827,7 +827,7 @@ v2 = StringVar()
 v3 = StringVar()
 v4 = StringVar()
 current_step_label_v = StringVar()
-delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png")
+delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png") 
 
 step = 1
 
@@ -1117,7 +1117,12 @@ def graphicalUIprotocol():
             shortcuts_v = shortcuts.get()
 
             #Volume
-            volume = volume_well.get()
+            if volume_well.get() == 0:
+                print("Please Check Volume Entry Box")
+                step_count = True
+            else:
+                volume = volume_well.get()
+
             #Value 1 (Pipette)
             sel_pipette = p_varpip.get()
             #Value 2 (First Container)
@@ -1200,7 +1205,6 @@ def graphicalUIprotocol():
                 value4 = value_c.get()
                 option2 = "rows"
                 print("Loaded Row")
-
             else:
                 step_count = True
                 confirmation_box(11)
@@ -1238,9 +1242,9 @@ def graphicalUIprotocol():
         if step_count == True:
             step = step - 1
             step_count = False
-            confirmation_box_v2("Please Double Check Entered Value")
+            confirmation_box(13)
         else:
-            confirmation_box_v2("Protocol Step Saved")
+            confirmation_box(12)
 
 
     ###########################################################################################################

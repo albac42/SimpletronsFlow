@@ -406,6 +406,10 @@ def start_protocol_temp(db_file):
                     if option == '0':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
 
+
+                #consolidate (Don't change tip)
+
+
                 for c in robot.commands():
                     print(c)                    
 
