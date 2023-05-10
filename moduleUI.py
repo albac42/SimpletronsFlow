@@ -1097,6 +1097,36 @@ def graphicalUIprotocol():
         
         current_step_label_v.set("Step:" + str(step))
 
+    def view_protocol():    
+        conn = sqlite3.connect(db_file)
+        #c = conn.cursor()
+        proto_data = conn.execute("SELECT id, volume, value1, value2, value3, value4 FROM custom_protocol") 
+        records = proto_data.fetchall()
+
+        viewWindow = Tk()
+        viewText = Text(viewWindow)
+        viewText.pack()
+        viewText.insert(1.0, "ID, volume, aspirate container, aspirate cell, dispense container, dispense cell\n")
+        for line in records:
+            #print(line)
+            viewText.insert(END, line)
+            viewText.insert(END, "\n")
+
+        viewWindow.mainloop()
+        # viewTable = ttk.Treeview(viewWindow)
+        # viewTable['columns']=("ID", "volume", "aspirate container", "aspirate cell", "dispense container", "dispense cell")
+        # for line in records:
+        #     viewTable.insert("", 'end', line)
+
+       # viewTable.pack()
+
+
+        #print(proto_data)
+        #print()
+        conn.close()
+
+
+
     def save_step():
         """ Save Step to Database """
         global step
@@ -1367,6 +1397,9 @@ def graphicalUIprotocol():
     delete_step.grid(column = 4, row = 0)
     Tooltip(delete_step, text='Delete ALL Protocol Step', wraplength=wraplength)
 
+    #View protocol
+    view_protocol = ttk.Button(proroot, text = "View Protocol", width = 5, command = view_protocol)
+    view_protocol.grid(column = 6, row = 5)
 
 
 ##########################################################################################################
