@@ -311,6 +311,52 @@ def save_data(table, insert):
     conn.close()  # Close database
 
 
+def update_data(table, update):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
+    # if table == "custom_pipette":
+    #     sql_insert_template = ''' INSERT INTO custom_pipette(axis, max_volume, min_volume, channels, aspirate_speed, dispense_speed, tip_racks, trash_container)
+    #         VALUES(?,?,?,?,?,?,?,?) '''
+
+    # if table == "custom_container":
+    #     sql_insert_template = ''' INSERT INTO custom_container(name, grid_c, gri`d_r, spacing_c, diameter, depth)
+    #         VALUES(?,?,?,?,?,?) '''
+
+    # if table == "custom_workspace":
+    #     sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z, xx, yy, zz)
+    #         VALUES(?,?,?,?,?,?,?,?,?) '''
+
+    # if table == "custom_workspace_a":
+    #     sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, xx, yy, zz)
+    #         VALUES(?,?,?,?,?,?) '''
+
+    # if table == "custom_workspace_b":
+    #     sql_insert_template = ''' INSERT INTO custom_workspace(name, container, location, x , y, z)
+    #         VALUES(?,?,?,?,?,?) '''
+
+    if table == "custom_protocol":
+        sql_insert_template = '''UPDATE custom_protocol 
+                        SET name=?, 
+                        shortcuts = ?, 
+                        pipette=?, 
+                        volume=?, 
+                        value1=?, 
+                        value2=?, 
+                        value3 = ?, 
+                        value4 = ?, 
+                        option = ?, 
+                        option2 = ?, 
+                        notes =  ?
+                        WHERE id = ?;'''
+
+
+    #Excute Task to Database
+    c.execute(sql_insert_template, update)
+    conn.commit() # Save
+    print("Record Added successfully to", table)
+    conn.close()  # Close database
+
 
 # Find Data
 def find_data(table, name):

@@ -73,7 +73,7 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 ###########################################################################################################
 # Remember to verify the custom container exist before adding into this container list to reduce errors
 
-shortcuts_list = ['Simple_Transfer', 'One_to_Many']
+shortcuts_list = ['Simple_Transfer', 'One_to_Many', ]
 container_list = [ '','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
                     '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
                    'custom'
@@ -829,14 +829,13 @@ v4 = StringVar()
 current_step_label_v = StringVar()
 delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png") 
 
-step = 1
+
 
 def graphicalUIprotocol():
     """ 
     Code for Graphical Protocol Creation 
     Note: Remember to include global variable for any PhotoImage
     """ 
-
     global v1
     global v2
     global v3 
@@ -855,7 +854,17 @@ def graphicalUIprotocol():
     global background3
     global background2
     global step
+    global max_step
+    global current_row
     global current_step_label_v
+
+    deleteTable("custom_protocol")
+
+    current_row = 1
+    step = 1
+    max_step = 1
+    #root = root
+ 
 
     f_name = StringVar()
     volume_well = DoubleVar()
@@ -1093,9 +1102,11 @@ def graphicalUIprotocol():
     def delete_step():
         global step
         deleteTable("custom_protocol")
-        step = 1
+        #step = 1
         
         current_step_label_v.set("Step:" + str(step))
+
+
 
     def view_protocol():    
         conn = sqlite3.connect(db_file)
@@ -1104,13 +1115,32 @@ def graphicalUIprotocol():
         records = proto_data.fetchall()
 
         viewWindow = Tk()
-        viewText = Text(viewWindow)
-        viewText.pack()
-        viewText.insert(1.0, "ID, volume, aspirate container, aspirate cell, dispense container, dispense cell\n")
-        for line in records:
-            #print(line)
-            viewText.insert(END, line)
-            viewText.insert(END, "\n")
+
+        e=Label(viewWindow,width=20,text='ID',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=0)
+        e=Label(viewWindow,width=20,text='Volume (uL)',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=1)
+        e=Label(viewWindow,width=20,text='Aspirate Container',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=2)
+        e=Label(viewWindow,width=20,text='Aspirate Cell',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=3)
+        e=Label(viewWindow,width=20,text='Dispense Container',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=4)
+        e=Label(viewWindow,width=20,text='Dispense Cell',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e.grid(row=0,column=5)
+        i=1
+
+        for line in records: 
+            for j in range(len(line)):
+                e = Entry(viewWindow, width=20, fg='blue') 
+                e.grid(row=i, column=j) 
+                e.insert(END, line[j])
+            i=i+1
+        
+        # for line in records:
+        #     #print(line)
+        #     viewText.insert(END, line)
+        #     viewText.insert(END, "\n")
 
         viewWindow.mainloop()
         # viewTable = ttk.Treeview(viewWindow)
@@ -1125,6 +1155,25 @@ def graphicalUIprotocol():
         #print()
         conn.close()
 
+
+    def back_step():
+        global step
+     
+        global current_step_label_v
+        #global max_step
+        if step>1:
+            step = step-1
+            current_step_label_v.set("Step:" + str(step))
+            
+    def next_step():
+        global step
+        global max_step
+        global current_step_label_v
+        #global max_step
+        if step < max_step:
+            step = step+1
+            current_step_label_v.set("Step:" + str(step))   
+        
 
 
     def save_step():
@@ -1259,14 +1308,35 @@ def graphicalUIprotocol():
 
         # if shortcuts.get() == "Few_to_Many":
         #     pass
-
-        if step_count == False:
+        global max_step
+        global current_row
+        global conn
+        global cursor
+        if step_count == False and step == max_step:
             insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
             save_data("custom_protocol", insert)
 
             step = step + 1
+            current_row = current_row + 1
+            max_step = max_step + 1
 
             current_step_label_v.set("Step:" + str(step)) #Set Default Label
+
+
+
+        elif step_count == False:
+            try:
+                update = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes, step)
+                #cursor.execute("UPDATE custom_protocol SET name=?, shortcuts = ?, pipette=?, volume=?, value1=?, value2=?, value3 = ?, value4 = ?, option = ?, option2 = ?, notes =  WHERE id=?", insert)
+                #conn.commit()
+
+                update_data("custom_protocol", update)
+
+                #step = max_step
+                #messagebox.showinfo("Success", "Data updated successfully!")
+            except Exception as e:
+                pass
+                #messagebox.showerror("Error", f"An error occurred: {e}")
 
         #Reset Count if error occurs in step creation 
         if step_count == True:
@@ -1306,7 +1376,7 @@ def graphicalUIprotocol():
     label.grid(column = 0, row = 0)
     v1.set("Transfer: Basic") #Set Default Label
 
-    label = ttk.Label(proroot, text = 'Shortcuts Function:*').grid(column = 0, row = 1)
+    label = ttk.Label(proroot, text = 'Step Type:*').grid(column = 0, row = 1)
 
     current_step_label = ttk.Label(proroot, width=12, textvariable=current_step_label_v)
     current_step_label.grid(column = 1, row = 0)
@@ -1398,8 +1468,16 @@ def graphicalUIprotocol():
     Tooltip(delete_step, text='Delete ALL Protocol Step', wraplength=wraplength)
 
     #View protocol
-    view_protocol = ttk.Button(proroot, text = "View Protocol", width = 5, command = view_protocol)
-    view_protocol.grid(column = 6, row = 5)
+    view_protocol = ttk.Button(proroot, text = "View Protocol", width = 15, command = view_protocol)
+    view_protocol.grid(column = 4, row = 5)
+
+
+        #View protocol
+    go_back = ttk.Button(proroot, text = "Back", width = 5, command = back_step)
+    go_back.grid(column = 4, row = 7)
+
+    go_next = ttk.Button(proroot, text = "Next", width = 5, command = next_step)
+    go_next.grid(column = 4, row = 8)
 
 
 ##########################################################################################################
