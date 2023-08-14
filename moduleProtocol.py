@@ -194,11 +194,11 @@ def start_protocol_temp(db_file):
         plateB = row[7]
         wellB = row[8]
 
-        option = row[9] #Option 1: Change Tip
+        change_tip = row[9] #Option 1: Change Tip
 
-        option2 = row[10] #Conditional Option (One to Many - Rows or Columns)
+        row_col = row[10] #Conditional Option (One to Many - Rows or Columns)
 
-
+        mix_after = row[11] # whether the well should be mixed after dispensing
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
@@ -233,7 +233,6 @@ def start_protocol_temp(db_file):
                 pipette_b.calibrate_position((plateA, pos))
                 robot.move_head(z=60, strategy='direct')
 
-
                 #Second Plate Initialisation 
                 plateBName = plateB[0:2]
                 planteBType = plateB[3:]
@@ -258,7 +257,7 @@ def start_protocol_temp(db_file):
     
                 #print(option)
                 # This will send command to perform desire task  
-                if option == '1':
+                if change_tip == '1':
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")
 
@@ -319,7 +318,7 @@ def start_protocol_temp(db_file):
     
                 #print(option)
                 # This will send command to perform desire task  
-                if option == '1':
+                if change_tip == '1':
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
                     print("Complete: Step", id_count, ": Option: Never Change")
 
@@ -391,21 +390,20 @@ def start_protocol_temp(db_file):
                 pipette_b.calibrate_position((plateB, pos))
 
 
-                if option2 == "rows":
+                if row_col == "rows":
                     # Never Get a New Tip each steps
-                    if option == '1':
+                    if change_tip == '1':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == '0':
+                    if change_tip == '0':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
-                if option2 == "cols":
-                    if option == '1':
+                if row_col == "cols":
+                    if change_tip == '1':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == '0':
+                    if change_tip == '0':
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
-
 
                 #consolidate (Don't change tip)
 
@@ -468,23 +466,158 @@ def start_protocol_temp(db_file):
                 pipette_a.calibrate_position((plateB, pos))
 
 
-                if option2 == "rows":
+                if row_col == "rows":
                     # Never Get a New Tip each steps
-                    if option == '1':
+                    if change_tip == '1':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if option == '0':
+                    if change_tip == '0':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
-                if option2 == "cols":
-                    if option == '1':
+                if row_col == "cols":
+                    if change_tip == '1':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if option == '0':
+                    if change_tip == '0':
                         pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
                 for c in robot.commands():
                     print(c)
-                    
+    
+        if shortcut == "Mixing":
+                      
+            if pipette == "pipette_b":
+                
+                #First Plate Initialisation 
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
+
+                plateA = containers.load(planteAType, plateAName, 'plateA')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateAName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container:", plateBName)
+                    break
+
+                pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
+                pipette_b.calibrate_position((plateA, pos))
+                robot.move_head(z=60, strategy='direct')
+
+                #Second Plate Initialisation 
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
+
+                plateB = containers.load(planteBType, plateBName, 'plateB')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container:", plateBName)
+                    break
+
+                pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
+                pipette_b.calibrate_position((plateB, pos))
+    
+                #print(change_tip)
+                # This will send command to perform desire task  
+                if change_tip == '1':
+                    for repeat in range(4):
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
+
+                    print("Complete: Step", id_count, ": Option: Never Change")
+
+                else:
+                    for repeat in range(3):
+                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always')
+                    print("Complete: Step", id_count, ": Option: Always")
+
+                for c in robot.commands():
+                    print(c)                    
+
+            if pipette == "pipette_a":
+                ''' Pipette A'''
+                #First Plate Initialisation 
+                plateAName = plateA[0:2]
+                planteAType = plateA[3:]
+                #print(plateAName)
+                #print(planteAType)
+
+                plateA = containers.load(planteAType, plateAName, 'plateA')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateAName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
+
+                pos = plateA[0].from_center(x=0, y=0, z=-1, reference=plateA)
+                pipette_a.calibrate_position((plateA, pos))
+                robot.move_head(z=60, strategy='direct')
+
+
+                #Second Plate Initialisation 
+                plateBName = plateB[0:2]
+                planteBType = plateB[3:]
+                #print(plateBName)
+                #print(planteBType)
+
+                plateB = containers.load(planteBType, plateBName, 'plateB')
+                
+                #Load Calibration Data
+                calibarate_data = find_data("custom_workspace", plateBName)
+                #Check Calibration Data
+                if (calibarate_data[4] != 0 and calibarate_data[5] != 0 and calibarate_data[6] != 0):
+                    robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
+                    robot.move_head(z=calibarate_data[6], strategy='direct')
+                    print("Calibration Loaded")
+                else:
+                    print("Calibration Data not available. please calibrate this container")
+                    #break
+
+                pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
+                pipette_a.calibrate_position((plateB, pos))
+    
+                #print(option)
+                # This will send command to perform desire task  
+                # This will send command to perform desire task  
+                if change_tip == '1':
+                    for repeat in range(4):
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
+
+                    print("Complete: Step", id_count, ": Option: Never Change")
+
+                else:
+                    for repeat in range(3):
+                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
+
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always')
+                    print("Complete: Step", id_count, ": Option: Always")
+
+                for c in robot.commands():
+                    print(c)           
+
+
+
 
     #Finally both Drop Tip at end of protocol
     try:
@@ -575,16 +708,17 @@ def test_save_data_demo():
     shortcuts = "Simple_Transfer" #Transfer Shortcut [Refer To Documentation]
     sel_pipette = "pipette_b" # Pipette Name (pipette_b or pipette_a)
     volume = 100 # Volume (Double Variable)
-    value1 = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
-    value2 = "B1" #Well Cell for first plate
-    value3 = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
-    value4 = "B2" #Well Cell for second plate
-    option = True #Never Change Tip Enable (False for always change tip)
-    option2 = None #Additional Parameters 
+    aspirate_container = "B1_48-well-plate"  #First Plate Full Name (Require initial 3 variable is require for location)
+    aspirate_well = "B1" #Well Cell for first plate
+    dispense_container = "B1_48-well-plate" #Second Plate Full Name (Require initial 3 variable is require for location)
+    dispense_well = "B2" #Well Cell for second plate
+    change_tip = True #Never Change Tip Enable (False for always change tip)
+    row_col = None #Additional Parameters 
+    mixing = None
     notes = "Simple Transfer From 24 well plate to 48 well plate"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    insert = (name, shortcuts, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes)
     save_data("custom_protocol", insert)
     
     
@@ -593,17 +727,17 @@ def test_save_data_demo():
     shortcuts = "One_to_Many"
     sel_pipette = "pipette_b"
     volume = 200
-    value1 = "A1_24-well-plate"
-    value2 = "A2"
-    value3 = "B1_48-well-plate"
-    value4 = "1"
-    option = True
-    option2 = 'rows' # For one to Many you can set to transfer to whole rows or cols by changing this. 
+    aspirate_container = "A1_24-well-plate"
+    aspirate_well = "A2"
+    dispense_container = "B1_48-well-plate"
+    dispense_well = "1"
+    change_tip = True
+    row_col = 'rows' # For one to Many you can set to transfer to whole rows or cols by changing this. 
                     # DO not value need to just a number (rows) or a letter (cols)
     notes = "test notes"
 
     #Insert To Database Function
-    insert = (name, shortcuts, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+    insert = (name, shortcuts, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes)
     save_data("custom_protocol", insert)  
 
 #Load Test Data Condition [Comment Out if you require debugging Protocol API]

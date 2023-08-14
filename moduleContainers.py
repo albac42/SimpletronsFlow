@@ -21,7 +21,7 @@ def create_container(name, grid_c, grid_r, spacing_c, spacing_r, diameter, depth
 
     print('Creating "', name, '" Container') 
     containers.create(
-        name,                    # name of you container
+        name,                    # name of your container
         grid=(grid_c, grid_r),                    # specify amount of (columns, rows)
         spacing=(spacing_c, spacing_r),               # distances (mm) between each (column, row)
         diameter=diameter,                     # diameter (mm) of each well on the plate

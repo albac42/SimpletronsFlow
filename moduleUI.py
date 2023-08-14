@@ -1,6 +1,7 @@
 #Import User Interface Library 
 from tkinter import *
 
+
 #Database
 import sqlite3
 from sqlite3 import Error
@@ -54,6 +55,7 @@ create_connection()
 ###########################################################################################################
 root = Tk()
 root.title('Simpletrons - OT')
+#root.configure(bg="#96c4c3")
 #root.geometry("740x400")
 #root.pack_propagate(0)
 
@@ -73,7 +75,7 @@ root.geometry("+{}+{}".format(positionRight, positionDown))
 ###########################################################################################################
 # Remember to verify the custom container exist before adding into this container list to reduce errors
 
-shortcuts_list = ['Simple_Transfer', 'One_to_Many', ]
+shortcuts_list = ['Simple_Transfer', 'One_to_Many', 'Mixing']
 container_list = [ '','point', 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul', '96-flat', 
                     '96-PCR-flat', '96-PCR-tall',  '96-deep-well', '48-well-plate', '24-well-plate',
                    'custom'
@@ -879,6 +881,7 @@ def graphicalUIprotocol():
     proroot = Toplevel(root)
 
     proroot.title("Simpletrons - OT: Protocol Designer")
+    proroot.configure(background="#f9f4f2")
     #newWindow.geometry("200x60")
     
     windowWidth = root.winfo_reqwidth()
@@ -1099,40 +1102,42 @@ def graphicalUIprotocol():
     # Save Steps to Database
     #
     ###########################################################################################################
-    def delete_step():
+    def delete_protocol():
         global step
         deleteTable("custom_protocol")
-        #step = 1
-        
-        current_step_label_v.set("Step:" + str(step))
+        step = 1
+        max_step = 1
+        current_step_label_v.set("Step: " + str(step))
 
 
 
     def view_protocol():    
         conn = sqlite3.connect(db_file)
         #c = conn.cursor()
-        proto_data = conn.execute("SELECT id, volume, value1, value2, value3, value4 FROM custom_protocol") 
+        proto_data = conn.execute("SELECT id, shortcuts, volume, aspirate_container, aspirate_well, dispense_container, dispense_well FROM custom_protocol") 
         records = proto_data.fetchall()
 
         viewWindow = Tk()
 
-        e=Label(viewWindow,width=20,text='ID',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='ID',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=0)
-        e=Label(viewWindow,width=20,text='Volume (uL)',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='Type',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=1)
-        e=Label(viewWindow,width=20,text='Aspirate Container',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='Volume (uL)',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=2)
-        e=Label(viewWindow,width=20,text='Aspirate Cell',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='Aspirate Container',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=3)
-        e=Label(viewWindow,width=20,text='Dispense Container',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='Aspirate Cell',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=4)
-        e=Label(viewWindow,width=20,text='Dispense Cell',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+        e=Label(viewWindow,width=20,text='Dispense Container',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=5)
+        e=Label(viewWindow,width=20,text='Dispense Cell',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
+        e.grid(row=0,column=6)
         i=1
 
         for line in records: 
             for j in range(len(line)):
-                e = Entry(viewWindow, width=20, fg='blue') 
+                e = Entry(viewWindow, width=20, fg='gray4') 
                 e.grid(row=i, column=j) 
                 e.insert(END, line[j])
             i=i+1
@@ -1163,7 +1168,7 @@ def graphicalUIprotocol():
         #global max_step
         if step>1:
             step = step-1
-            current_step_label_v.set("Step:" + str(step))
+            current_step_label_v.set("Step: " + str(step))
             
     def next_step():
         global step
@@ -1172,7 +1177,7 @@ def graphicalUIprotocol():
         #global max_step
         if step < max_step:
             step = step+1
-            current_step_label_v.set("Step:" + str(step))   
+            current_step_label_v.set("Step: " + str(step))   
         
 
 
@@ -1184,6 +1189,8 @@ def graphicalUIprotocol():
         # Reference
         # shortcuts_list = ['Simple_Transfer', 'Multiple_Wells_Transfer', 'One_to_Many', 'Few_to_Many']
         print(shortcuts.get())
+
+        ##SIMPLE TRANSFER 
         if shortcuts.get() == "Simple_Transfer":
             ''' Simple Transfer '''
             #Check if Friendly Name is available if not set a default based of step
@@ -1205,24 +1212,24 @@ def graphicalUIprotocol():
             #Value 1 (Pipette)
             sel_pipette = p_varpip.get()
             #Value 2 (First Container)
-            value1 = aspirate_con.get()
+            aspirate_container = aspirate_con.get()
             #Value 2 (First Container Syntax)
             container_lookup = aspirate_con.get()
 
             #Check if Point Container (Single Well Items)
             if re.search('point', container_lookup):
-                value2 = "A1"
+                aspirate_well = "A1"
             else:
-                value2 = value_b.get()
+                aspirate_well = value_b.get()
             #Value 3 (Second Container)
-            value3 = dispense_con.get()
+            dispense_container = dispense_con.get()
             #Value 4 (Second Container Syntax)
             container_lookup = dispense_con.get()
 
             if re.search('point', container_lookup):
-                value4 = "A1"
+                dispense_well = "A1"
             else:
-                value4 = value_c.get()
+                dispense_well = value_c.get()
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1232,13 +1239,20 @@ def graphicalUIprotocol():
 
             #print("TEST: changetip variable", tipchange.get())
             if tipchange.get() == 1:
-                option = True
+                change_tip = True
 
             else:
-                option = False
+                change_tip = False
                 
-            option2 = "None"
+            row_col = "None"
 
+            if mix_after.get() == 1:
+                mixing = True
+            else:
+                mixing = False
+
+
+        ##ONE TO MANY 
         if shortcuts.get() == "One_to_Many":
             #Check if Friendly Name is available if not set a default based of step
             if len(f_name.get()) == 0:
@@ -1257,32 +1271,33 @@ def graphicalUIprotocol():
             #Value 1 (Pipette)
             sel_pipette = p_varpip.get()
             #Value 2 (First Container)
-            value1 = aspirate_con.get()
+            aspirate_container = aspirate_con.get()
             #Value 2 (First Container Syntax)
             container_lookup = aspirate_con.get()
 
             #Check if Point Container (Single Well Items)
             if re.search('point', container_lookup):
-                value2 = "A1"
+                aspirate_well = "A1" #aspirate_well is aspirate cell
             else:
-                value2 = value_b.get()
+                aspirate_well = value_b.get()
 
-            value3 = dispense_con.get()
+            dispense_container = dispense_con.get() #value 3 is dispense container
 
             # Code To Find if row or column ()
             # If you need higher rows count adjust pattern2
             # pattern1 = re.compile("[A-Za-z]+")
             # pattern2 = re.compile("[0-12]+")
-            container_lookup = value_c.get()
+            container_lookup = value_c.get() #value_c is dispense container
+
 
             if re.match("[A-Za-z]+" , container_lookup) is not None:
-                value4 = value_c.get()
-                option2 = "cols"
+                dispense_well = value_c.get()
+                row_col = "cols"
                 print("Loaded Cols")
                 print("Check Input Cell")
-            elif re.match("[0-12]+", container_lookup)  is not None:
-                value4 = value_c.get()
-                option2 = "rows"
+            elif re.match("[0-9]+", container_lookup)  is not None:
+                dispense_well = value_c.get()
+                row_col = "rows"
                 print("Loaded Row")
             else:
                 step_count = True
@@ -1297,10 +1312,80 @@ def graphicalUIprotocol():
 
             #print("TEST: changetip variable", tipchange.get())
             if tipchange.get() == 1:
-                option = True
+                change_tip = True
 
             else:
-                option = False
+                change_tip = False
+
+            if mix_after.get() == 1:
+                mixing = True
+            else:
+                mixing = False
+
+
+        if shortcuts.get() == "Mixing":
+            
+            #Check for name
+            if len(f_name.get()) == 0:
+                name = "step" + str(step)
+            else:
+                name = f_name.get()
+
+            #Shortcut name
+            shortcuts_v = shortcuts.get()
+
+            #Volume to mix
+            if volume_well.get() == 0:
+                print("Please Check Volume Entry Box")
+                step_count = True
+            else:
+                volume = volume_well.get()
+
+            #Value 1 (Pipette)
+            sel_pipette = p_varpip.get()
+
+            #Value 2 (First Container)
+            aspirate_container = aspirate_con.get()
+            #Value 2 (First Container Syntax)
+            container_lookup = aspirate_con.get()
+
+            #Check if Point Container (Single Well Items)
+            if re.search('point', container_lookup):
+                aspirate_well = "A1"
+            else:
+                aspirate_well = value_b.get()
+
+            dispense_container = aspirate_container
+            dispense_well = aspirate_well
+
+            #Value 3 (Second Container)
+            # dispense_container = dispense_con.get()
+            # #Value 4 (Second Container Syntax)
+            # container_lookup = dispense_con.get()
+
+            # if re.search('point', container_lookup):
+            #     dispense_well = "A1"
+            # else:
+            #     dispense_well = value_c.get()
+
+            if len(f_note.get()) == 0:
+                notes = "NULL"
+            else:
+                notes = f_note.get()
+
+            #print("TEST: changetip variable", tipchange.get())
+            if tipchange.get() == 1:
+                change_tip = True
+            else:
+                change_tip = False
+                
+            row_col = "None"
+
+            if mix_after.get() == 1:
+                mixing = True
+            else:
+                mixing = False
+
 
         # if shortcuts.get() == "Multiple_Wells_Transfer":
         #     pass
@@ -1308,26 +1393,32 @@ def graphicalUIprotocol():
 
         # if shortcuts.get() == "Few_to_Many":
         #     pass
+
+
+        #Save or update
+
         global max_step
         global current_row
         global conn
         global cursor
+
+        #If the current step number is the max step, add a new protocol step entry
         if step_count == False and step == max_step:
-            insert = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes)
+            insert = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes)
             save_data("custom_protocol", insert)
 
             step = step + 1
             current_row = current_row + 1
             max_step = max_step + 1
 
-            current_step_label_v.set("Step:" + str(step)) #Set Default Label
+            current_step_label_v.set("Step: " + str(step)) #Set Default Label
 
 
-
+        #If not, edit the 
         elif step_count == False:
             try:
-                update = (name, shortcuts_v, sel_pipette, volume, value1, value2, value3, value4, option, option2, notes, step)
-                #cursor.execute("UPDATE custom_protocol SET name=?, shortcuts = ?, pipette=?, volume=?, value1=?, value2=?, value3 = ?, value4 = ?, option = ?, option2 = ?, notes =  WHERE id=?", insert)
+                update = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes, step)
+                #cursor.execute("UPDATE custom_protocol SET name=?, shortcuts = ?, pipette=?, volume=?, aspirate_container=?, aspirate_well=?, dispense_container = ?, dispense_well = ?, change_tip = ?, row_col = ?, notes =  WHERE id=?", insert)
                 #conn.commit()
 
                 update_data("custom_protocol", update)
@@ -1340,11 +1431,24 @@ def graphicalUIprotocol():
 
         #Reset Count if error occurs in step creation 
         if step_count == True:
-            step = step - 1
+           # step = step - 1
             step_count = False
             confirmation_box(13)
         else:
             confirmation_box(12)
+
+
+
+    def on_dropdown_change(event):
+        selected_option = shortcuts.get()
+
+        if selected_option == "Mixing":
+            dropdown_dispense_c.config(state="disabled")
+            textboxC.config(state="disabled")
+        else:
+            dropdown_dispense_c.config(state="normal")
+            textboxC.config(state="normal")
+
 
 
     ###########################################################################################################
@@ -1384,6 +1488,7 @@ def graphicalUIprotocol():
     
     dropdown_shortcuts = ttk.Combobox(proroot, state="readonly", textvariable = shortcuts)
     dropdown_shortcuts['values'] = shortcuts_list
+    dropdown_shortcuts.bind("<<ComboboxSelected>>", on_dropdown_change)
     dropdown_shortcuts.current(0)   #Set Default Selection
     dropdown_shortcuts.grid(column = 0, row = 2)
     Tooltip(dropdown_shortcuts, text='Select a shortcut Function', wraplength=wraplength)
@@ -1396,6 +1501,7 @@ def graphicalUIprotocol():
     Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
     tipchange = IntVar()
+    mix_after = IntVar()
 
     #Change Tip Tick Box
     label = ttk.Label(proroot, text="Change Tip?")
@@ -1404,6 +1510,15 @@ def graphicalUIprotocol():
     textboxI.grid(column = 2, row = 4)    
     #textboxI.select()
     Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
+
+
+    label = ttk.Label(proroot, text="Mix after dispense?")
+    label.grid(column = 3, row = 3)
+    textboxQ = Checkbutton(proroot, onvalue=1, offvalue=0, variable=mix_after, text='Mix?')
+    textboxQ.grid(column = 3, row = 4)    
+    #textboxI.select()
+    Tooltip(textboxQ, text='Do you wish to mix the well after a dispense?', wraplength=wraplength)
+
 
     # Friendly Name Input
     label = ttk.Label(proroot, text="Friendly Name:")
@@ -1463,12 +1578,12 @@ def graphicalUIprotocol():
 
     #Delete Protocol
     #delete_button_image_pro = PhotoImage(file="graphic/delete-circle.png") 
-    delete_step = ttk.Button(proroot, image = delete_button_image_pro, width = 5, command = delete_step)
-    delete_step.grid(column = 4, row = 0)
-    Tooltip(delete_step, text='Delete ALL Protocol Step', wraplength=wraplength)
+    delete_protocol = ttk.Button(proroot, image = delete_button_image_pro, width = 5, command = delete_protocol)
+    delete_protocol.grid(column = 4, row = 0)
+    Tooltip(delete_protocol, text='Delete ALL Protocol Step', wraplength=wraplength)
 
     #View protocol
-    view_protocol = ttk.Button(proroot, text = "View Protocol", width = 15, command = view_protocol)
+    view_protocol = ttk.Button(proroot, text = "View Protocol", width = 15, command = view_protocol, )
     view_protocol.grid(column = 4, row = 5)
 
 

@@ -351,6 +351,21 @@ def confirmation_box(variable):
         save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
         save_w.grid(column = 0, row = 1)
 
+    elif variable == 14:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Step Updated Successfully', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)   
+
+    elif variable == 15:
+        newWindow.geometry("140x60")
+        label = Label(newWindow, text='Please Double Check \n Entered Value', font = ('Arial', 9))
+        label.grid(column = 0, row = 0, sticky="NW")
+        save_button_image = PhotoImage(file="graphic/content-save-outline.png") 
+        save_w = ttk.Button(newWindow, text='OK', width = 5, command = close_popup)
+        save_w.grid(column = 0, row = 1)
     else:
         newWindow.geometry("180x60")
         label = Label(newWindow, text='Error: Please Check \n Terminal Window', font = ('Arial', 9))
