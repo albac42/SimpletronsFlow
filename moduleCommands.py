@@ -301,8 +301,8 @@ def save_data(table, insert):
 
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, value1, value2, value3, value4, option, option2, notes)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mix_after, notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -341,12 +341,13 @@ def update_data(table, update):
                         shortcuts = ?, 
                         pipette=?, 
                         volume=?, 
-                        value1=?, 
-                        value2=?, 
-                        value3 = ?, 
-                        value4 = ?, 
-                        option = ?, 
-                        option2 = ?, 
+                        aspirate_container=?, 
+                        aspirate_well=?, 
+                        dispense_container = ?, 
+                        dispense_well = ?, 
+                        change_tip = ?, 
+                        row_col = ?,
+                        mix_after = ?,
                         notes =  ?
                         WHERE id = ?;'''
 
@@ -488,12 +489,13 @@ def setup_table(variable):
                                             shortcuts text NOT NULL,
                                             pipette text NOT NULL,
                                             volume REAL NOT NULL,
-                                            value1 text,
-                                            value2 text,
-                                            value3 text,
-                                            value4 text,
-                                            option text,
-                                            option2 text,
+                                            aspirate_container text,
+                                            aspirate_well text,
+                                            dispense_container text,
+                                            dispense_well text,
+                                            change_tip text,
+                                            row_col text,
+                                            mix_after text,
                                             notes text
                                         ); """
 
@@ -505,12 +507,13 @@ def setup_table(variable):
                                             shortcuts text NOT NULL,
                                             pipette text NOT NULL,
                                             volume REAL NOT NULL,
-                                            value1 text,
-                                            value2 text,
-                                            value3 text,
-                                            value4 text,
-                                            option boolean,
-                                            option2 text,
+                                            aspirate_container text,
+                                            aspirate_well text,
+                                            dispense_container text,
+                                            dispense_well text,
+                                            change_tip boolean,
+                                            row_col text,
+                                            mix_after text,
                                             notes text
                                         ); """
 
