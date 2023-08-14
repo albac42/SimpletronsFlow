@@ -16,7 +16,7 @@ Simplify Opentrons API 1 for OT-1
 
 For Linux (Ubuntu/Debian)
 1. `sudo apt-get update && apt-get -y upgrade`
-2. `git clone https://github.com/skydivercactus/simpletrons`
+2. `git clone https://github.com/LaurenChem/SimpletronsFlow.git`
 3. `cd simpletrons`
 4. `sudo ./install.sh`
 
@@ -27,7 +27,7 @@ For Windows Based
 3.  Download Python 3.x ([Download Latest Page](https://www.python.org/downloads/windows/)) ([Python 3.9.6 64 bit Download Link](https://www.python.org/ftp/python/3.9.6/python-3.9.6-amd64.exe))
 4.  Ensure “Add Python 3.x to PATH” is checked before “Install Now”
 5.  Start Github Bash
-6.  Enter `git clone https://github.com/skydivercactus/simpletrons`
+6.  Enter `git clone https://github.com/LaurenChem/SimpletronsFlow.git`
 7.  Enter `cd simpletrons`
 8.  Enter `./install.sh`
 
@@ -35,7 +35,7 @@ For Mac Based
 
 1.  Open terminal and install git using homebrew 
 2.  Enter `brew install git` 
-3.  Enter `git clone https://github.com/skydivercactus/simpletrons`  
+3.  Enter `git clone https://github.com/LaurenChem/SimpletronsFlow.git`  
 4.  Enter `cd simpletrons`
 5.  Enter `./install.sh`
 
