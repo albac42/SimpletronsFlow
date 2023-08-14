@@ -880,8 +880,8 @@ def graphicalUIprotocol():
 
     proroot = Toplevel(root)
 
-    proroot.title("Simpletrons - OT: Protocol Designer")
-    proroot.configure(background="#f9f4f2")
+    proroot.title("SimpletronsFlow - Protocol Designer")
+    proroot.configure(background="#ffffff")
     #newWindow.geometry("200x60")
     
     windowWidth = root.winfo_reqwidth()
@@ -1474,11 +1474,15 @@ def graphicalUIprotocol():
     ###########################################################################################################
     # Draw Main Graphical Interface
     ###########################################################################################################
+    style = ttk.Style()
+    style.configure("TLabel", font=("Helvetica"), background = "#ffffff", foreground = "#444444")  # Set the font for all ttk.Label widgets
+    style.configure("TButton", font=("Helvetica"), background = "#444444", foreground = "#444444")
+
 
     # Short Cut Function
-    label = ttk.Label(proroot, textvariable=v1)
+    label = ttk.Label(proroot, textvariable=v1, foreground="#444444")
     label.grid(column = 0, row = 0)
-    v1.set("Transfer: Basic") #Set Default Label
+    v1.set("Transfer") #Set Default Label
 
     label = ttk.Label(proroot, text = 'Step Type:*').grid(column = 0, row = 1)
 

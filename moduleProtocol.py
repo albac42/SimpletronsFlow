@@ -70,7 +70,7 @@ def start_protocol_temp(db_file):
     global pipette_b
     global pipette_a
 
-
+    #tip_number = 0
     #threading.Thread(target=New_UI()).start()
 
     sqlite_select_query = """SELECT * FROM custom_pipette"""
@@ -125,8 +125,10 @@ def start_protocol_temp(db_file):
             robot.move_head(z=60, strategy='direct') # Move Clear Labware   
 
             #Pick Up Tip [ Pick Up Tips ]
-            pipette_b.pick_up_tip(tiprack[0])
-            robot.move_head(z=60, strategy='direct')           
+            #pipette_b.pick_up_tip(tiprack[tip_number])
+            pipette_b.pick_up_tip()
+            robot.move_head(z=60, strategy='direct')     
+            #tip_number = tip_number + 1      
 
         if axis_s == 'a':
             """ Not Complete Yet """
@@ -160,8 +162,10 @@ def start_protocol_temp(db_file):
             robot.move_head(z=60, strategy='direct') # Move Clear Labware 
 
             #Pick Up Tip [ Pick Up Tips ]
-            pipette_b.pick_up_tip(tiprack[0])
+            #pipette_b.pick_up_tip(tiprack[tip_number])
+            pipette_b.pick_up_tip()
             robot.move_head(z=60, strategy='direct')  
+            #tip_number = tip_number + 1
 
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
@@ -535,15 +539,12 @@ def start_protocol_temp(db_file):
                 #print(change_tip)
                 # This will send command to perform desire task  
                 if change_tip == '1':
-                    for repeat in range(4):
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
 
                     print("Complete: Step", id_count, ": Option: Never Change")
 
                 else:
-                    for repeat in range(3):
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                     print("Complete: Step", id_count, ": Option: Always")
 
                 for c in robot.commands():
@@ -601,16 +602,11 @@ def start_protocol_temp(db_file):
                 # This will send command to perform desire task  
                 # This will send command to perform desire task  
                 if change_tip == '1':
-                    for repeat in range(4):
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
-
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
                     print("Complete: Step", id_count, ": Option: Never Change")
 
                 else:
-                    for repeat in range(3):
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never')
-
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always')
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                     print("Complete: Step", id_count, ": Option: Always")
 
                 for c in robot.commands():
