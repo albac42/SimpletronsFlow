@@ -518,7 +518,7 @@ def setup_workspace():
         BB = B3_W.get()
         #print(AA)
 
-        update_containecontypers_list(AA)
+        update_containers_list(AA)
         load_container('B3', 'B3', BB)
         #insert = ('B3', BB, 'B3')
         #save_data("custom_workspace", insert)
@@ -1104,11 +1104,34 @@ def graphicalUIprotocol():
     ###########################################################################################################
     def delete_protocol():
         global step
+        global max_step
         deleteTable("custom_protocol")
         step = 1
         max_step = 1
         current_step_label_v.set("Step: " + str(step))
 
+
+    def view_workspace():
+        conn = sqlite3.connect(db_file)
+        wspace_data = conn.execute("SELECT container, location FROM custom_workspace")
+        records = wspace_data.fetchall()
+
+        viewWindow = Tk()
+        viewWindow.title("View current workspace")
+
+        e=Label(viewWindow,width=20,text='Container',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
+        e.grid(row=0,column=1)
+        e=Label(viewWindow,width=20,text='Location',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
+        e.grid(row=0,column=2)
+
+        i = 1
+        for line in records: 
+            for j in range(len(line)):
+                e = Entry(viewWindow, width=20, fg='gray4') 
+                e.grid(row=i, column=j) 
+                e.insert(END, line[j])
+            i=i+1
+    
 
 
     def view_protocol():    
@@ -1118,6 +1141,7 @@ def graphicalUIprotocol():
         records = proto_data.fetchall()
 
         viewWindow = Tk()
+        viewWindow.title("View current protocol")
 
         e=Label(viewWindow,width=20,text='ID',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=0)
@@ -1133,6 +1157,7 @@ def graphicalUIprotocol():
         e.grid(row=0,column=5)
         e=Label(viewWindow,width=20,text='Dispense Cell',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
         e.grid(row=0,column=6)
+        
         i=1
 
         for line in records: 
@@ -1476,7 +1501,7 @@ def graphicalUIprotocol():
     ###########################################################################################################
     style = ttk.Style()
     style.configure("TLabel", font=("Helvetica"), background = "#ffffff", foreground = "#444444")  # Set the font for all ttk.Label widgets
-    style.configure("TButton", font=("Helvetica"), background = "#444444", foreground = "#444444")
+    style.configure("TButton", font=("Helvetica"))
 
 
     # Short Cut Function
@@ -1504,21 +1529,38 @@ def graphicalUIprotocol():
     textboxF.grid(column = 2, row = 2)
     Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
-    tipchange = IntVar()
-    mix_after = IntVar()
+    tipchange = StringVar()
+    tip_label_var = tk.StringVar()
+    tip_label_var.set("Always")
+
+    def update_tip_label():
+        if tipchange.get() == 'never':
+            tip_label_var.set("Never")
+        else:
+            tip_label_var.set("Always")
 
     #Change Tip Tick Box
     label = ttk.Label(proroot, text="Change Tip?")
     label.grid(column = 2, row = 3)
-    textboxI = Checkbutton(proroot, onvalue=1, offvalue=0, variable=tipchange, text='Never')
+    textboxI = Checkbutton(proroot, onvalue='never', offvalue='always', variable=tipchange, command = update_tip_label, textvariable = tip_label_var)
     textboxI.grid(column = 2, row = 4)    
     #textboxI.select()
     Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
 
+    mix_after = BooleanVar()
+    mix_label_var = tk.StringVar()
+    mix_label_var.set("Don't Mix")
+
+    def update_mix_label():
+        if mix_after.get():
+            mix_label_var.set("Mix")
+        else:
+            mix_label_var.set("Don't mix")
+
 
     label = ttk.Label(proroot, text="Mix after dispense?")
     label.grid(column = 3, row = 3)
-    textboxQ = Checkbutton(proroot, onvalue=1, offvalue=0, variable=mix_after, text='Mix?')
+    textboxQ = Checkbutton(proroot, variable=mix_after, command = update_mix_label, textvariable= mix_label_var)
     textboxQ.grid(column = 3, row = 4)    
     #textboxI.select()
     Tooltip(textboxQ, text='Do you wish to mix the well after a dispense?', wraplength=wraplength)
@@ -1585,6 +1627,12 @@ def graphicalUIprotocol():
     delete_protocol = ttk.Button(proroot, image = delete_button_image_pro, width = 5, command = delete_protocol)
     delete_protocol.grid(column = 4, row = 0)
     Tooltip(delete_protocol, text='Delete ALL Protocol Step', wraplength=wraplength)
+
+
+    #View workspace calibration
+    view_workspace = ttk.Button(proroot, text = "View Workspace", width = 15, command = view_workspace)
+    view_workspace.grid(column = 4, row = 4)
+    Tooltip(view_workspace, text="If an expected container is missing, return to container calibration", wraplength=wraplength)
 
     #View protocol
     view_protocol = ttk.Button(proroot, text = "View Protocol", width = 15, command = view_protocol, )
