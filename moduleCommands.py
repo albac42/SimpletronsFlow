@@ -204,7 +204,7 @@ def create_connection():
     try:
         conn = sqlite3.connect(db_file)
         print(sqlite3.version)
-        print('Datbase Found')
+        print('Database Found')
     except Error as e:
         print(e)
         print('[#A8] Error Loading Database')

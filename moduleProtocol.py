@@ -37,14 +37,18 @@ pipette_b = instruments.Pipette(
     max_volume=200)
 
 def start_protocol():
+    global error_message
+    error_message = "Error loading protocol."
     try:
         threading.Thread(target=start_protocol_temp('database/data.db')).start()
     except:
-        print("Error Loading Protocol")
+        print(error_message)
+        #print("Error Loading Protocol")
         pass
 
 
 def start_protocol_temp(db_file):
+    global error_message
     """
     Start Protocol based on information in database
     Any database shortcut please refer to moduleCommands
@@ -55,14 +59,19 @@ def start_protocol_temp(db_file):
     #Home Robot (Note: Require user to be connected to robot using connection UI (Manual or Auto))
     #manual_connect()    
     #threading.Thread(target=home_robot()).start()
+    error_message = "Could not home robot. Try reconnecting."
     home_robot()
+
+
+    #Connection to Custom Protocol Table
+    error_message = "Could not connect to database, please confirm file name and location is correct."
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
 
     step_count = read_row('custom_protocol')
     print(step_count)
 
-    #Connection to Custom Protocol Table
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
+
 
 
     #Load Pipette
@@ -76,6 +85,7 @@ def start_protocol_temp(db_file):
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
     for row in c:
+        error_message = "Could not read step " + str(c) + "from database."
         print(row)
 
         rawTip = row[7]
@@ -87,7 +97,10 @@ def start_protocol_temp(db_file):
         trashName = rawTrash[0:2]
         trashType = rawTrash[3:]
 
+        error_message = "Could not load tip rack. Please check calibrations are complete."
         tiprack = containers.load(trashType, tipName, 'tiprack')
+
+        error_message = "Could not load trash container. Please check calibrations are complete."
         trash = containers.load(tipType, trashName, 'trash')
 
         axis_s = row[1]
@@ -107,6 +120,8 @@ def start_protocol_temp(db_file):
             print ("Loaded B Axis Pipette")
             # Calibrate Tip Track and Bin
             #Load Calibration Data
+
+            error_message = "Could not find trash container. Please check calibrations are complete."
             calibarate_data = find_data("custom_workspace", trashName)
             robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
             robot.move_head(z=calibarate_data[6], strategy='direct')
@@ -115,7 +130,7 @@ def start_protocol_temp(db_file):
             pipette_b.calibrate_position((trash, pos))
             robot.move_head(z=60, strategy='direct') # Move Clear Labware
             
-            
+            error_message = "Could not find tip rack. Please check calibrations are complete."           
             calibarate_data = find_data("custom_workspace", tipName)
             robot.move_head(x=calibarate_data[4],y=calibarate_data[5],z=60, strategy='arc')
             robot.move_head(z=calibarate_data[6], strategy='direct')
@@ -126,7 +141,7 @@ def start_protocol_temp(db_file):
 
             #Pick Up Tip [ Pick Up Tips ]
             #pipette_b.pick_up_tip(tiprack[tip_number])
-            pipette_b.pick_up_tip()
+            pipette_b.pick_up_tip(tiprack[0])
             robot.move_head(z=60, strategy='direct')     
             #tip_number = tip_number + 1      
 
@@ -163,10 +178,11 @@ def start_protocol_temp(db_file):
 
             #Pick Up Tip [ Pick Up Tips ]
             #pipette_b.pick_up_tip(tiprack[tip_number])
-            pipette_b.pick_up_tip()
+            pipette_b.pick_up_tip(tiprack[0])
             robot.move_head(z=60, strategy='direct')  
             #tip_number = tip_number + 1
 
+    error_message = "Could not access protocol in database. Please check file location, name and contents"
     #Load protocol in loaded in workspace
     sqlite_select_query = """SELECT * FROM custom_protocol"""
     c.execute(sqlite_select_query) 
@@ -176,6 +192,8 @@ def start_protocol_temp(db_file):
     Uncomment out print(row) if you wish to see output.
 
     """
+
+    prev_change_tip = "never"
     for row in c:
         print("Loaded Below Protocol from database")
         print(row)
@@ -206,6 +224,10 @@ def start_protocol_temp(db_file):
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
+
+        error_message = "Could not execute step " + str(c) + ". Please check calibrations and all values in this protocol step."
+
+
         if shortcut == "Simple_Transfer":
             ''' [ Simple Transfer ] 
             Do Note: Calibration data is stored on database in separated columns for pipette A and B 
@@ -259,15 +281,23 @@ def start_protocol_temp(db_file):
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))
     
+                #NEEDS ADDING ELSEWHERE, THIS IS JUST A TEST
+                if prev_change_tip == "always":
+                    pipette_b.drop_tip()
+                    pipette_b.pick_up_tip()
+
+    
                 #print(option)
                 # This will send command to perform desire task  
-                if change_tip == '1':
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
-                    print("Complete: Step", id_count, ": Option: Never Change")
+                # if change_tip == '1':
+                #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
+                #     print("Complete: Step", id_count, ": Option: Never Change")
 
-                else:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
-                    print("Complete: Step", id_count, ": Option: Always")
+                # else:
+                #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                #     print("Complete: Step", id_count, ": Option: Always")
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip)
+                print("Complete: Step", id_count)
 
                 for c in robot.commands():
                     print(c)                    
@@ -322,13 +352,15 @@ def start_protocol_temp(db_file):
     
                 #print(option)
                 # This will send command to perform desire task  
-                if change_tip == '1':
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
-                    print("Complete: Step", id_count, ": Option: Never Change")
+                # if change_tip == '1':
+                #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='never')
+                #     print("Complete: Step", id_count, ": Option: Never Change")
 
-                else:
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
-                    print("Complete: Step", id_count, ": Option: Always")
+                # else:
+                #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
+                #     print("Complete: Step", id_count, ": Option: Always")
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip)
+                print("Complete: Step", id_count)
 
                 for c in robot.commands():
                     print(c)
@@ -396,18 +428,23 @@ def start_protocol_temp(db_file):
 
                 if row_col == "rows":
                     # Never Get a New Tip each steps
-                    if change_tip == '1':
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
+                    # if change_tip == '1':
+                    #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
 
-                    if change_tip == '0':
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+                    # if change_tip == '0':
+                    #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip=change_tip)
+                    print("Complete: Step", id_count)
 
                 if row_col == "cols":
-                    if change_tip == '1':
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
+                    # if change_tip == '1':
+                    #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if change_tip == '0':
-                        pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
+                    # if change_tip == '0':
+                    #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip=change_tip)
+                    print("Complete: Step", id_count)
+
 
                 #consolidate (Don't change tip)
 
@@ -472,18 +509,23 @@ def start_protocol_temp(db_file):
 
                 if row_col == "rows":
                     # Never Get a New Tip each steps
-                    if change_tip == '1':
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
+                    # if change_tip == '1':
+                    #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip=change_tip)
+                    print("Complete: Step", id_count)
 
-                    if change_tip == '0':
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
+                    # if change_tip == '0':
+                    #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
 
                 if row_col == "cols":
-                    if change_tip == '1':
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
+                    # if change_tip == '1':
+                    #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='never')
 
-                    if change_tip == '0':
-                        pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
+                    # if change_tip == '0':
+                    #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip=change_tip)
+                    print("Complete: Step", id_count)
+
                 for c in robot.commands():
                     print(c)
     
@@ -538,14 +580,16 @@ def start_protocol_temp(db_file):
     
                 #print(change_tip)
                 # This will send command to perform desire task  
-                if change_tip == '1':
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
+                # if change_tip == '1':
+                #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
 
-                    print("Complete: Step", id_count, ": Option: Never Change")
+                #     print("Complete: Step", id_count, ": Option: Never Change")
 
-                else:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
-                    print("Complete: Step", id_count, ": Option: Always")
+                # else:
+                #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
+                #     print("Complete: Step", id_count, ": Option: Always")
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume))
+                print("Complete: Step", id_count)
 
                 for c in robot.commands():
                     print(c)                    
@@ -601,16 +645,20 @@ def start_protocol_temp(db_file):
                 #print(option)
                 # This will send command to perform desire task  
                 # This will send command to perform desire task  
-                if change_tip == '1':
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
-                    print("Complete: Step", id_count, ": Option: Never Change")
+                # if change_tip == '1':
+                #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='never', mix_after = (4, volume))
+                #     print("Complete: Step", id_count, ": Option: Never Change")
 
-                else:
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
-                    print("Complete: Step", id_count, ": Option: Always")
+                # else:
+                #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
+                #     print("Complete: Step", id_count, ": Option: Always")
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume))
+                print("Complete: Step", id_count)
 
                 for c in robot.commands():
-                    print(c)           
+                    print(c)  
+
+        prev_change_tip = change_tip         
 
 
 
