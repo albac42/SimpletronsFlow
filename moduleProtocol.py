@@ -591,7 +591,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, 1000), touch_tip=touchtip)
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume), touch_tip=touchtip)
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
@@ -655,7 +655,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, 1000), touch_tip=touchtip)
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume), touch_tip=touchtip)
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
