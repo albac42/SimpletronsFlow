@@ -638,11 +638,11 @@ def action_save_pip():
     Save Custom Pipette
     Note: The Load Pipette Function is placeholder, it just error checking argument is acceptable
     """
-    if var_p_a.get() == 0:
+    if var_pipette_axis.get() == 0:
         axis = 'b'
         print(axis)
         update_pipette('pipette_b', 0)
-    elif var_p_a.get() == 1:
+    elif var_pipette_axis.get() == 1:
         axis = 'a'
         print(axis)
         update_pipette('pipette_a', 1)
@@ -1120,9 +1120,9 @@ def graphicalUIprotocol():
         viewWindow.title("View current workspace")
 
         e=Label(viewWindow,width=20,text='Container',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
-        e.grid(row=0,column=1)
+        e.grid(row=0,column=0)
         e=Label(viewWindow,width=20,text='Location',borderwidth=2, relief='ridge',anchor='w',bg='turquoise')
-        e.grid(row=0,column=2)
+        e.grid(row=0,column=1)
 
         i = 1
         for line in records: 
@@ -1263,11 +1263,12 @@ def graphicalUIprotocol():
 
 
             #print("TEST: changetip variable", tipchange.get())
-            if tipchange.get() == 1:
-                change_tip = True
+            # if tipchange.get() == 1:
+            #     change_tip = True
 
-            else:
-                change_tip = False
+            # else:
+            #     change_tip = False
+            change_tip = tipchange.get()
                 
             row_col = "None"
 
@@ -1276,6 +1277,7 @@ def graphicalUIprotocol():
             else:
                 mixing = False
 
+            touch_tip = touchtip.get()
 
         ##ONE TO MANY 
         if shortcuts.get() == "One_to_Many":
@@ -1336,17 +1338,14 @@ def graphicalUIprotocol():
 
 
             #print("TEST: changetip variable", tipchange.get())
-            if tipchange.get() == 1:
-                change_tip = True
-
-            else:
-                change_tip = False
+            change_tip = tipchange.get()
 
             if mix_after.get() == 1:
                 mixing = True
             else:
                 mixing = False
 
+            touch_tip = touchtip.get()
 
         if shortcuts.get() == "Mixing":
             
@@ -1399,19 +1398,16 @@ def graphicalUIprotocol():
                 notes = f_note.get()
 
             #print("TEST: changetip variable", tipchange.get())
-            if tipchange.get() == 1:
-                change_tip = True
-            else:
-                change_tip = False
+            change_tip = tipchange.get()
                 
             row_col = "None"
 
             if mix_after.get() == 1:
-                mixing = True
+                mixing = 3
             else:
-                mixing = False
+                mixing = 0
 
-
+            touch_tip = (touchtip.get() == "True")
         # if shortcuts.get() == "Multiple_Wells_Transfer":
         #     pass
             
@@ -1429,7 +1425,8 @@ def graphicalUIprotocol():
 
         #If the current step number is the max step, add a new protocol step entry
         if step_count == False and step == max_step:
-            insert = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes)
+            insert = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, touch_tip, notes)
+            print(insert)
             save_data("custom_protocol", insert)
 
             step = step + 1
@@ -1442,7 +1439,7 @@ def graphicalUIprotocol():
         #If not, edit the 
         elif step_count == False:
             try:
-                update = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, notes, step)
+                update = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, touch_tip, notes, step)
                 #cursor.execute("UPDATE custom_protocol SET name=?, shortcuts = ?, pipette=?, volume=?, aspirate_container=?, aspirate_well=?, dispense_container = ?, dispense_well = ?, change_tip = ?, row_col = ?, notes =  WHERE id=?", insert)
                 #conn.commit()
 
@@ -1530,6 +1527,7 @@ def graphicalUIprotocol():
     Tooltip(textboxF, text='Enter a more readable note for this step', wraplength=wraplength)
 
     tipchange = StringVar()
+    tipchange.set('always')
     tip_label_var = tk.StringVar()
     tip_label_var.set("Always")
 
@@ -1541,11 +1539,13 @@ def graphicalUIprotocol():
 
     #Change Tip Tick Box
     label = ttk.Label(proroot, text="Change Tip?")
-    label.grid(column = 2, row = 3)
-    textboxI = Checkbutton(proroot, onvalue='never', offvalue='always', variable=tipchange, command = update_tip_label, textvariable = tip_label_var)
-    textboxI.grid(column = 2, row = 4)    
+    label.grid(column = 0, row = 7)
+    textboxI = Checkbutton(proroot, onvalue="always", offvalue="never", variable=tipchange, command = update_tip_label, textvariable = tip_label_var)
+    textboxI.grid(column = 0, row = 8)    
     #textboxI.select()
-    Tooltip(textboxI, text='Do you wish to change tip per liquid transfer - applicable for multiple well transfer', wraplength=wraplength)
+    Tooltip(textboxI, text='Do you wish to change tip per liquid transfer? - applicable for multiple well transfer', wraplength=wraplength)
+
+
 
     mix_after = BooleanVar()
     mix_label_var = tk.StringVar()
@@ -1557,13 +1557,31 @@ def graphicalUIprotocol():
         else:
             mix_label_var.set("Don't mix")
 
-
     label = ttk.Label(proroot, text="Mix after dispense?")
-    label.grid(column = 3, row = 3)
+    label.grid(column = 1, row = 7)
     textboxQ = Checkbutton(proroot, variable=mix_after, command = update_mix_label, textvariable= mix_label_var)
-    textboxQ.grid(column = 3, row = 4)    
+    textboxQ.grid(column = 1, row = 8)    
     #textboxI.select()
     Tooltip(textboxQ, text='Do you wish to mix the well after a dispense?', wraplength=wraplength)
+
+    
+    touchtip = StringVar()
+    touchtip.set('False')
+    touch_label_var = tk.StringVar()
+    touch_label_var.set("Don't touch")
+
+    def update_touch_label():
+        if touchtip.get()=="True":
+            touch_label_var.set("Touch")
+        else:
+            touch_label_var.set("Don't touch")
+
+    label = ttk.Label(proroot, text="Touch tip after dispense?")
+    label.grid(column = 2, row = 7)
+    textboxQ = Checkbutton(proroot, onvalue="True", offvalue="False", variable=touchtip, command = update_touch_label, textvariable= touch_label_var)
+    textboxQ.grid(column = 2, row = 8)    
+    #textboxI.select()
+    Tooltip(textboxQ, text='Touch the pipette tip to the base of the well after dispensing?', wraplength=wraplength)
 
 
     # Friendly Name Input
@@ -2025,7 +2043,7 @@ label_drop_tip_c.grid(column = 3, row = 6, columnspan = 3)
 Tooltip(label_drop_tip_c, text='Drop Pipette Tip', wraplength=wraplength)
 
 label_set_calibration = ttk.Button(tab3, text='Connect to Robot', command = connecton_graphical)
-label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
+label_set_calibration.grid(column = 5, row = 0, columnspan = 3)
 Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 #Keyboard Input
@@ -2063,7 +2081,7 @@ root.bind("<Key>", key_press)
 #########################################################################################################
 #Drop Down Default Selection
 #varcon = StringVar(root, value='')
-var_p_a = IntVar()
+var_pipette_axis = IntVar()
 var_max_volume = DoubleVar()
 var_min_volume = DoubleVar()
 var_aspirate_speed = DoubleVar()
@@ -2072,15 +2090,15 @@ s_tip_rack = StringVar(root, value='')
 s_trash = StringVar(root, value='')
 
 
-
+##-----------Select Pipette-----------##
 #Selection 1 - Axis
 label_axis = ttk.Label(tab1, text='Select a Axis:', font = ('Arial', 12))
 label_axis.grid(column = 1, row = 0)
 Tooltip(label_axis, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 #Scale Bar
-scale_1 = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_p_a)
-scale_1.grid(column = 1, row = 1)
-Tooltip(scale_1, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
+select_pipette_scale = Scale(tab1, from_=0, to=1, resolution = 1, orient="horizontal", variable = var_pipette_axis)
+select_pipette_scale.grid(column = 1, row = 1)
+Tooltip(select_pipette_scale, text='Select Pipette Axis [Left or Right]', wraplength=wraplength)
 
 left_hand_image = PhotoImage(file="graphic/hand-left.png")
 right_hand_image = PhotoImage(file="graphic/hand-right.png")
@@ -2090,31 +2108,40 @@ label = ttk.Label(tab1, text='L', font = ('Arial', 12) ).grid(column = 0,  row =
 label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
 label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
 
+
+##-----------Set Max Volume-----------##
 #Selection 2 - Max Volume
 var_max_volume = IntVar()
 
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
 #Scale Bar
-scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume)
+scale_2 = Scale(tab1, from_=100, to=2000, resolution = 50, orient="horizontal", variable = var_max_volume)
 scale_2.grid(column = 1, row = 3)
 Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
 
 #Sync Entry Box
-text = Entry(tab1, width=3, textvariable=var_max_volume)
+#text = Entry(tab1, width=4, textvariable=var_max_volume)
+text = Entry(tab1, width = 4, textvariable = var_max_volume)
 text.grid(column = 0, row = 3, padx=5)
-text.bind("<Return>", lambda event: scale_2.configure(to=var_max_volume.get()))
+
+#text.bind("<Return>", lambda event: scale_2.configure(to=var_max_volume.get()))
+
 #Unit
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
 
+
+
+
+##-----------Set Min Volume-----------##
 #Selection 3 - Min Volume
 var_min_volume = IntVar()
 
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
 #Scale Bar
-scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
+scale_3 = Scale(tab1, from_=100, to=1000, resolution = 50, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
 Tooltip(scale_3, text='Set Pipette Min Volume', wraplength=wraplength)
 #Sync Entry Box
@@ -2125,13 +2152,15 @@ text.bind("<Return>", lambda event: scale_3.configure(to=var_min_volume.get()))
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 5)
 
-#Selection 3 - aspirate_speed
+
+##-----------Set Aspirate Speed-----------##
+#Selection 4 - aspirate_speed
 var_aspirate_speed = IntVar()
 
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
 #Scale Bar
-scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4 = Scale(tab1, from_=100, to=1500, resolution = 50, orient="horizontal", variable = var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
 Tooltip(scale_4, text='Set Pipette aspirate speed', wraplength=wraplength)
 
@@ -2147,13 +2176,14 @@ label.grid(column = 2, row = 7)
 separator = ttk.Separator(tab1, orient='vertical')
 separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
-#Selection 4 - dispense_speed
+##-----------Set Dispense Speed-----------##
+#Selection 5 - dispense_speed
 var_dispense_speed = IntVar()
 
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
 #Scale Bar
-scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5 = Scale(tab1, from_=100, to=1500, resolution = 50, orient="horizontal", variable = var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
 Tooltip(scale_5, text='Set Pipette dispense speed', wraplength=wraplength)
 #Sync Entry Box
@@ -2164,6 +2194,8 @@ text.bind("<Return>", lambda event: scale_5.configure(to=var_dispense_speed.get(
 label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
 
+
+##-----------Select Tip Rack-----------##
 #Selection 5 - Select a Tip Rack
 label = ttk.Label(tab1, text='Select a Tip Rack:*', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
@@ -2172,6 +2204,8 @@ dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_r
 dropdown_tip_rack.grid(column = 6, row = 1)
 Tooltip(dropdown_tip_rack, text='Set a Pipette Tip Rack', wraplength=wraplength)
 
+
+##-----------Select Bin-----------##
 #Selection 6 - Select a Bin
 label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
@@ -2180,6 +2214,8 @@ dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, 
 dropdown_trash.grid(column = 6, row = 3)
 Tooltip(dropdown_trash, text='Set a Pipette Trash Rack', wraplength=wraplength)
 
+
+##-----------Save Pipette Config-----------##
 # Save Button
 label = ttk.Label(tab1, text='Save Pipette Config:', font = ('Arial', 12))
 label.grid(column = 6, row = 4)
@@ -2191,6 +2227,8 @@ Tooltip(save_pip, text='Save and Load Current Pipette Based off your selected sl
 separator = ttk.Separator(tab1, orient='vertical')
 separator.grid(row=0,column=8, rowspan=10, ipady=180)
 
+
+##----------Pre-Configured Pipetting------------##
 #Use Pre-Configured Pipetting in script/database
 label = ttk.Label(tab1, text='Load Pre-Configured:', font = ('Arial', 12))
 label.grid(column = 6, row = 6)
@@ -2226,7 +2264,7 @@ def callback_p(eventObject):
 
     if eventObject.widget.get() == "blow_out":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
-        vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or \n “hard-stop”,  making sure any attached tip do not get pushed off")
+        vpc1.set("Blow Out: Plunger is all the way down to it's “second-stop” or \n “hard-stop”,  making sure any attached tip do not get pushed off.\n NOTE: Gilson piston pipettes have no second stop. Set this to the same as 'bottom'")
 
     if eventObject.widget.get() == "drop_tip":
         background_image_pc=tk.PhotoImage(file='graphic/calibrate/Blowout.png')
@@ -2288,21 +2326,44 @@ save_p.grid(column = 3, row = 4)
 Tooltip(save_p, text='Save Calibration Point', wraplength=wraplength)
 
 label_set_calibration = ttk.Button(tab2, text='Connect to Robot', command = connecton_graphical)
-label_set_calibration.grid(column = 0, row = 7, columnspan = 3)
+label_set_calibration.grid(column = 3, row = 7, columnspan = 3)
 Tooltip(label_set_calibration, text='Connect to Robot UI, ensure robot is homed before calibration', wraplength=wraplength)
 
 
 #Change Movement Speed
+#Control slider resolution
+# def update_resolution(event):
+#     slider_value = scale_b.get()
+#     if slider_value < 1.0:
+#         scale_b.config(resolution=0.1)
+#     elif slider_value <= 3.0:
+#         scale_b.config(resolution=0.5)
+#     else:
+#         scale_b.config(resolution=1)
+
+
 label = ttk.Label(tab2, text='Set Movement Speed:', font = ('Arial', 10))
 label.grid(column = 1, row = 5)
 #Scale Bar
-scale_b = Scale(tab2, from_=0.1, to=10, resolution = 0.1, orient="horizontal", variable = head_speed_p)
-scale_b.grid(column = 1, row = 6)
-scale_b.set(1)
-#Sync Entry Box
+# scale_b = Scale(tab2, from_=0.1, to=10, resolution = 0.5, orient="horizontal", variable = head_speed_p)
+# scale_b.grid(column = 1, row = 6)
+# scale_b.set(2.0)
+# scale_b.bind("<Button-1>", update_resolution)
+def set_movement_speed():
+    selected_speed = head_speed_p.get()
+    print(f"Selected Movement Speed: {selected_speed}")
+
+
+speed_options = [0.1, 0.5, 1, 1.5, 2.0, 2.5, 3, 5, 10]
+
+for i, speed_option in enumerate(speed_options):
+    ttk.Radiobutton(tab2, text=str(speed_option), variable=head_speed_p, value=speed_option, command=set_movement_speed).grid(column = 1, row = 6+i)
+
+# #Sync Entry Box
 text = Entry(tab2, width=4, textvariable=head_speed_p)
 text.grid(column = 0, row = 6, padx=5)
-text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
+
+#text.bind("<Return>", lambda event: scale_b.configure(to=head_speed_p.get()))
 #Unit
 label = ttk.Label(tab2, text='mm', font = ('Arial', 10))
 label.grid(column = 2, row = 6)

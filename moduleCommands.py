@@ -301,8 +301,8 @@ def save_data(table, insert):
 
 
     if table == "custom_protocol":
-        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mix_after, notes)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?) '''
+        sql_insert_template = ''' INSERT INTO custom_protocol(name, shortcuts, pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mix_after, touchtip, notes)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) '''
 
     #Excute Task to Database
     c.execute(sql_insert_template, insert)
@@ -348,6 +348,7 @@ def update_data(table, update):
                         change_tip = ?, 
                         row_col = ?,
                         mix_after = ?,
+                        touchtip = ?,
                         notes =  ?
                         WHERE id = ?;'''
 
@@ -496,6 +497,7 @@ def setup_table(variable):
                                             change_tip text,
                                             row_col text,
                                             mix_after text,
+                                            touchtip text,
                                             notes text
                                         ); """
 
@@ -514,6 +516,7 @@ def setup_table(variable):
                                             change_tip boolean,
                                             row_col text,
                                             mix_after text,
+                                            touchtip text,
                                             notes text
                                         ); """
 

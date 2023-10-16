@@ -85,7 +85,7 @@ def start_protocol_temp(db_file):
     sqlite_select_query = """SELECT * FROM custom_pipette"""
     c.execute(sqlite_select_query) 
     for row in c:
-        error_message = "Could not read step " + str(c) + "from database."
+        error_message = "Could not read step " + str(id_count) + "from database."
         print(row)
 
         rawTip = row[7]
@@ -217,15 +217,18 @@ def start_protocol_temp(db_file):
         wellB = row[8]
 
         change_tip = row[9] #Option 1: Change Tip
+        #change_tip = str(holder_change_tip)
 
         row_col = row[10] #Conditional Option (One to Many - Rows or Columns)
 
-        mix_after = row[11] # whether the well should be mixed after dispensing
+        mixing = row[11] # whether the well should be mixed after dispensing
         #Note: https://docs.opentrons.com/ot1/transfer.html 
         #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
 
-        error_message = "Could not execute step " + str(c) + ". Please check calibrations and all values in this protocol step."
+        touchtip = row[12]
+
+        error_message = "Could not execute step " + str(id_count) + ". Please check calibrations and all values in this protocol step."
 
 
         if shortcut == "Simple_Transfer":
@@ -296,7 +299,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip)
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip, )
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
@@ -359,7 +362,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip='always')
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip)
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip)
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
@@ -433,7 +436,7 @@ def start_protocol_temp(db_file):
 
                     # if change_tip == '0':
                     #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='always')
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip=change_tip)
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
                 if row_col == "cols":
@@ -442,7 +445,7 @@ def start_protocol_temp(db_file):
 
                     # if change_tip == '0':
                     #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always')
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip=change_tip)
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
 
@@ -511,7 +514,7 @@ def start_protocol_temp(db_file):
                     # Never Get a New Tip each steps
                     # if change_tip == '1':
                     #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip='never')
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), new_tip=change_tip)
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
                     # if change_tip == '0':
@@ -523,7 +526,7 @@ def start_protocol_temp(db_file):
 
                     # if change_tip == '0':
                     #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip='always') 
-                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), new_tip=change_tip)
+                    pipette_a.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), mix_after =(mixing, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
                 for c in robot.commands():
@@ -588,7 +591,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume))
+                pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, 1000), touch_tip=touchtip)
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
@@ -652,7 +655,7 @@ def start_protocol_temp(db_file):
                 # else:
                 #     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip='always', mix_after = (4, volume))
                 #     print("Complete: Step", id_count, ": Option: Always")
-                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, volume))
+                pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellA), new_tip=change_tip, mix_after = (4, 1000), touch_tip=touchtip)
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
