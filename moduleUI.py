@@ -871,7 +871,7 @@ def graphicalUIprotocol():
     f_name = StringVar()
     volume_well = DoubleVar()
     value_b = StringVar()
-    value_c = StringVar()
+    dispense_wells = StringVar()
     f_note = StringVar()
     shortcuts = StringVar()
     p_varpip = StringVar()
@@ -1166,23 +1166,8 @@ def graphicalUIprotocol():
                 e.grid(row=i, column=j) 
                 e.insert(END, line[j])
             i=i+1
-        
-        # for line in records:
-        #     #print(line)
-        #     viewText.insert(END, line)
-        #     viewText.insert(END, "\n")
 
         viewWindow.mainloop()
-        # viewTable = ttk.Treeview(viewWindow)
-        # viewTable['columns']=("ID", "volume", "aspirate container", "aspirate cell", "dispense container", "dispense cell")
-        # for line in records:
-        #     viewTable.insert("", 'end', line)
-
-       # viewTable.pack()
-
-
-        #print(proto_data)
-        #print()
         conn.close()
 
 
@@ -1254,7 +1239,7 @@ def graphicalUIprotocol():
             if re.search('point', container_lookup):
                 dispense_well = "A1"
             else:
-                dispense_well = value_c.get()
+                dispense_well = dispense_wells.get()
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1314,16 +1299,17 @@ def graphicalUIprotocol():
             # If you need higher rows count adjust pattern2
             # pattern1 = re.compile("[A-Za-z]+")
             # pattern2 = re.compile("[0-12]+")
-            container_lookup = value_c.get() #value_c is dispense container
+            #container_lookup = dispense_wells.get() #dispense_wells is dispense container
+            dispense_well = dispense_wells.get()
 
-
-            if re.match("[A-Za-z]+" , container_lookup) is not None:
-                dispense_well = value_c.get()
+            #columns are labelled with letters
+            if re.match("[A-Za-z]+" , dispense_well) is not None:
+                #dispense_well = dispense_wells.get()
                 row_col = "cols"
                 print("Loaded Cols")
                 print("Check Input Cell")
-            elif re.match("[0-9]+", container_lookup)  is not None:
-                dispense_well = value_c.get()
+            elif re.match("[0-9]+", dispense_well)  is not None:
+                #dispense_well = dispense_wells.get()
                 row_col = "rows"
                 print("Loaded Row")
             else:
@@ -1390,7 +1376,7 @@ def graphicalUIprotocol():
             # if re.search('point', container_lookup):
             #     dispense_well = "A1"
             # else:
-            #     dispense_well = value_c.get()
+            #     dispense_well = dispense_wells.get()
 
             if len(f_note.get()) == 0:
                 notes = "NULL"
@@ -1440,13 +1426,7 @@ def graphicalUIprotocol():
         elif step_count == False:
             try:
                 update = (name, shortcuts_v, sel_pipette, volume, aspirate_container, aspirate_well, dispense_container, dispense_well, change_tip, row_col, mixing, touch_tip, notes, step)
-                #cursor.execute("UPDATE custom_protocol SET name=?, shortcuts = ?, pipette=?, volume=?, aspirate_container=?, aspirate_well=?, dispense_container = ?, dispense_well = ?, change_tip = ?, row_col = ?, notes =  WHERE id=?", insert)
-                #conn.commit()
-
                 update_data("custom_protocol", update)
-
-                #step = max_step
-                #messagebox.showinfo("Success", "Data updated successfully!")
             except Exception as e:
                 pass
                 #messagebox.showerror("Error", f"An error occurred: {e}")
@@ -1629,7 +1609,7 @@ def graphicalUIprotocol():
     label = ttk.Label(proroot, textvariable=v4)
     label.grid(column = 3, row = 5)
     v4.set("Wells:*") #Set Default Label
-    textboxC = tk.Entry(proroot, width=12, textvariable=value_c)
+    textboxC = tk.Entry(proroot, width=12, textvariable=dispense_wells)
     textboxC.grid(column = 3, row = 6)
     Tooltip(textboxC, text='Insert Well Position', wraplength=wraplength)
 
@@ -2370,7 +2350,7 @@ label.grid(column = 2, row = 6)
 
 # label = ttk.Label(tab2, text='Robot Position:', font = ('Arial', 10))
 # label.grid(column = 1, row = 7)
-# #Display Coordinate
+# #Display Coordinateadio
 # label = ttk.Label(tab2, textvariable=position_display_x)
 # label.grid(column = 1, row = 8)
 # position_display_x.set("x: 0") #Set Default Label
