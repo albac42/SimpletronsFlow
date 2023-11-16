@@ -193,7 +193,6 @@ def start_protocol_temp(db_file):
 
     """
 
-    prev_change_tip = "never"
     for row in c:
         print("Loaded Below Protocol from database")
         print(row)
@@ -284,10 +283,6 @@ def start_protocol_temp(db_file):
                 pos = plateB[0].from_center(x=0, y=0, z=-1, reference=plateB)
                 pipette_b.calibrate_position((plateB, pos))
     
-                #NEEDS ADDING ELSEWHERE, THIS IS JUST A TEST
-                if prev_change_tip == "always":
-                    pipette_b.drop_tip()
-                    pipette_b.pick_up_tip()
 
     
                 #print(option)
@@ -658,9 +653,7 @@ def start_protocol_temp(db_file):
                 print("Complete: Step", id_count)
 
                 for c in robot.commands():
-                    print(c)  
-
-        prev_change_tip = change_tip         
+                    print(c)          
 
 
 
