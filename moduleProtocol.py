@@ -293,11 +293,11 @@ def start_protocol_temp(db_file):
                 #print(option)
                 # This will send command to perform desire task  
                 if(mixing):
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip, )
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
                 else:
-                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip, touch_tip=touchtip, )
+                    pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
 
