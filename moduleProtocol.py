@@ -226,7 +226,7 @@ def start_protocol_temp(db_file):
         #Use above resource for opentrons implementing future API shortcut
         #Send Action to Robot 
 
-        touchtip = row[12]
+        touchtip = bool(row[12])
 
         error_message = "Could not execute step " + str(id_count) + ". Please check calibrations and all values in this protocol step."
 
@@ -292,7 +292,7 @@ def start_protocol_temp(db_file):
     
                 #print(option)
                 # This will send command to perform desire task  
-                if(mixing):
+                if(mixing == 1):
                     pipette_b.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
@@ -354,7 +354,7 @@ def start_protocol_temp(db_file):
                 pipette_a.calibrate_position((plateB, pos))
     
                 # This will send command to perform desire task  
-                if(mixing):
+                if(mixing == 1):
                     pipette_a.transfer(volume, plateA.wells(wellA), plateB.wells(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip)
                     print("Complete: Step", id_count)
 
@@ -429,7 +429,7 @@ def start_protocol_temp(db_file):
 
 
                 if row_col == "rows":
-                    if(mixing):
+                    if(mixing == 1):
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.rows(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip)
                         print("Complete: Step", id_count)
 
@@ -440,7 +440,7 @@ def start_protocol_temp(db_file):
 
 
                 if row_col == "cols":
-                    if(mixing):
+                    if(mixing == 1):
                         pipette_b.transfer(volume, plateA.wells(wellA), plateB.cols(wellB), mix_after =(3, 1000), new_tip=change_tip, touch_tip=touchtip)
                         print("Complete: Step", id_count)
 
