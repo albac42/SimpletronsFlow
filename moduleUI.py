@@ -192,7 +192,8 @@ def update_pipette(name, num):
 
 #Update Tip Rack List in Setup Pipette
 def update_dropdown_tip_rack():
-    list = loaded_containers
+    selected_containers = [container for container in loaded_containers if container.attribute == 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul']
+    list = selected_containers
     dropdown_tip_rack['values'] = list
     print('Updating Drop-down List: tip rack pipette setup')
 
