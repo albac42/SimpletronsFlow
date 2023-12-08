@@ -584,7 +584,7 @@ def saveCalibration(pipette, container, container_type):
 #
 ###########################################################################################################
 
-plungerPos = None
+plungerPos = 0.0
 
 def moveDefaultLocation_p(pipette, plungerTarget):
     """ 
