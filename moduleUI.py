@@ -192,7 +192,7 @@ def update_pipette(name, num):
 
 #Update Tip Rack List in Setup Pipette
 def update_dropdown_tip_rack():
-    selected_containers = [container for container in loaded_containers if container.attribute == 'tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul']
+    selected_containers = [container for container in loaded_containers in ('tiprack-10ul', 'tiprack-200ul', 'tiprack-1000ul')]
     list = selected_containers
     dropdown_tip_rack['values'] = list
     print('Updating Drop-down List: tip rack pipette setup')
@@ -2040,7 +2040,7 @@ label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
 label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
 
 #Selection 2 - Max Volume
-var_max_volume = IntVar()
+var_max_volume = StringVar()
 var_max_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
@@ -2048,9 +2048,8 @@ label.grid(column = 1, row = 2)
 
 def update_var_max_volume(event):
   try: 
-    max_volume = var_max_volume.get()
+    max_volume = int(var_max_volume.get())
     scale_2.set(max_volume)
-    text_2.set(max_volume)
   except ValueError:
     pass
     
@@ -2060,7 +2059,7 @@ scale_2.grid(column = 1, row = 3)
 Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
 
 #Entry Box
-text_2 = Entry(tab1, width=5, textvariable=var_max_volume)
+text_2 = Entry(tab1, width=4, textvariable=var_max_volume)
 text_2.grid(column = 0, row = 3, padx=5)
 text_2.bind("<FocusOut>", update_var_max_volume)
 #Unit
@@ -2068,7 +2067,7 @@ label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
 
 #Selection 3 - Min Volume
-var_min_volume = IntVar()
+var_min_volume = StringVar()
 var_min_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
@@ -2076,9 +2075,8 @@ label.grid(column = 1, row = 4)
 
 def update_var_min_volume(event):
   try: 
-    min_volume = var_min_volume.get()
+    min_volume = int(var_min_volume.get())
     scale_3.set(min_volume)
-    text_3.set(min_volume)
   except ValueError:
     pass
     
@@ -2088,7 +2086,7 @@ scale_3.grid(column = 1, row = 5)
 Tooltip(scale_2, text='Set Pipette Min Volume', wraplength=wraplength)
 
 #Entry Box
-text_3 = Entry(tab1, width=5, textvariable=var_min_volume)
+text_3 = Entry(tab1, width=4, textvariable=var_min_volume)
 text_3.grid(column = 0, row = 5, padx=5)
 text_3.bind("<FocusOut>", update_var_min_volume)
 #Unit
@@ -2102,7 +2100,7 @@ label.grid(column = 2, row = 5)
 
 
 #Selection 3 - aspirate_speed
-var_aspirate_speed = IntVar()
+var_aspirate_speed = StringVar()
 var_aspirate_speed.set(0)
 
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
@@ -2112,7 +2110,6 @@ def update_var_aspirate_speed(event):
   try: 
     aspirate_speed = var_aspirate_speed.get()
     scale_4.set(aspirate_speed)
-    text_4.set(aspirate_speed)
   except ValueError:
     pass
 
@@ -2122,7 +2119,7 @@ scale_4.grid(column = 1, row = 7)
 Tooltip(scale_4, text='Set Pipette aspirate speed', wraplength=wraplength)
 
 #Sync Entry Box
-text_4 = Entry(tab1, width=5, textvariable=var_aspirate_speed)
+text_4 = Entry(tab1, width=4, textvariable=var_aspirate_speed)
 text_4.grid(column = 0, row = 7, padx=5)
 text_4.bind("<FocusOut>", update_var_aspirate_speed)
 #Unit
@@ -2134,7 +2131,7 @@ separator = ttk.Separator(tab1, orient='vertical')
 separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
 #Selection 4 - dispense_speed
-var_dispense_speed = IntVar()
+var_dispense_speed = StringVar()
 var_dispense_speed.set(0)
 
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
@@ -2144,7 +2141,6 @@ def update_var_dispense_speed(event):
   try: 
     dispense_speed = var_dispense_speed.get()
     scale_5.set(dispense_speed)
-    text_5.set(dispense_speed)
   except ValueError:
     pass
     
@@ -2154,7 +2150,7 @@ scale_5.grid(column = 1, row = 9)
 Tooltip(scale_5, text='Set Pipette dispense speed', wraplength=wraplength)
 
 #Sync Entry Box
-text_5 = Entry(tab1, width=3, textvariable=var_dispense_speed)
+text_5 = Entry(tab1, width=4, textvariable=var_dispense_speed)
 text_5.grid(column = 0, row = 9, padx=5)
 text_5.bind("<FocusOut>", update_var_dispense_speed)
 #Unit
