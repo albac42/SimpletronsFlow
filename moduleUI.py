@@ -2040,60 +2040,90 @@ label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =
 
 #Selection 2 - Max Volume
 var_max_volume = IntVar()
+var_max_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
+
+def update_var_max_volume(event):
+  try: 
+    max_volume = var_max_volume.get()
+    scale_2.set(max_volume)
+    text_2.set(max_volume)
+  except ValueError:
+    pass
+    
 #Scale Bar
-scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume)
+scale_2 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_max_volume, command = update_var_max_volume)
 scale_2.grid(column = 1, row = 3)
 Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
 
-#Sync Entry Box
-def update_var_max_volume(event):
-  try: 
-    max_volume = int(var_max_volume.get())
-    scale_2.set(max_volume)
-  except ValueError:
-    pass
-text = Entry(tab1, width=4, textvariable=var_max_volume)
-text.grid(column = 0, row = 3, padx=5)
-text.bind("<Return>", update_var_max_volume)
+#Entry Box
+text_2 = Entry(tab1, width=5, textvariable=var_max_volume)
+text_2.grid(column = 0, row = 3, padx=5)
+text_2.bind("<FocusOut>", update_var_max_volume)
 #Unit
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
 
 #Selection 3 - Min Volume
 var_min_volume = IntVar()
+var_min_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
-#Scale Bar
-scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
-scale_3.grid(column = 1, row = 5)
-Tooltip(scale_3, text='Set Pipette Min Volume', wraplength=wraplength)
 
-#Sync Entry Box
-text = Entry(tab1, width=4, textvariable=var_min_volume)
-text.grid(column = 0, row = 5, padx=5)
-text.bind("<Return>", lambda event: scale_3.set(var_min_volume.get()))
+def update_var_min_volume(event):
+  try: 
+    min_volume = var_min_volume.get()
+    scale_3.set(min_volume)
+    text_3.set(min_volume)
+  except ValueError:
+    pass
+    
+#Scale Bar
+scale_3 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = var_min_volume, command = update_var_min_volume)
+scale_3.grid(column = 1, row = 5)
+Tooltip(scale_2, text='Set Pipette Min Volume', wraplength=wraplength)
+
+#Entry Box
+text_3 = Entry(tab1, width=5, textvariable=var_min_volume)
+text_3.grid(column = 0, row = 5, padx=5)
+text_3.bind("<FocusOut>", update_var_min_volume)
+#Unit
+label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
+label.grid(column = 2, row = 3)
+
 #Unit
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 5)
 
+
+
 #Selection 3 - aspirate_speed
 var_aspirate_speed = IntVar()
+var_aspirate_speed.set(0)
 
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
+
+def update_var_aspirate_speed(event):
+  try: 
+    aspirate_speed = var_aspirate_speed.get()
+    scale_4.set(aspirate_speed)
+    text_4.set(aspirate_speed)
+  except ValueError:
+    pass
+
 #Scale Bar
-scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed)
+scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_aspirate_speed, command = update_var_aspirate_speed)
 scale_4.grid(column = 1, row = 7)
 Tooltip(scale_4, text='Set Pipette aspirate speed', wraplength=wraplength)
 
 #Sync Entry Box
-text = Entry(tab1, width=3, textvariable=var_aspirate_speed)
-text.grid(column = 0, row = 7, padx=5)
-text.bind("<Return>", lambda event: scale_4.configure(to=var_aspirate_speed.get()))
+text_4 = Entry(tab1, width=5, textvariable=var_aspirate_speed)
+text_4.grid(column = 0, row = 7, padx=5)
+text_4.bind("<FocusOut>", update_var_aspirate_speed)
 #Unit
 label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 7)
@@ -2104,17 +2134,28 @@ separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
 #Selection 4 - dispense_speed
 var_dispense_speed = IntVar()
+var_dispense_speed.set(0)
 
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
+
+def update_var_dispense_speed(event):
+  try: 
+    dispense_speed = var_dispense_speed.get()
+    scale_5.set(dispense_speed)
+    text_5.set(dispense_speed)
+  except ValueError:
+    pass
+    
 #Scale Bar
-scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed)
+scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = var_dispense_speed, command = update_var_dispense_speed)
 scale_5.grid(column = 1, row = 9)
 Tooltip(scale_5, text='Set Pipette dispense speed', wraplength=wraplength)
+
 #Sync Entry Box
-text = Entry(tab1, width=3, textvariable=var_dispense_speed)
-text.grid(column = 0, row = 9, padx=5)
-text.bind("<Return>", lambda event: scale_5.configure(to=var_dispense_speed.get()))
+text_5 = Entry(tab1, width=3, textvariable=var_dispense_speed)
+text_5.grid(column = 0, row = 9, padx=5)
+text_5.bind("<FocusOut>", update_var_dispense_speed)
 #Unit
 label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
