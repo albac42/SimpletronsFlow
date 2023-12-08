@@ -2049,9 +2049,15 @@ scale_2.grid(column = 1, row = 3)
 Tooltip(scale_2, text='Set Pipette Max Volume', wraplength=wraplength)
 
 #Sync Entry Box
-text = Entry(tab1, width=3, textvariable=var_max_volume)
+def update_var_max_volume(event):
+  try: 
+    max_volume = int(var_max_volume.get())
+    scale_2.set(max_volume)
+  except ValueError:
+    pass
+text = Entry(tab1, width=4, textvariable=var_max_volume)
 text.grid(column = 0, row = 3, padx=5)
-text.bind("<Return>", lambda event: scale_2.configure(to=var_max_volume.get()))
+text.bind("<Return>", update_var_max_volume)
 #Unit
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
@@ -2065,10 +2071,11 @@ label.grid(column = 1, row = 4)
 scale_3 = Scale(tab1, from_=100, to=1000, resolution = 1, orient="horizontal", variable = var_min_volume)
 scale_3.grid(column = 1, row = 5)
 Tooltip(scale_3, text='Set Pipette Min Volume', wraplength=wraplength)
+
 #Sync Entry Box
-text = Entry(tab1, width=3, textvariable=var_min_volume)
+text = Entry(tab1, width=4, textvariable=var_min_volume)
 text.grid(column = 0, row = 5, padx=5)
-text.bind("<Return>", lambda event: scale_3.configure(to=var_min_volume.get()))
+text.bind("<Return>", lambda event: scale_3.set(var_min_volume.get()))
 #Unit
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 5)
