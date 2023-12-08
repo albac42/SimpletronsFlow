@@ -2040,7 +2040,7 @@ label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
 label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
 
 #Selection 2 - Max Volume
-var_max_volume = StringVar()
+var_max_volume = IntVar()
 var_max_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
@@ -2048,7 +2048,7 @@ label.grid(column = 1, row = 2)
 
 def update_var_max_volume(event):
   try: 
-    max_volume = int(var_max_volume.get())
+    max_volume = var_max_volume.get()
     scale_2.set(max_volume)
   except ValueError:
     pass
@@ -2067,7 +2067,7 @@ label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
 
 #Selection 3 - Min Volume
-var_min_volume = StringVar()
+var_min_volume = IntVar()
 var_min_volume.set(0)
 
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
@@ -2075,7 +2075,7 @@ label.grid(column = 1, row = 4)
 
 def update_var_min_volume(event):
   try: 
-    min_volume = int(var_min_volume.get())
+    min_volume = var_min_volume.get()
     scale_3.set(min_volume)
   except ValueError:
     pass
@@ -2100,7 +2100,7 @@ label.grid(column = 2, row = 5)
 
 
 #Selection 3 - aspirate_speed
-var_aspirate_speed = StringVar()
+var_aspirate_speed = IntVar()
 var_aspirate_speed.set(0)
 
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
@@ -2131,7 +2131,7 @@ separator = ttk.Separator(tab1, orient='vertical')
 separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
 #Selection 4 - dispense_speed
-var_dispense_speed = StringVar()
+var_dispense_speed = IntVar()
 var_dispense_speed.set(0)
 
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
