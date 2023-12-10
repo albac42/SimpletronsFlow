@@ -2039,9 +2039,9 @@ label = ttk.Label(tab1, text='L', font = ('Arial', 12) ).grid(column = 0,  row =
 label = ttk.Label(tab1, image=right_hand_image).grid(column = 2,  row =0)
 label = ttk.Label(tab1, text='R', font = ('Arial', 12) ).grid(column = 2,  row =1)
 
-#Selection 2 - Max Volume
+#----------------Selection 2 - Max Volume---------------------
 var_max_volume = IntVar()
-var_max_volume.set(0)
+var_max_volume.set(1000)
 
 label = ttk.Label(tab1, text='Select a max volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 2)
@@ -2049,7 +2049,12 @@ label.grid(column = 1, row = 2)
 def update_var_max_volume(event):
   try: 
     max_volume = var_max_volume.get()
-    scale_2.set(max_volume)
+    if 100 <= max_volume <= 2000:
+            scale_2.set(max_volume)
+            text_2.insert(max_volume)
+    else:
+      # If the value is outside the range, reset to the previous value
+      var_max_volume.set(1000)
   except ValueError:
     pass
     
@@ -2066,9 +2071,9 @@ text_2.bind("<FocusOut>", update_var_max_volume)
 label = ttk.Label(tab1, text='uL', font = ('Arial', 12))
 label.grid(column = 2, row = 3)
 
-#Selection 3 - Min Volume
+#---------------------Selection 3 - Min Volume-----------------------
 var_min_volume = IntVar()
-var_min_volume.set(0)
+var_min_volume.set(100)
 
 label = ttk.Label(tab1, text='Select a min volume:', font = ('Arial', 12))
 label.grid(column = 1, row = 4)
@@ -2076,7 +2081,11 @@ label.grid(column = 1, row = 4)
 def update_var_min_volume(event):
   try: 
     min_volume = var_min_volume.get()
-    scale_3.set(min_volume)
+    if 100 <= min_volume <= 2000:
+            scale_3.set(min_volume)
+    else:
+      # If the value is outside the range, reset to the previous value
+      var_min_volume.set(100)
   except ValueError:
     pass
     
@@ -2099,9 +2108,9 @@ label.grid(column = 2, row = 5)
 
 
 
-#Selection 3 - aspirate_speed
+#------------------------Selection 3 - aspirate_speed-----------------------
 var_aspirate_speed = IntVar()
-var_aspirate_speed.set(0)
+var_aspirate_speed.set(100)
 
 label = ttk.Label(tab1, text='Select aspirate speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 6)
@@ -2109,7 +2118,12 @@ label.grid(column = 1, row = 6)
 def update_var_aspirate_speed(event):
   try: 
     aspirate_speed = var_aspirate_speed.get()
-    scale_4.set(aspirate_speed)
+    if 100 <= aspirate_speed <= 1500:
+            scale_4.set(aspirate_speed)
+      
+    else:
+      # If the value is outside the range, reset to the previous value
+      var_aspirate_volume.set(100)
   except ValueError:
     pass
 
@@ -2130,7 +2144,7 @@ label.grid(column = 2, row = 7)
 separator = ttk.Separator(tab1, orient='vertical')
 separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
-#Selection 4 - dispense_speed
+#----------------------Selection 4 - dispense_speed-----------------------
 var_dispense_speed = IntVar()
 var_dispense_speed.set(0)
 
@@ -2140,7 +2154,11 @@ label.grid(column = 1, row = 8)
 def update_var_dispense_speed(event):
   try: 
     dispense_speed = var_dispense_speed.get()
-    scale_5.set(dispense_speed)
+    if 100 <= dispense_speed <= 1500:
+            scale_5.set(dispense_speed)
+    else:
+      # If the value is outside the range, reset to the previous value
+      var_dispense_volume.set(1000)
   except ValueError:
     pass
     
@@ -2157,7 +2175,7 @@ text_5.bind("<FocusOut>", update_var_dispense_speed)
 label = ttk.Label(tab1, text='mm/min', font = ('Arial', 12))
 label.grid(column = 2, row = 9)
 
-#Selection 5 - Select a Tip Rack
+#-------------------Selection 5 - Select a Tip Rack----------------------
 label = ttk.Label(tab1, text='Select a Tip Rack:*', font = ('Arial', 12))
 label.grid(column = 6, row = 0)
 dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_rack, postcommand = update_dropdown_tip_rack)
@@ -2165,7 +2183,7 @@ dropdown_tip_rack = ttk.Combobox(tab1, state="readonly",  textvariable = s_tip_r
 dropdown_tip_rack.grid(column = 6, row = 1)
 Tooltip(dropdown_tip_rack, text='Set a Pipette Tip Rack', wraplength=wraplength)
 
-#Selection 6 - Select a Bin
+#--------------------Selection 6 - Select a Bin----------------------------
 label = ttk.Label(tab1, text='Select a Bin:*', font = ('Arial', 12))
 label.grid(column = 6, row = 2)
 dropdown_trash = ttk.Combobox(tab1,  state="readonly" , textvariable = s_trash, postcommand = update_dropdown_trash)
