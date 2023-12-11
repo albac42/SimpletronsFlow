@@ -2112,7 +2112,7 @@ def update_var_min_volume1(event):
         min_volume = scale_var.get()
         text_2.delete(0, tk.END) 
         text_2.insert(0, min_volume)
-        var_max_volume.set(max_volume)
+        var_min_volume.set(min_volume)
     except ValueError:
         pass
       
@@ -2165,7 +2165,7 @@ def update_var_aspirate_speed1(event):
         aspirate_speed = scale_var.get()
         text_2.delete(0, tk.END) 
         text_2.insert(0, aspirate_speed)
-        var_max_volume.set(max_volume)
+        var_aspirate_speed.set(aspirate_speed)
     except ValueError:
         pass
 
@@ -2217,7 +2217,7 @@ def update_var_dispense_speed1(event):
         dispense_speed = scale_var.get()
         text_2.delete(0, tk.END) 
         text_2.insert(0, dispense_speed)
-        var_max_volume.set(max_volume)
+        var_dispense_speed.set(dispense_speed)
     except ValueError:
         pass
 
