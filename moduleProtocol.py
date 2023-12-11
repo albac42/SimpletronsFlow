@@ -87,8 +87,8 @@ def start_protocol_temp(db_file):
         trashName = rawTrash[0:2]
         trashType = rawTrash[3:]
 
-        tiprack = containers.load(tipType, tipName, 'tiprack')
-        trash = containers.load(trashType, trashName, 'trash')
+        tiprack = containers.load(trashType, tipName, 'tiprack')
+        trash = containers.load(tipType, trashName, 'trash')
 
         axis_s = row[1]
 
