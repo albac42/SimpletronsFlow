@@ -2103,7 +2103,7 @@ def update_var_min_volume(event):
     try:
         min_volume = entry_var3.get()
         if 100 <= min_volume <= 2000:
-            scale_2.set(min_volume)
+            scale_3.set(min_volume)
             var_min_volume.set(min_volume) 
         else:
             scale_var3.set(100)
@@ -2113,8 +2113,8 @@ def update_var_min_volume(event):
 def update_var_min_volume1(event):
     try:
         min_volume = scale_var3.get()
-        text_2.delete(0, tk.END) 
-        text_2.insert(0, min_volume)
+        text_3.delete(0, tk.END) 
+        text_3.insert(0, min_volume)
         var_min_volume.set(min_volume)
     except ValueError:
         pass
@@ -2156,7 +2156,7 @@ def update_var_aspirate_speed(event):
     try:
         aspirate_speed = entry_var4.get()
         if 100 <= aspirate_speed <= 2000:
-            scale_2.set(aspirate_speed)
+            scale_4.set(aspirate_speed)
             var_aspirate_speed.set(aspirate_speed) 
         else:
             scale_var4.set(100)
@@ -2166,8 +2166,8 @@ def update_var_aspirate_speed(event):
 def update_var_aspirate_speed1(event):
     try:
         aspirate_speed = scale_var4.get()
-        text_2.delete(0, tk.END) 
-        text_2.insert(0, aspirate_speed)
+        text_4.delete(0, tk.END) 
+        text_4.insert(0, aspirate_speed)
         var_aspirate_speed.set(aspirate_speed)
     except ValueError:
         pass
@@ -2208,7 +2208,7 @@ def update_var_dispense_speed(event):
     try:
         dispense_speed = entry_var5.get()
         if 100 <= dispense_speed <= 2000:
-            scale_2.set(dispense_speed)
+            scale_5.set(dispense_speed)
             var_dispense_speed.set(dispense_speed) 
         else:
             scale_var5.set(100)
@@ -2218,8 +2218,8 @@ def update_var_dispense_speed(event):
 def update_var_dispense_speed1(event):
     try:
         dispense_speed = scale_var5.get()
-        text_2.delete(0, tk.END) 
-        text_2.insert(0, dispense_speed)
+        text_5.delete(0, tk.END) 
+        text_5.insert(0, dispense_speed)
         var_dispense_speed.set(dispense_speed)
     except ValueError:
         pass
