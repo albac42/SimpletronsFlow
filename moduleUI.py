@@ -643,10 +643,12 @@ def action_save_pip():
         axis = 'b'
         print(axis)
         update_pipette('pipette_b', 0)
+        update_pipette('pipette_a', 1)
     elif var_p_a.get() == 1:
         axis = 'a'
         print(axis)
         update_pipette('pipette_a', 1)
+        update_pipette('pipette_b', 0)
 
     max_vol = var_max_volume.get()
     min_vol = var_min_volume.get()
