@@ -1961,10 +1961,10 @@ label.grid(column = 2, row = 6)
 
 # Start Command Threading [LL]
 def set_calibration_location():
-    threading.Thread(target=moveDefaultLocation_p("pipette_b", "bottom")).start()
+    threading.Thread(target=moveDefaultLocation_p("pipette_a", "bottom")).start()
 
 def set_calibration_drop_tip():
-    threading.Thread(target=moveDefaultLocation_p("pipette_b", "drop_tip")).start()
+    threading.Thread(target=moveDefaultLocation_p("pipette_a", "drop_tip")).start()
     
 label_set_calibration = ttk.Button(tab3, text='Pickup Tip', command = set_calibration_location)
 label_set_calibration.grid(column = 3, row = 5, columnspan = 3)
