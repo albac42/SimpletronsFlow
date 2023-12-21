@@ -717,14 +717,13 @@ def saveCalibrationPip(pipette, plungerPos):
             )
             print ("Loaded A Axis Pipette")    
 
-    offset = 0.30 * plungerPos
 
     if pipette == "pipette_b":
-        pipette_b.calibrate(plungerPos + offset)
+        pipette_b.calibrate(plungerPos)
         print('Successfully Save Pipette Calibration:', pipette)
 
     if pipette == "pipette_a":
-        pipette_a.calibrate(plungerPos + offset)
+        pipette_a.calibrate(plungerPos)
         print('Successfully Save Pipette Calibration:', pipette)
 
     calibration_mode_toggle(0)
