@@ -186,7 +186,7 @@ def start_protocol_temp(db_file):
 
         pipette = row[3] # Pipette
 
-        volume = row[4] # Volume
+        volume = row[4] + row[4] * 0.3 # Volume
 
         plateA = row[5] #Plate A
         wellA = row[6] #Well A
