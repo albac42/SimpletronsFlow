@@ -88,15 +88,10 @@ def start_protocol_temp(db_file):
     for row in c:
         error_message = "Could not read pipette calibration from database."
         print(row)
-
-        rawTip = row[7]
-        rawTrash = row[8]
-
-        tipName = rawTip[0:2]
-        tipType = rawTip[3:]
-
-        trashName = rawTrash[0:2]
-        trashType = rawTrash[3:]
+     
+        rawTip, rawTrash = row[7], row[8]
+        tipName, tipType = rawTip[0:2], rawTip[3:]
+        trashName, trashType = rawTrash[0:2], rawTrash[3:]
 
         error_message = "Could not load tip rack. Please check calibrations are complete."
         tiprack = containers.load(trashType, tipName, 'tiprack')
@@ -208,7 +203,7 @@ def start_protocol_temp(db_file):
 
         pipette = row[3] # Pipette
 
-        volume = row[4] + row[4] * 0.3 # Volume
+        volume = row[4] # Volume
 
         plateA = row[5] #Plate A
         wellA = row[6] #Well A
