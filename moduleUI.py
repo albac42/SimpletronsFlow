@@ -2120,10 +2120,10 @@ def update_var_min_volume1(event):
       
 # Separate variables for Scale and Entry Box
 scale_var3 = tk.IntVar()
-scale_var3.set(1000)
+scale_var3.set(100)
 
 entry_var3 = tk.IntVar()
-entry_var3.set(1000)
+entry_var3.set(100)
     
 #Scale Bar
 scale_3 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = scale_var3, command = update_var_min_volume1)
@@ -2174,10 +2174,10 @@ def update_var_aspirate_speed1(event):
 
 # Separate variables for Scale and Entry Box
 scale_var4 = tk.IntVar()
-scale_var4.set(1000)
+scale_var4.set(100)
 
 entry_var4 = tk.IntVar()
-entry_var4.set(1000)
+entry_var4.set(100)
 
 #Scale Bar
 scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = scale_var4, command = update_var_aspirate_speed1)
@@ -2198,7 +2198,7 @@ separator.grid(row=0,column=4, rowspan=10, ipady=180)
 
 #----------------------Selection 4 - dispense_speed-----------------------
 var_dispense_speed = IntVar()
-var_dispense_speed.set(0)
+var_dispense_speed.set(100)
 
 label = ttk.Label(tab1, text='Select a dispense speed:', font = ('Arial', 12))
 label.grid(column = 1, row = 8)
@@ -2226,10 +2226,10 @@ def update_var_dispense_speed1(event):
 
 # Separate variables for Scale and Entry Box
 scale_var5 = tk.IntVar()
-scale_var5.set(1000)
+scale_var5.set(100)
 
 entry_var5 = tk.IntVar()
-entry_var5.set(1000)
+entry_var5.set(100)
     
 #Scale Bar
 scale_5 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = scale_var5, command = update_var_dispense_speed1)
