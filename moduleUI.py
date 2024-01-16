@@ -2120,10 +2120,10 @@ def update_var_min_volume1(event):
       
 # Separate variables for Scale and Entry Box
 scale_var3 = tk.IntVar()
-scale_var3.set(1000)
+scale_var3.set(100)
 
 entry_var3 = tk.IntVar()
-entry_var3.set(1000)
+entry_var3.set(100)
     
 #Scale Bar
 scale_3 = Scale(tab1, from_=100, to=2000, resolution = 1, orient="horizontal", variable = scale_var3, command = update_var_min_volume1)
@@ -2174,10 +2174,10 @@ def update_var_aspirate_speed1(event):
 
 # Separate variables for Scale and Entry Box
 scale_var4 = tk.IntVar()
-scale_var4.set(1000)
+scale_var4.set(100)
 
 entry_var4 = tk.IntVar()
-entry_var4.set(1000)
+entry_var4.set(100)
 
 #Scale Bar
 scale_4 = Scale(tab1, from_=100, to=1500, resolution = 1, orient="horizontal", variable = scale_var4, command = update_var_aspirate_speed1)
